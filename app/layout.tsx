@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  icons: {
+    icon: '/ars-exim-logo-transparent.png',
+    shortcut: '/ars-exim-logo-transparent.png',
+    apple: '/ars-exim-logo-transparent.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',

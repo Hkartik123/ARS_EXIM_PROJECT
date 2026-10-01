@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -10,7 +11,7 @@ import {
   Inbox,
   Briefcase,
   Users,
-  Image,
+  Image as ImageIcon,
   MessageSquareQuote,
   HelpCircle,
   Settings,
@@ -37,7 +38,7 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
     { name: 'Enquiries & RFQs', href: '/admin/enquiries', icon: Inbox, roles: ['SUPER_ADMIN', 'SALES_BD', 'VIEWER'] },
     { name: 'Careers', href: '/admin/careers', icon: Briefcase, roles: ['SUPER_ADMIN', 'HR', 'VIEWER'] },
     { name: 'Applications', href: '/admin/applications', icon: Users, roles: ['SUPER_ADMIN', 'HR', 'VIEWER'] },
-    { name: 'Media Library', href: '/admin/media', icon: Image, roles: ['SUPER_ADMIN', 'ADMIN_CONTENT'] },
+    { name: 'Media Library', href: '/admin/media', icon: ImageIcon, roles: ['SUPER_ADMIN', 'ADMIN_CONTENT'] },
     { name: 'Testimonials', href: '/admin/testimonials', icon: MessageSquareQuote, roles: ['SUPER_ADMIN', 'ADMIN_CONTENT'] },
     { name: 'Technical FAQs', href: '/admin/faqs', icon: HelpCircle, roles: ['SUPER_ADMIN', 'ADMIN_CONTENT'] },
     { name: 'Site Settings', href: '/admin/settings', icon: Settings, roles: ['SUPER_ADMIN'] },
@@ -46,19 +47,11 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
   ];
 
   return (
-    <aside className="w-64 bg-navy-950 text-steel-300 flex flex-col border-r border-navy-800 flex-shrink-0 min-h-screen">
+    <aside className="w-64 bg-[#edf5ff] text-navy-900 flex flex-col border-r border-[#dfeaf7] flex-shrink-0 min-h-screen">
       {/* Brand Header */}
-      <div className="p-6 border-b border-navy-800 flex items-center justify-between">
+      <div className="p-6 border-b border-[#dfeaf7] flex items-center justify-between">
         <Link href="/admin/dashboard" className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gold rounded flex items-center justify-center font-black text-navy-950 text-base">
-            ARS
-          </div>
-          <div>
-            <span className="block font-bold text-sm tracking-wider text-white">ARS EXIM CMS</span>
-            <span className="block text-[10px] uppercase tracking-widest text-gold font-semibold">
-              {userRole.replace('_', ' ')}
-            </span>
-          </div>
+          <Image src="/ars-exim-logo-transparent.png" alt="ARS EXIM Global Solutions logo" width={132} height={132} className="h-[104px] w-[104px] object-contain" />
         </Link>
       </div>
 
@@ -76,14 +69,14 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
                 className={cn(
                   'flex items-center px-3.5 py-2.5 rounded text-xs font-semibold tracking-wide transition-colors group',
                   isActive
-                    ? 'bg-navy-800 text-gold font-bold shadow-sm'
-                    : 'text-steel-300 hover:bg-navy-900 hover:text-white'
+                    ? 'bg-white text-navy-900 font-bold shadow-sm border border-[#dfeaf7]'
+                    : 'text-navy-700 hover:bg-white hover:text-navy-900'
                 )}
               >
                 <Icon
                   className={cn(
                     'w-4 h-4 mr-3 transition-colors',
-                    isActive ? 'text-gold' : 'text-steel-400 group-hover:text-white'
+                    isActive ? 'text-navy-900' : 'text-navy-700 group-hover:text-navy-900'
                   )}
                 />
                 <span>{item.name}</span>
@@ -97,7 +90,7 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
         <Link
           href="/"
           target="_blank"
-          className="flex items-center justify-between px-3 py-2 text-xs font-semibold text-steel-400 hover:text-white transition-colors"
+          className="flex items-center justify-between px-3 py-2 text-xs font-semibold text-navy-700 hover:text-navy-900 transition-colors"
         >
           <span>View Public Website</span>
           <ExternalLink className="w-3.5 h-3.5" />

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,8 +42,15 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-navy-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="w-12 h-12 bg-gold rounded flex items-center justify-center font-black text-navy-950 text-xl mx-auto mb-3 shadow-md">
-          ARS
+        <div className="mx-auto mb-3 flex justify-center">
+          <Image
+            src="/ars-exim-logo-transparent.png"
+            alt="ARS EXIM Global Solutions logo"
+            width={144}
+            height={144}
+            priority
+            className="h-[128px] w-[128px] rounded-md bg-white p-1.5 object-contain shadow-sm"
+          />
         </div>
         <h2 className="text-2xl font-black text-white font-display tracking-tight">
           ARS EXIM Staff Command Portal

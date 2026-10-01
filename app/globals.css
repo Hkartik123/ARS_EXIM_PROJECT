@@ -5,6 +5,8 @@
 :root {
   --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
   --navy-900: #10233F;
+  --brand-blue: #edf5ff;
+  --brand-blue-strong: #dfeeff;
   --gold: #C9A961;
 }
 
@@ -14,7 +16,7 @@ html {
 
 body {
   color: #1E232A;
-  background-color: #FFFFFF;
+  background: linear-gradient(180deg, #f5f9ff 0%, #edf5ff 100%);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

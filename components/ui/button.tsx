@@ -14,13 +14,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary:
-        'bg-gold text-navy-950 hover:bg-gold-600 focus-visible:ring-gold font-semibold shadow-sm',
+        'bg-navy-900 text-white hover:bg-navy-700 focus-visible:ring-navy-900 font-semibold shadow-sm',
       secondary:
-        'bg-navy-900 text-white hover:bg-navy-800 focus-visible:ring-navy-900',
+        'bg-[#eaf3ff] text-navy-900 hover:bg-[#dfeeff] focus-visible:ring-navy-900 border border-[#d4e7ff]',
       outline:
-        'border border-navy-900/20 text-navy-900 hover:bg-steel-100 focus-visible:ring-navy-900',
+        'border border-navy-900/20 text-navy-900 hover:bg-[#edf5ff] focus-visible:ring-navy-900',
       ghost:
-        'text-navy-900 hover:bg-steel-100 focus-visible:ring-navy-900',
+        'text-navy-900 hover:bg-[#edf5ff] focus-visible:ring-navy-900',
       safety:
         'bg-safety-red text-white hover:bg-safety-hover focus-visible:ring-safety-red font-semibold',
       danger:
