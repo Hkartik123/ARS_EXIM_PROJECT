@@ -28,6 +28,14 @@ const INDUSTRY_OPTIONS = [
   { label: 'Civil & Industrial Infrastructure', value: 'Infrastructure' },
 ];
 
+const PROJECT_TYPE_OPTIONS = [
+  { label: 'Select Project Type', value: '' },
+  { label: 'Shutdown / turnaround', value: 'Shutdown / turnaround' },
+  { label: 'New build / capital project', value: 'New build / capital project' },
+  { label: 'Maintenance / modification', value: 'Maintenance / modification' },
+  { label: 'Other / not yet defined', value: 'Other / not yet defined' },
+];
+
 export function QuoteForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -40,6 +48,7 @@ export function QuoteForm() {
     phone: '',
     country: '',
     projectName: '',
+    projectType: '',
     industry: '',
     location: '',
     requiredServices: [] as string[],
@@ -111,6 +120,7 @@ export function QuoteForm() {
       data.append('phone', formData.phone);
       data.append('country', formData.country);
       data.append('projectName', formData.projectName);
+      data.append('projectType', formData.projectType);
       data.append('industry', formData.industry);
       data.append('location', formData.location);
       data.append('requiredServices', JSON.stringify(formData.requiredServices));
@@ -225,6 +235,14 @@ export function QuoteForm() {
             options={INDUSTRY_OPTIONS}
             value={formData.industry}
             onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+          />
+          <Select
+            id="projectType"
+            label="Project Type"
+            options={PROJECT_TYPE_OPTIONS}
+            required
+            value={formData.projectType}
+            onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
           />
           <Input
             id="location"
@@ -351,9 +369,8 @@ export function QuoteForm() {
               className="mt-0.5 rounded border-steel-300 text-gold focus:ring-gold"
             />
             <span>
-              I confirm that the submitted project specifications are accurate and authorize ARS EXIM’s
-              estimating and engineering teams to evaluate this quotation request under our strict NDA
-              and privacy governance.
+              I confirm that the submitted project specifications are accurate and authorize ARS EXIM to
+              use these details to respond to my quotation request in accordance with the privacy policy.
             </span>
           </label>
         </div>

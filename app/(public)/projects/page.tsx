@@ -3,13 +3,14 @@ import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { ProjectFilter } from '@/components/public/project-filter';
 import { connectToDatabase } from '@/lib/db/mongodb';
 import { Project } from '@/models/Project';
+import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Project Case Studies & Industrial Execution Portfolio',
+  title: 'Project References',
   description:
-    'Explore verified technical case studies across Industrial Insulation, Passive Fire Protection, and Scaffolding executed by ARS EXIM.',
+    'Review project references ARS EXIM is able to share publicly, or contact the team to discuss an industrial scope.',
 };
 
 export default async function ProjectsPage() {
@@ -17,6 +18,8 @@ export default async function ProjectsPage() {
   const rawProjects = await Project.find({
     publishStatus: 'PUBLISHED',
     isDeleted: false,
+    slug: { $nin: UNVERIFIED_SEED_PROJECT_SLUGS },
+    featuredImage: { $not: /images\.unsplash\.com/i },
   })
     .sort({ isFeatured: -1, createdAt: -1 })
     .lean();
@@ -30,14 +33,14 @@ export default async function ProjectsPage() {
 
         <div className="max-w-3xl my-8">
           <span className="text-xs font-bold uppercase tracking-widest text-gold-600 block mb-2">
-            Execution Track Record
+            Project References
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-4">
-            Industrial Project Case Studies
+            Public Project References
           </h1>
           <p className="text-base text-steel-600 leading-relaxed">
-            Detailed technical case studies showcasing engineered execution across petrochemical refineries,
-            offshore modules, cryogenic terminals, and power generation assets.
+            ARS EXIM shares project details only where they are approved for public release. For a
+            comparable industrial scope, contact the team with your service, location and requirements.
           </p>
         </div>
 

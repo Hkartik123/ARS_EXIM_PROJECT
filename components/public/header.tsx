@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, Phone, Mail, ShieldAlert } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, Mail, ShieldAlert, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -28,21 +28,22 @@ export function Header() {
   }, [pathname]);
 
   const navLinks = [
+    { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     {
       name: 'Services',
       href: '/services',
       subLinks: [
-        { name: 'Overview Matrix', href: '/services' },
-        { name: 'Industrial Insulation', href: '/services/industrial-insulation' },
+        { name: 'Overview', href: '/services' },
+        { name: 'Hot Insulation', href: '/services/hot-insulation' },
+        { name: 'Cold & Cryogenic Insulation', href: '/services/cold-cryogenic-insulation' },
         { name: 'Passive Fire Protection', href: '/services/passive-fire-protection' },
         { name: 'Scaffolding & Access', href: '/services/scaffolding' },
       ],
     },
+    { name: 'Industries', href: '/industries' },
     { name: 'Projects', href: '/projects' },
-    { name: 'Safety & Quality', href: '/safety-quality' },
-    { name: 'Sustainability', href: '/sustainability' },
-    { name: 'Careers', href: '/careers' },
+    { name: 'Gallery', href: '/gallery' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -59,13 +60,13 @@ export function Header() {
       {/* Top Utility Bar */}
       <div className="bg-[#edf5ff] text-navy-900 text-xs py-2 border-b border-[#d9eafc]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center space-x-6">
+          <div className="hidden items-center space-x-6 sm:flex">
             <span className="flex items-center space-x-1.5">
               <ShieldAlert className="w-3.5 h-3.5 text-safety-red" />
-              <span className="font-semibold text-navy-900">Zero-Harm Safety Commitment</span>
+              <span className="font-semibold text-navy-900">Site safety · Quality · Coordination</span>
             </span>
             <span className="hidden sm:inline-block text-navy-700">
-              Safety · Quality · Field-tested delivery
+              Insulation · PFP · Scaffolding & Access
             </span>
           </div>
           <div className="flex items-center space-x-5">
@@ -83,12 +84,10 @@ export function Header() {
               <Mail className="w-3 h-3 text-navy-900" />
               <span>info@arsexim.com</span>
             </a>
-            <Link
-              href="/admin/login"
-              className="text-navy-700 hover:text-navy-900 transition-colors text-[11px] uppercase tracking-wider"
-            >
-              Admin Portal
-            </Link>
+            <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 font-semibold text-[#177d53] transition-colors hover:text-[#105d3e]">
+              <MessageCircle className="h-3.5 w-3.5" />
+              <span>WhatsApp</span>
+            </a>
           </div>
         </div>
       </div>

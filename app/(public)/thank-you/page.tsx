@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { CheckCircle2, ArrowRight, FileCheck, Phone, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface PageProps {
@@ -28,33 +28,33 @@ export default function ThankYouPage({ searchParams }: PageProps) {
           </h1>
 
           <p className="text-sm text-steel-600 mb-6">
-            Your project technical specifications have been committed to our engineering proposal pipeline.
+            Your enquiry has been recorded. Keep the reference below for follow-up.
           </p>
 
           {/* Reference Badge */}
           <div className="bg-navy-950 text-white rounded p-5 my-6 border-l-4 border-gold">
             <span className="text-xs uppercase tracking-widest text-gold block mb-1 font-semibold">
-              Official Tracking Reference Number
+              Enquiry Reference
             </span>
             <div className="text-2xl sm:text-3xl font-black font-display tracking-wider text-white">
               {referenceNumber}
             </div>
             <p className="text-xs text-steel-400 mt-1">
-              Please quote this reference number in all subsequent technical correspondence.
+              Include this reference if you contact ARS EXIM about your enquiry.
             </p>
           </div>
 
           {/* Next Steps */}
           <div className="text-left bg-steel-50 p-6 rounded border border-steel-200 text-xs sm:text-sm text-steel-700 space-y-3 mb-8">
-            <h3 className="font-bold text-navy-900 text-sm">Next Steps in Estimating Review:</h3>
+            <h3 className="font-bold text-navy-900 text-sm">What happens next</h3>
             <p>
-              1. <strong>Scope Validation:</strong> Our senior estimator reviews your Bill of Quantities (BoQ) and drawings.
+              1. <strong>Enquiry review:</strong> The team can review the information and attachments you submitted.
             </p>
             <p>
-              2. <strong>Technical Proposal:</strong> A formal commercial tender dossier will be emailed to your contact address within 1 business day.
+              2. <strong>Follow-up:</strong> If more details are needed, the team can contact you using the details provided.
             </p>
             <p>
-              3. <strong>Immediate Mobilization:</strong> If this inquiry relates to an urgent shutdown or emergency plant maintenance, contact our operations desk at <strong className="text-navy-900">+91 9764 425 426</strong>.
+              3. <strong>Urgent enquiry:</strong> Call <a className="font-semibold text-navy-900" href="tel:+919764425426">+91 9764 425 426</a> or <a className="font-semibold text-navy-900" href="https://wa.me/919764425426">message on WhatsApp</a>.
             </p>
           </div>
 

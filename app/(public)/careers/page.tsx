@@ -35,31 +35,9 @@ export default async function CareersPage() {
             Build Your Career in Specialist Industrial Contracting
           </h1>
           <p className="text-base text-steel-600 leading-relaxed">
-            At ARS EXIM, our reputation for technical excellence is driven by seasoned project managers,
-            certified safety inspectors, and skilled industrial craftsmen. Explore active vacancies below.
+            View current vacancies below. Any role-specific qualifications, location and employment
+            terms will be stated in the individual posting.
           </p>
-        </div>
-
-        {/* Culture / Employee Value Proposition Strip */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-10">
-          <div className="p-6 bg-white border border-steel-200 rounded">
-            <h3 className="font-bold text-navy-900 mb-2">Safety First Environment</h3>
-            <p className="text-xs text-steel-600 leading-relaxed">
-              We provide the highest standard of PPE, comprehensive ongoing training, and universal Stop Work Authority.
-            </p>
-          </div>
-          <div className="p-6 bg-white border border-steel-200 rounded">
-            <h3 className="font-bold text-navy-900 mb-2">Complex Energy Projects</h3>
-            <p className="text-xs text-steel-600 leading-relaxed">
-              Work on signature petrochemical turnarounds, offshore facilities, and major energy infrastructure assets.
-            </p>
-          </div>
-          <div className="p-6 bg-white border border-steel-200 rounded">
-            <h3 className="font-bold text-navy-900 mb-2">Professional Growth</h3>
-            <p className="text-xs text-steel-600 leading-relaxed">
-              Structured pathways for apprentice-to-foreman, engineering certifications, and international project exposure.
-            </p>
-          </div>
         </div>
 
         {/* Open Job Listings */}
@@ -73,11 +51,11 @@ export default async function CareersPage() {
               <Briefcase className="w-10 h-10 text-steel-400 mx-auto mb-3" />
               <h3 className="text-lg font-bold text-navy-900 mb-2">No Active Openings Currently</h3>
               <p className="text-sm text-steel-600 max-w-md mx-auto mb-6">
-                Our recruiting team regularly reviews speculative applications from certified inspectors and engineers.
+                Contact ARS EXIM to ask about future opportunities.
               </p>
               <Link href="/contact">
                 <Button variant="secondary" size="md">
-                  Submit Speculative CV
+                  Ask About Opportunities
                 </Button>
               </Link>
             </div>

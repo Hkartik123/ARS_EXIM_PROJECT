@@ -1,10 +1,10 @@
 import React from 'react';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { ContactForm } from '@/components/public/contact-form';
-import { MapPin, Phone, Mail, Clock, ShieldCheck } from 'lucide-react';
+import { Phone, Mail, MessageCircle, ShieldCheck } from 'lucide-react';
 
 export const metadata = {
-  title: 'Contact Corporate Headquarters & Operations Hub',
+  title: 'Contact ARS EXIM',
   description:
     'Get in touch with ARS EXIM engineering and estimating teams for industrial inquiries, vendor registration, and technical support.',
 };
@@ -23,8 +23,7 @@ export default function ContactPage() {
             Connect with ARS EXIM Engineering
           </h1>
           <p className="text-base text-steel-600 leading-relaxed">
-            Have a technical query, plant maintenance requirement, or need to schedule an on-site
-            facility inspection? Reach out to our operational team directly or submit the inquiry form below.
+              Have a project enquiry or technical question? Contact ARS EXIM by phone, email or WhatsApp, or use the enquiry form below.
           </p>
         </div>
 
@@ -32,17 +31,7 @@ export default function ContactPage() {
           {/* Coordinates Sidebar */}
           <div className="space-y-6">
             <div className="bg-navy-950 text-white rounded p-8 shadow-industrial space-y-6">
-              <h2 className="text-lg font-bold text-white border-b border-navy-800 pb-3">
-                Corporate Headquarters
-              </h2>
-
-              <div className="flex items-start space-x-3 text-sm text-steel-300">
-                <MapPin className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-                <span>
-                  Global project coordination and registered-office support available by inquiry<br />
-                  Response is coordinated through the ARS EXIM operations team.
-                </span>
-              </div>
+              <h2 className="text-lg font-bold text-white border-b border-navy-800 pb-3">Project Enquiries</h2>
 
               <div className="flex items-center space-x-3 text-sm text-steel-300">
                 <Phone className="w-5 h-5 text-gold flex-shrink-0" />
@@ -58,13 +47,13 @@ export default function ContactPage() {
                 </a>
               </div>
 
-              <div className="flex items-start space-x-3 text-sm text-steel-300 pt-2 border-t border-navy-800">
-                <Clock className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-                <span>
-                  Monday – Friday: 08:00 – 18:00 (GST)<br />
-                  Emergency Shutdown Mobilization: 24/7
-                </span>
+              <div className="flex items-center space-x-3 text-sm text-steel-300">
+                <MessageCircle className="w-5 h-5 text-[#39b87b] flex-shrink-0" />
+                <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="font-medium text-white hover:text-[#82ddb0] transition-colors">
+                  WhatsApp project enquiries
+                </a>
               </div>
+
             </div>
 
             <div className="bg-white border border-steel-200 rounded p-6">

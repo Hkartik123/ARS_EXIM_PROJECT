@@ -81,7 +81,7 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
           <div className="w-full md:w-64">
             <input
               type="text"
-              placeholder="Search case studies..."
+              placeholder="Search project references..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-10 px-3 text-xs rounded border border-steel-300 focus:border-navy-700 focus:outline-none"
@@ -112,15 +112,15 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
 
       {/* Results Count */}
       <div className="mb-6 flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-steel-500">
-        <span>Displaying {filteredProjects.length} Verified Case Studies</span>
+        <span>{filteredProjects.length} public project reference{filteredProjects.length === 1 ? '' : 's'}</span>
       </div>
 
       {/* Projects Grid */}
       {filteredProjects.length === 0 ? (
         <div className="text-center py-16 bg-white border border-steel-200 rounded p-8">
-          <h3 className="text-lg font-bold text-navy-900 mb-2">No matching case studies found</h3>
+          <h3 className="text-lg font-bold text-navy-900 mb-2">No public project references match</h3>
           <p className="text-sm text-steel-500 mb-6">
-            Try adjusting your service or industry filters to explore our full industrial project portfolio.
+            Adjust the filters or contact ARS EXIM to discuss a comparable scope.
           </p>
           <button
             onClick={() => {

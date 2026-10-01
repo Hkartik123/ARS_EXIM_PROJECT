@@ -15,6 +15,7 @@ interface ProjectEditorProps {
 }
 
 const INDUSTRY_OPTIONS = [
+  { label: 'Select industry sector', value: '' },
   { label: 'Oil & Gas', value: 'Oil & Gas' },
   { label: 'Petrochemical', value: 'Petrochemical' },
   { label: 'Power Generation', value: 'Power Generation' },
@@ -46,8 +47,8 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
     slug: initialData?.slug || '',
     client: initialData?.client || '',
     clientPublishable: initialData?.clientPublishable || false,
-    industry: initialData?.industry || 'Petrochemical',
-    country: initialData?.country || 'United Arab Emirates',
+    industry: initialData?.industry || '',
+    country: initialData?.country || '',
     location: initialData?.location || '',
     services: initialData?.services || ['industrial-insulation'],
     shortDescription: initialData?.shortDescription || '',
@@ -55,7 +56,7 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
     technicalChallenges: initialData?.technicalChallenges ? initialData.technicalChallenges.join('\n') : '',
     executionApproach: initialData?.executionApproach || '',
     safetyConsiderations: initialData?.safetyConsiderations ? initialData.safetyConsiderations.join('\n') : '',
-    featuredImage: initialData?.featuredImage || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
+    featuredImage: initialData?.featuredImage || '',
     galleryImages: initialData?.galleryImages ? initialData.galleryImages.join('\n') : '',
     isFeatured: initialData?.isFeatured || false,
     publishStatus: initialData?.publishStatus || 'DRAFT',
@@ -325,6 +326,7 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
               id="featuredImage"
               label="Featured Image URL"
               required
+              placeholder="Use a client-approved project image URL"
               value={formData.featuredImage}
               onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
             />

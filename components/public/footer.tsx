@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Mail, MapPin, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Phone, Mail, MessageCircle, ShieldCheck, ArrowRight } from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -22,13 +22,11 @@ export function Footer() {
               />
             </div>
             <p className="text-sm text-navy-700 leading-relaxed mb-6">
-              Specialist industrial contractor executing high-specification Industrial Insulation,
-              Passive Fire Protection (PFP), and Scaffolding & Access Management for major process
-              facilities and infrastructure assets globally.
+              Industrial insulation, passive fire protection and scaffolding services for project enquiries.
             </p>
             <div className="flex items-center space-x-2 text-xs font-semibold text-navy-900 bg-white border border-[#dfeaf7] p-2.5 rounded">
               <ShieldCheck className="w-4 h-4 text-navy-900 flex-shrink-0" />
-              <span>Safety-led industrial execution</span>
+              <span>Scope aligned to project requirements</span>
             </div>
           </div>
 
@@ -40,11 +38,20 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
-                  href="/services/industrial-insulation"
+                  href="/services/hot-insulation"
                   className="hover:text-gold transition-colors flex items-center group"
                 >
                   <ArrowRight className="w-3.5 h-3.5 mr-2 text-steel-500 group-hover:text-gold transition-colors" />
-                  Industrial Thermal & Cold Insulation
+                  Hot Insulation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services/cold-cryogenic-insulation"
+                  className="hover:text-gold transition-colors flex items-center group"
+                >
+                  <ArrowRight className="w-3.5 h-3.5 mr-2 text-steel-500 group-hover:text-gold transition-colors" />
+                  Cold / Cryogenic Insulation
                 </Link>
               </li>
               <li>
@@ -53,7 +60,7 @@ export function Footer() {
                   className="hover:text-gold transition-colors flex items-center group"
                 >
                   <ArrowRight className="w-3.5 h-3.5 mr-2 text-steel-500 group-hover:text-gold transition-colors" />
-                  Passive Fire Protection (PFP)
+                  Passive Fire Protection
                 </Link>
               </li>
               <li>
@@ -62,16 +69,7 @@ export function Footer() {
                   className="hover:text-gold transition-colors flex items-center group"
                 >
                   <ArrowRight className="w-3.5 h-3.5 mr-2 text-steel-500 group-hover:text-gold transition-colors" />
-                  Scaffolding & Access Management
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="hover:text-navy-900 transition-colors flex items-center group text-navy-600"
-                >
-                  <ArrowRight className="w-3.5 h-3.5 mr-2 text-navy-700 group-hover:text-navy-900 transition-colors" />
-                  Capabilities Matrix
+                  Scaffolding & Access
                 </Link>
               </li>
             </ul>
@@ -80,37 +78,42 @@ export function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-widest text-navy-900 mb-5">
-              Corporate Governance
+              Company & Resources
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
+                <Link href="/" className="hover:text-gold transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:text-gold transition-colors">
-                  Corporate Profile & Heritage
+                  About ARS EXIM
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className="hover:text-gold transition-colors">
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link href="/industries" className="hover:text-gold transition-colors">
+                  Industries
                 </Link>
               </li>
               <li>
                 <Link href="/projects" className="hover:text-gold transition-colors">
-                  Project Technical Case Studies
+                  Projects
                 </Link>
               </li>
               <li>
-                <Link href="/safety-quality" className="hover:text-gold transition-colors">
-                  HSE Management & Zero-Harm
-                </Link>
-              </li>
-              <li>
-                <Link href="/sustainability" className="hover:text-gold transition-colors">
-                  Energy Conservation & ESG
-                </Link>
-              </li>
-              <li>
-                <Link href="/careers" className="hover:text-gold transition-colors">
-                  Career Opportunities
+                <Link href="/gallery" className="hover:text-gold transition-colors">
+                  Gallery
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="hover:text-gold transition-colors">
-                  Global Office Hub
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -134,6 +137,12 @@ export function Footer() {
                   info@arsexim.com
                 </a>
               </div>
+              <div className="flex items-center space-x-3">
+                <MessageCircle className="w-4 h-4 text-[#177d53] flex-shrink-0" />
+                <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="font-semibold text-[#177d53] hover:text-[#105d3e] transition-colors">
+                  WhatsApp project enquiries
+                </a>
+              </div>
               <div className="pt-2">
                 <Link
                   href="/request-a-quote"
@@ -155,9 +164,6 @@ export function Footer() {
             </Link>
             <Link href="/terms-and-conditions" className="hover:text-navy-900 transition-colors">
               Terms & Conditions
-            </Link>
-            <Link href="/admin/login" className="hover:text-navy-900 transition-colors">
-              Staff Portal
             </Link>
           </div>
         </div>

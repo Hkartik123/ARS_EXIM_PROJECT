@@ -1,7 +1,7 @@
 import React from 'react';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { QuoteForm } from '@/components/public/quote-form';
-import { ShieldCheck, FileSpreadsheet, Clock, Lock } from 'lucide-react';
+import { FileSpreadsheet, MessageCircle, ClipboardCheck } from 'lucide-react';
 
 export const metadata = {
   title: 'Request an Industrial Project Quotation (RFQ)',
@@ -25,25 +25,24 @@ export default function RequestAQuotePage() {
           </h1>
           <p className="text-base text-steel-600 leading-relaxed max-w-3xl">
             Submit your Bill of Quantities (BoQ), drawings, and technical parameters.
-            Our industrial estimating team reviews your scope and issues a formal commercial proposal
-            within 1 business day.
+            The more detail you share about the location, discipline, project type and timeline, the easier it is to assess your enquiry.
           </p>
         </div>
 
         {/* Security & Confidentiality Badges */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-white border border-steel-200 rounded p-4 flex items-center space-x-3">
-            <Lock className="w-5 h-5 text-gold flex-shrink-0" />
-            <span className="text-xs font-semibold text-navy-900">Protected Under Strict Commercial NDA</span>
-          </div>
-          <div className="bg-white border border-steel-200 rounded p-4 flex items-center space-x-3">
             <FileSpreadsheet className="w-5 h-5 text-gold flex-shrink-0" />
-            <span className="text-xs font-semibold text-navy-900">Direct BoQ & Drawing Ingestion</span>
+            <span className="text-xs font-semibold text-navy-900">Attach drawings, BOQ or scope documents</span>
           </div>
           <div className="bg-white border border-steel-200 rounded p-4 flex items-center space-x-3">
-            <Clock className="w-5 h-5 text-gold flex-shrink-0" />
-            <span className="text-xs font-semibold text-navy-900">1 Business Day Estimating Response</span>
+            <ClipboardCheck className="w-5 h-5 text-gold flex-shrink-0" />
+            <span className="text-xs font-semibold text-navy-900">Share project type and anticipated schedule</span>
           </div>
+          <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="bg-white border border-steel-200 rounded p-4 flex items-center space-x-3 text-[#177d53] hover:border-[#177d53]">
+            <MessageCircle className="w-5 h-5 flex-shrink-0" />
+            <span className="text-xs font-semibold">Or start with WhatsApp</span>
+          </a>
         </div>
 
         {/* Main Quotation Wizard Form */}

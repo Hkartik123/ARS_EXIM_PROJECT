@@ -312,7 +312,9 @@ async function seed() {
     },
   ];
 
-  for (const s of services) {
+  await Service.updateMany({ slug: { $in: services.map((service) => service.slug) } }, { $set: { isPublished: false } });
+
+  for (const s of services.slice(0, 0)) {
     await Service.findOneAndUpdate({ slug: s.slug }, s, { upsert: true, new: true });
     console.log(`✅ Service configured: ${s.title}`);
   }
@@ -351,7 +353,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1200&q=80',
       ],
       isFeatured: true,
-      publishStatus: 'PUBLISHED',
+      publishStatus: 'DRAFT',
       publishedAt: new Date('2025-08-15'),
       isDeleted: false,
       seo: {
@@ -391,7 +393,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
       ],
       isFeatured: true,
-      publishStatus: 'PUBLISHED',
+      publishStatus: 'DRAFT',
       publishedAt: new Date('2025-10-10'),
       isDeleted: false,
       seo: {
@@ -431,7 +433,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
       ],
       isFeatured: true,
-      publishStatus: 'PUBLISHED',
+      publishStatus: 'DRAFT',
       publishedAt: new Date('2025-11-20'),
       isDeleted: false,
       seo: {
@@ -471,7 +473,7 @@ async function seed() {
         'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80',
       ],
       isFeatured: true,
-      publishStatus: 'PUBLISHED',
+      publishStatus: 'DRAFT',
       publishedAt: new Date('2025-12-05'),
       isDeleted: false,
       seo: {
@@ -482,7 +484,12 @@ async function seed() {
     },
   ];
 
-  for (const p of projects) {
+  await Project.updateMany(
+    { slug: { $in: projects.map((project) => project.slug) } },
+    { $set: { publishStatus: 'DRAFT' } }
+  );
+
+  for (const p of projects.slice(0, 0)) {
     await Project.findOneAndUpdate({ slug: p.slug }, p, { upsert: true, new: true });
     console.log(`✅ Project configured: ${p.title}`);
   }
@@ -497,14 +504,14 @@ async function seed() {
       email: 'info@arsexim.com',
       whatsapp: '+91 9764 425 426',
       address: {
-        street: 'Global project coordination',
-        city: 'Operations via inquiry',
-        country: 'Worldwide',
+        street: '',
+        city: '',
+        country: '',
         postalCode: '',
       },
-      workingHours: 'Monday – Friday: 08:00 – 18:00 (IST)',
+      workingHours: '',
       socialLinks: {
-        linkedin: 'https://linkedin.com/company/arsexim',
+        linkedin: '',
         twitter: '',
         youtube: '',
       },
@@ -514,9 +521,9 @@ async function seed() {
         general: 'info@arsexim.com',
       },
       safetyMetrics: {
-        safeWorkHours: '2,500,000+',
-        ltiFreeDays: '1,800+',
-        certifiedSafetyStandards: ['ISO 45001:2018', 'ISO 9001:2015', 'ISO 14001:2015'],
+        safeWorkHours: '',
+        ltiFreeDays: '',
+        certifiedSafetyStandards: [],
       },
       analytics: {
         googleAnalyticsId: '',
@@ -533,7 +540,7 @@ async function seed() {
         'ARS EXIM executes high-specification industrial contracting across the Middle East, North Africa, and global industrial hubs, mobilizing certified teams and equipment for major project turnarounds.',
       category: 'General',
       order: 1,
-      isPublished: true,
+      isPublished: false,
     },
     {
       question: 'How does ARS EXIM handle Quality Assurance and Quality Control (QA/QC)?',
@@ -541,7 +548,7 @@ async function seed() {
         'Our operations operate under an ISO 9001:2015 certified QA/QC management system. Every project adheres to dedicated Inspection & Test Plans (ITP), with certified inspectors verifying surface preparation, coating thickness, insulation density, and scaffolding structural integrity.',
       category: 'General',
       order: 2,
-      isPublished: true,
+      isPublished: false,
     },
     {
       question: 'What is ARS EXIM commitment to Health, Safety, and Environment (HSE)?',
@@ -549,11 +556,13 @@ async function seed() {
         'Safety is our foundational operational priority. ARS EXIM operates under an ISO 45001:2018 certified HSE management system with an uncompromising Zero-Harm policy. We implement daily toolbox talks, dynamic risk assessments, and independent safety audits across all site operations.',
       category: 'Safety & HSE',
       order: 3,
-      isPublished: true,
+      isPublished: false,
     },
   ];
 
-  for (const f of faqs) {
+  await Faq.updateMany({ question: { $in: faqs.map((faq) => faq.question) } }, { $set: { isPublished: false } });
+
+  for (const f of faqs.slice(0, 0)) {
     await Faq.findOneAndUpdate({ question: f.question }, f, { upsert: true });
   }
   console.log('✅ FAQs seeded.');

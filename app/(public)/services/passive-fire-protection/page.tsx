@@ -1,14 +1,14 @@
 import React from 'react';
-import { ServiceDetailView } from '@/components/public/service-detail-view';
+import { ServiceScopeView } from '@/components/public/service-scope-view';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Passive Fire Protection (PFP) & Intumescent Coatings',
   description:
-    'Certified structural steel fireproofing, hydrocarbon pool/jet fire protection, and dense cementitious coatings by ARS EXIM.',
+    'Discuss project-specific passive fire protection scope for structural steel and process assets with ARS EXIM.',
 };
 
 export default function PassiveFireProtectionPage() {
-  return <ServiceDetailView slug="passive-fire-protection" />;
+  return <ServiceScopeView slug="passive-fire-protection" />;
 }

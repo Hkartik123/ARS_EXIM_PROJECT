@@ -7,6 +7,7 @@ export const quoteEnquirySchema = z.object({
   phone: z.string().min(7, 'Contact phone number must be at least 7 digits.').max(30).trim(),
   country: z.string().min(2, 'Country or territory is required.').trim(),
   projectName: z.string().max(200).optional().or(z.literal('')),
+  projectType: z.string().min(1, 'Please select a project type.').max(100),
   industry: z.string().max(100).optional().or(z.literal('')),
   location: z.string().max(150).optional().or(z.literal('')),
   requiredServices: z

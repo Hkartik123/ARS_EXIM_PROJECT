@@ -14,46 +14,60 @@ export const metadata = {
 export default function ServicesPage() {
   const serviceMatrix = [
     {
-      slug: 'industrial-insulation',
-      title: 'Industrial Insulation',
-      tagline: 'Thermal Energy Conservation, Cold/Cryogenic Containment & Acoustic Attenuation',
+      slug: 'hot-insulation',
+      title: 'Hot Insulation',
+      tagline: 'Thermal energy control for hot process systems',
       icon: Layers,
       description:
-        'Engineered insulation solutions for high-temperature process piping, boilers, pressure vessels, and cryogenic liquid storage facilities designed to prevent Corrosion Under Insulation (CUI).',
+          'Thermal insulation for hot service lines, vessels and equipment helps conserve energy, manage surface temperatures and support safe plant operation.',
       applications: [
-        'High-pressure steam and condensate manifolds',
-        'Ethylene and LNG cryogenic tanks down to -196°C',
-        'Rotating equipment acoustic enclosures',
+        'Steam and hot process pipework',
+        'Boilers, heat exchangers and process vessels',
+        'Tank and duct insulation interfaces',
       ],
-      standards: ['ASTM C533', 'ASTM C612', 'BS 5970', 'CINI Standards'],
+      standards: [],
+    },
+    {
+      slug: 'cold-cryogenic-insulation',
+      title: 'Cold & Cryogenic Insulation',
+      tagline: 'Low-temperature systems and condensation control',
+      icon: Layers,
+      description:
+          'Cold and cryogenic insulation is designed to minimise heat gain, prevent condensation and protect low-temperature assets within demanding industrial conditions.',
+      applications: [
+        'Cryogenic tank and pipe insulation',
+        'LNG and refrigerated process systems',
+        'Cold storage and sub-zero asset protection',
+      ],
+      standards: [],
     },
     {
       slug: 'passive-fire-protection',
       title: 'Passive Fire Protection (PFP)',
-      tagline: 'Hydrocarbon Fire Barriers & Structural Steel Fireproofing',
+      tagline: 'Fire-resistant protection for structural and process assets',
       icon: Flame,
       description:
-        'Certified plural-component epoxy intumescent coatings and dense cementitious fireproofing safeguarding critical structural steel columns, pipe racks, and pressure vessels against hydrocarbon pool and jet fires.',
+          'Passive fire protection scope may include structural steel and process-area assets. Required systems, ratings and application requirements must be confirmed from project documents.',
       applications: [
         'Main process pipe racks and transfer corridors',
         'Vessel skirts and spherical tank support legs',
         'Offshore topside module blast/fire partitions',
       ],
-      standards: ['UL 1709', 'BS 476 Part 20/21', 'API 2218', 'ISO 22899-1'],
+      standards: [],
     },
     {
       slug: 'scaffolding',
       title: 'Scaffolding & Access Management',
-      tagline: 'Engineered Modular Scaffolding, Suspended Access & Turnaround Rigging',
+      tagline: 'Engineered modular access and temporary platforms',
       icon: Building,
       description:
-        'Certified modular Ringlock and Cuplok system scaffolding with 3D structural engineering, load calculations, and Scafftag inspection management for complex shutdown turnarounds.',
+          'Scaffolding and temporary access enquiries are assessed against work location, access needs, loading requirements, site constraints and applicable project rules.',
       applications: [
         'Process column & flare stack maintenance access',
         'Spherical storage tank 360-degree perimeter scaffolds',
         'Suspended marine jetty access platforms',
       ],
-      standards: ['BS EN 12811', 'TG20:21', 'OSHA 1926.451'],
+      standards: [],
     },
   ];
 
@@ -70,8 +84,8 @@ export default function ServicesPage() {
             Industrial Contracting Capabilities Matrix
           </h1>
           <p className="text-base sm:text-lg text-steel-600 leading-relaxed">
-            ARS EXIM brings specialized contracting disciplines under one unified engineering framework.
-            Explore our three core capability sectors below.
+              Explore the three service areas. Final scope, materials, standards and acceptance criteria
+              are confirmed against the client’s project documents.
           </p>
         </div>
 
@@ -121,21 +135,15 @@ export default function ServicesPage() {
                     </ul>
                   </div>
 
-                  {/* Certified Standards & Codes */}
+                  {/* Project-specific requirements */}
                   <div className="bg-white p-6 rounded border border-steel-200">
                     <h3 className="text-xs font-bold uppercase tracking-wider text-navy-900 mb-4 pb-2 border-b border-steel-100">
-                      Governing Codes & Standards
+                        Project Requirements
                     </h3>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {service.standards.map((std, i) => (
-                        <span
-                          key={i}
-                          className="bg-steel-100 text-navy-900 font-semibold px-2.5 py-1 rounded text-xs"
-                        >
-                          {std}
-                        </span>
-                      ))}
-                    </div>
+                      <p className="mb-6 text-xs leading-5 text-steel-600">
+                        Applicable materials, specifications, standards and approval requirements are
+                        project-specific and should be confirmed in the enquiry documents.
+                      </p>
                     <Link
                       href={`/request-a-quote?service=${encodeURIComponent(service.title)}`}
                       className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-gold-700 hover:text-navy-900"

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from '@/components/public/header';
 import { Footer } from '@/components/public/footer';
+import { WhatsAppButton } from '@/components/public/whatsapp-button';
 
 export default function PublicLayout({
   children,
@@ -13,6 +14,7 @@ export default function PublicLayout({
       <main id="main-content" className="flex-1">
         {children}
       </main>
+      <WhatsAppButton />
       <Footer />
     </div>
   );

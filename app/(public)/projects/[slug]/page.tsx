@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { connectToDatabase } from '@/lib/db/mongodb';
 import { Project } from '@/models/Project';
+import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 
 interface PageProps {
   params: { slug: string };
@@ -22,7 +23,11 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   await connectToDatabase();
-  const project = await Project.findOne({ slug: params.slug, isDeleted: false }).lean();
+  const project = await Project.findOne({
+    slug: { $eq: params.slug, $nin: UNVERIFIED_SEED_PROJECT_SLUGS },
+    isDeleted: false,
+    featuredImage: { $not: /images\.unsplash\.com/i },
+  }).lean();
   if (!project) return { title: 'Project Dossier Not Found' };
 
   return {
@@ -34,9 +39,10 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function ProjectDetailPage({ params }: PageProps) {
   await connectToDatabase();
   const rawProject = await Project.findOne({
-    slug: params.slug,
+    slug: { $eq: params.slug, $nin: UNVERIFIED_SEED_PROJECT_SLUGS },
     publishStatus: 'PUBLISHED',
     isDeleted: false,
+    featuredImage: { $not: /images\.unsplash\.com/i },
   }).lean();
 
   if (!rawProject) {
@@ -47,9 +53,10 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
   // Find related projects by service or industry
   const relatedProjects = await Project.find({
-    slug: { $ne: project.slug },
+    slug: { $nin: [...UNVERIFIED_SEED_PROJECT_SLUGS, project.slug] },
     publishStatus: 'PUBLISHED',
     isDeleted: false,
+    featuredImage: { $not: /images\.unsplash\.com/i },
     $or: [{ services: { $in: project.services } }, { industry: project.industry }],
   })
     .limit(2)
@@ -85,15 +92,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <MapPin className="w-4 h-4 text-gold flex-shrink-0" />
               <span>Location: {project.location}, {project.country}</span>
             </span>
-            <span className="flex items-center space-x-1.5">
-              <Building2 className="w-4 h-4 text-gold flex-shrink-0" />
-              <span>
-                Client:{' '}
-                {project.clientPublishable && project.client
-                  ? project.client
-                  : 'Major Energy & Infrastructure Operator (Confidential)'}
+            {project.clientPublishable && project.client && (
+              <span className="flex items-center space-x-1.5">
+                <Building2 className="w-4 h-4 text-gold flex-shrink-0" />
+                <span>Client: {project.client}</span>
               </span>
-            </span>
+            )}
           </div>
         </div>
 
@@ -167,7 +171,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <section>
                 <h2 className="text-xl font-bold text-navy-900 font-display mb-4 flex items-center">
                   <ShieldAlert className="w-5 h-5 text-safety-red mr-2" />
-                  HSE Execution & Zero-Harm Metrics
+                  Project Safety Considerations
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {project.safetyConsiderations.map((safety: string, idx: number) => (

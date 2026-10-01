@@ -42,10 +42,10 @@ export const metadata: Metadata = {
       'Engineered industrial solutions across Industrial Insulation, Passive Fire Protection, and Scaffolding.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
+        url: '/ars-exim-social.png',
         width: 1200,
         height: 630,
-        alt: 'ARS EXIM Industrial Contracting Operations',
+        alt: 'ARS EXIM industrial insulation, passive fire protection and scaffolding services',
       },
     ],
   },
@@ -53,6 +53,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ARS EXIM | Specialist Industrial Contractor',
     description: 'Engineering excellence in Industrial Insulation, PFP, and Scaffolding.',
+    images: ['/ars-exim-social.png'],
   },
   robots: {
     index: true,

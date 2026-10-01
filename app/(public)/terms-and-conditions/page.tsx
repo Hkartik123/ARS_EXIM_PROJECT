@@ -17,7 +17,7 @@ export default function TermsAndConditionsPage() {
             Terms & Conditions of Website Use
           </h1>
           <p className="text-xs text-steel-500 font-semibold uppercase tracking-wider mb-8">
-            Last Updated: January 2026 | ARS EXIM Corporate Governance
+            Last Updated: January 2026 | ARS EXIM
           </p>
 
           <div className="prose prose-sm max-w-none text-steel-700 space-y-6 leading-relaxed">

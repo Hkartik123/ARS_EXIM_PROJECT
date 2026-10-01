@@ -27,6 +27,7 @@ export interface IEnquiry extends Document {
   phone: string;
   country: string;
   projectName?: string;
+  projectType?: string;
   industry?: string;
   location?: string;
   requiredServices?: string[];
@@ -59,6 +60,7 @@ const EnquirySchema = new Schema<IEnquiry>(
     phone: { type: String, required: true, trim: true },
     country: { type: String, required: true, trim: true },
     projectName: { type: String, trim: true },
+    projectType: { type: String, trim: true },
     industry: { type: String, trim: true },
     location: { type: String, trim: true },
     requiredServices: [{ type: String }],

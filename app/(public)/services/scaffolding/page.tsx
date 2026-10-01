@@ -1,14 +1,14 @@
 import React from 'react';
-import { ServiceDetailView } from '@/components/public/service-detail-view';
+import { ServiceScopeView } from '@/components/public/service-scope-view';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Engineered Industrial Scaffolding & Turnaround Access',
   description:
-    'Modular Ringlock/Cuplok system scaffolding, 3D structural load calculation, and Scafftag management by ARS EXIM.',
+    'Discuss project-specific industrial scaffolding and temporary access requirements with ARS EXIM.',
 };
 
 export default function ScaffoldingPage() {
-  return <ServiceDetailView slug="scaffolding" />;
+  return <ServiceScopeView slug="scaffolding" />;
 }

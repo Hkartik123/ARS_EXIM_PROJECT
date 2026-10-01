@@ -194,6 +194,10 @@ export default function EnquiryDetailPage({ params }: EnquiryDetailPageProps) {
                 <span className="font-bold text-navy-900">{enquiry.projectName || 'N/A'}</span>
               </div>
               <div>
+                <span className="text-steel-400 block font-semibold">Project Type</span>
+                <span className="font-bold text-navy-900">{enquiry.projectType || 'Not specified'}</span>
+              </div>
+              <div>
                 <span className="text-steel-400 block font-semibold">Industry Sector</span>
                 <span className="font-bold text-navy-900">{enquiry.industry || 'N/A'}</span>
               </div>

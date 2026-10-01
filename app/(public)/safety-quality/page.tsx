@@ -1,13 +1,13 @@
 import React from 'react';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
-import { ShieldAlert, CheckCircle2, Award, FileCheck, AlertOctagon, HeartHandshake } from 'lucide-react';
+import { ShieldAlert, FileCheck, AlertOctagon, HeartHandshake } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export const metadata = {
   title: 'Health, Safety & Environment (HSE) & Quality Assurance (QA/QC)',
   description:
-    'ARS EXIM zero-harm safety charter, ISO 45001:2018 occupational safety protocols, and ISO 9001:2015 quality assurance management.',
+    'Discuss project-specific health, safety, quality and inspection requirements for industrial insulation, passive fire protection and scaffolding scopes.',
 };
 
 export default function SafetyQualityPage() {
@@ -15,19 +15,19 @@ export default function SafetyQualityPage() {
     {
       title: 'Inspection & Test Plans (ITP)',
       description:
-        'Every project operates under a customized, client-approved ITP with documented Hold, Witness, and Review inspection milestones.',
+        'Identify the client inspection plan, hold and witness points, records, and approval responsibilities required for the specific work package.',
       icon: FileCheck,
     },
     {
       title: 'Stop Work Authority (SWA)',
       description:
-        'Every employee and contractor on site holds the absolute authority and obligation to suspend work without penalty upon observing any unsafe condition.',
+        'Confirm stop-work expectations, escalation routes and site-specific controls with the client before work is planned.',
       icon: AlertOctagon,
     },
     {
       title: 'Daily Dynamic Risk Assessments (JSA)',
       description:
-        'Mandatory shift-starter Job Safety Analysis covering confined space entry, hot work permits, and working at height.',
+        'Review task risk assessments, permits, access restrictions and interfaces with live operations against the site requirements.',
       icon: HeartHandshake,
     },
   ];
@@ -41,40 +41,15 @@ export default function SafetyQualityPage() {
         <div className="max-w-3xl my-8">
           <div className="inline-flex items-center space-x-2 bg-safety-light border border-safety-red/40 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider text-safety-red mb-3">
             <ShieldAlert className="w-4 h-4 text-safety-red" />
-            <span>Zero-Harm Safety Governance</span>
+            <span>Project-specific safety and quality</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-4">
             Safety Leadership & Quality Assurance
           </h1>
           <p className="text-base sm:text-lg text-steel-600 leading-relaxed">
-            Operating in high-hazard live refineries, offshore platforms, and petrochemical facilities
-            requires an uncompromising safety philosophy. Safety is not a procedural checkbox at ARS EXIM;
-            it is our core operational foundation.
+            Safety, quality and inspection requirements vary by site, client and scope. They should be
+            agreed from the project documents and applicable site rules before work begins.
           </p>
-        </div>
-
-        {/* Key Metrics Banner */}
-        <div className="bg-navy-950 text-white rounded p-8 sm:p-10 my-12 border-l-4 border-gold shadow-industrial">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
-            <div>
-              <div className="text-3xl sm:text-4xl font-black text-gold font-display">2,500,000+</div>
-              <div className="text-xs uppercase tracking-wider text-steel-300 font-semibold mt-1">
-                Safe Man-Hours Executed
-              </div>
-            </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-black text-gold font-display">1,800+</div>
-              <div className="text-xs uppercase tracking-wider text-steel-300 font-semibold mt-1">
-                LTI-Free Operational Days
-              </div>
-            </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-black text-gold font-display">100%</div>
-              <div className="text-xs uppercase tracking-wider text-steel-300 font-semibold mt-1">
-                Hold-Point Verification Signoff
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* HSE Pillars Grid */}
@@ -91,56 +66,28 @@ export default function SafetyQualityPage() {
           })}
         </div>
 
-        {/* Certified Standards Section */}
+        {/* Project documentation */}
         <div className="my-16 py-12 border-t border-steel-200">
           <h2 className="text-2xl font-bold text-navy-900 font-display mb-8">
-            Accredited International Management Standards
+            Aligning project documentation
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 border border-steel-200 rounded bg-white shadow-sm">
-              <span className="text-xs font-bold text-gold-700 uppercase tracking-wider block mb-1">
-                Occupational Health & Safety
-              </span>
-              <h3 className="text-xl font-bold text-navy-900 mb-2">ISO 45001:2018</h3>
-              <p className="text-xs text-steel-600 leading-relaxed">
-                Comprehensive occupational safety management framework mitigating operational risk and
-                preventing workplace injuries across extreme industrial environments.
-              </p>
-            </div>
-
-            <div className="p-6 border border-steel-200 rounded bg-white shadow-sm">
-              <span className="text-xs font-bold text-gold-700 uppercase tracking-wider block mb-1">
-                Quality Management System
-              </span>
-              <h3 className="text-xl font-bold text-navy-900 mb-2">ISO 9001:2015</h3>
-              <p className="text-xs text-steel-600 leading-relaxed">
-                Institutionalized quality control ensuring consistent material batch compliance,
-                verified calibration, and traceable documentation across all installation phases.
-              </p>
-            </div>
-
-            <div className="p-6 border border-steel-200 rounded bg-white shadow-sm">
-              <span className="text-xs font-bold text-gold-700 uppercase tracking-wider block mb-1">
-                Environmental Governance
-              </span>
-              <h3 className="text-xl font-bold text-navy-900 mb-2">ISO 14001:2015</h3>
-              <p className="text-xs text-steel-600 leading-relaxed">
-                Systematic environmental stewardship minimizing waste generation, volatile organic
-                compound emissions, and carbon footprint during field operations.
-              </p>
-            </div>
-          </div>
+          <p className="max-w-3xl text-sm leading-7 text-steel-700">
+            Tender and work-pack discussions may include the client’s specifications, approved product
+            systems, method statements, inspection and test plans, competency requirements, permits,
+            risk controls and handover records. No certificate, safety statistic or standard is claimed
+            here; applicability should be confirmed for each enquiry.
+          </p>
         </div>
 
         {/* CTA Strip */}
         <div className="mt-12 p-8 bg-steel-100 rounded flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <h3 className="text-lg font-bold text-navy-900">Require HSE Dossier or Quality Plans for an Upcoming Tender?</h3>
-            <p className="text-xs text-steel-600">Our compliance officers provide verified safety documentation for pre-qualification.</p>
+            <h3 className="text-lg font-bold text-navy-900">Have project HSE or QA/QC requirements?</h3>
+            <p className="text-xs text-steel-600">Share the tender requirements so the requested scope and documentation can be discussed.</p>
           </div>
           <Link href="/contact">
             <Button variant="secondary" size="md">
-              Request HSE Pre-Qualification Pack
+              Discuss Project Requirements
             </Button>
           </Link>
         </div>

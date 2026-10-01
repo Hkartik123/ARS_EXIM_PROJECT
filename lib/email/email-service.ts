@@ -65,6 +65,7 @@ class EmailService {
     phone: string;
     country: string;
     projectName?: string;
+    projectType?: string;
     industry?: string;
     requiredServices?: string[];
     scopeDescription: string;
@@ -104,6 +105,7 @@ class EmailService {
               <tr><th>Phone</th><td>${enquiry.phone}</td></tr>
               <tr><th>Country</th><td>${enquiry.country}</td></tr>
               <tr><th>Project Name</th><td>${enquiry.projectName || 'Not specified'}</td></tr>
+              <tr><th>Project Type</th><td>${enquiry.projectType || 'Not specified'}</td></tr>
               <tr><th>Industry Sector</th><td>${enquiry.industry || 'Not specified'}</td></tr>
               <tr><th>Required Services</th><td>${enquiry.requiredServices?.join(', ') || 'N/A'}</td></tr>
               <tr><th>Attachments</th><td>${enquiry.attachmentsCount} file(s) uploaded</td></tr>
