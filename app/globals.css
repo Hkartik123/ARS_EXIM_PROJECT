@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --navy-900: #10233F;
+  --gold: #C9A961;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: #1E232A;
+  background-color: #FFFFFF;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #10233F;
+  color: #C9A961;
+}
+
+/* Subtle Industrial Engineering Background Pattern */
+.bg-industrial-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(16, 35, 63, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 35, 63, 0.04) 1px, transparent 1px);
+}
+
+.industrial-scene {
+  width: 100%;
+  height: clamp(300px, 40vw, 520px);
+  cursor: grab;
+}
+
+.industrial-scene:active {
+  cursor: grabbing;
+}
+
+.industrial-scene canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline-offset: 5px;
+}
+
+.home-reveal {
+  animation: home-reveal 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes home-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Touch Targets for WCAG 2.2 AA (Minimum 44x44px) */
+button, 
+a, 
+input, 
+select {
+  touch-action: manipulation;
+}
+
+/* Focus Visible Rings */
+:focus-visible {
+  outline: 2px solid #C9A961;
+  outline-offset: 2px;
+}
