@@ -119,6 +119,52 @@ const serviceContent = {
       ['Do you provide a specific fire rating or certification?', 'No rating or certification is represented here. The required performance and acceptable evidence are project-specific and should be confirmed from approved design documents and product records.'],
     ],
   },
+  'coating-and-painting': {
+    title: 'Coating and Painting',
+    subtitle: 'Professional industrial surface protection and finish systems',
+    intro: 'Coating and painting services support industrial assets by improving surface protection, durability and long-term performance in demanding operating environments. The selected system depends on the substrate, environmental exposure, expected service conditions and project specification. This page summarises typical considerations for enquiry review and scope alignment.',
+    applications: [
+      'Protective coatings for structural steel and process equipment.',
+      'Painting and finishing work for maintenance and refurbishment scopes.',
+      'Surface treatment support for utility, plant and asset protection programmes.',
+      'Corrosion protection projects where long-term durability is an objective.',
+      'Coating work coordinated with site access, preparation and finishing requirements.',
+    ],
+    reviewPoints: [
+      ['Surface condition', 'Describe substrate condition, existing finish, contamination, corrosion state and any repair or preparation requirements.'],
+      ['Environment and service exposure', 'Share details of temperature, humidity, chemical exposure, abrasion or marine/industrial conditions that affect the system.'],
+      ['System specification', 'Identify approved coatings, primer requirements, finish standards, dry film thickness and inspection methods if available.'],
+      ['Access and sequencing', 'Confirm workfront access, shutdown windows, surface preparation constraints and interfaces with other trades.'],
+    ],
+    faqs: [
+      ['Do you handle all coating and painting scopes?', 'Project enquiries are reviewed against asset condition, substrate details, environmental exposure and specification requirements before any scope or treatment recommendation is made.'],
+      ['What should be included in a coating enquiry?', 'The enquiry should ideally include the asset list, substrate information, existing condition, exposure conditions, approved coatings and any inspection or finish requirements stated by the project.'],
+      ['Is the system selection project specific?', 'Yes. Coating type, preparation method and finish requirements should be confirmed against the client-approved specification and asset conditions for the job.'],
+    ],
+  },
+  'skilled-manpower': {
+    title: 'Skilled Manpower',
+    subtitle: 'Project-ready personnel for industrial execution support',
+    intro: 'Skilled manpower supports the execution of industrial work packages across insulation, coating, painting, scaffolding and related project activities. The right team depends on skill set, experience, site conditions, safety expectations and the sequence of work required by the project team.',
+    applications: [
+      'Industrial insulation crews for process and equipment installation work.',
+      'Surface preparation and painting personnel for planned refurbishment or maintenance packages.',
+      'Scaffolding and access support for shutdown, turnaround and maintenance work fronts.',
+      'Project labour support across multiple disciplines on live industrial sites.',
+      'Temporary manpower resources aligned with site schedule and productivity needs.',
+    ],
+    reviewPoints: [
+      ['Work scope and duties', 'Describe the activities, work fronts, duration and skill categories required for the project.'],
+      ['Site conditions', 'Share location, access constraints, work hours, mobilisation needs and any site safety procedures or induction requirements.'],
+      ['Team structure', 'Confirm whether specific trade capabilities, supervision, certifications or leadership are required for the package.'],
+      ['Coordination and handover', 'Outline interfaces with other contractors, reporting lines and inspection or productivity expectations.'],
+    ],
+    faqs: [
+      ['What types of manpower support do you provide?', 'Support can be arranged for industrial insulation, coating, painting, scaffolding and related execution tasks depending on project requirements and the site conditions.'],
+      ['Can manpower be supplied for a shutdown or turnaround?', 'Yes. Temporary workforce requirements can be aligned to shutdown windows, project sequencing and workfront constraints included in the enquiry.'],
+      ['How do you review manpower requirements?', 'The project scope, duration, manpower categories, experience level, site access and reporting structure are all reviewed before assignment or mobilisation.'],
+    ],
+  },
   scaffolding: {
     title: 'Scaffolding & Access Management',
     subtitle: 'Temporary access scope for industrial work fronts',

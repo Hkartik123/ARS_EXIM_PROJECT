@@ -45,11 +45,11 @@ export default function AdminLoginPage() {
         <div className="mx-auto mb-3 flex justify-center">
           <Image
             src="/ars-exim-logo-transparent.png"
-            alt="ARS EXIM Global Solutions logo"
-            width={144}
-            height={144}
+            alt="ARS EXIM logo"
+            width={220}
+            height={160}
             priority
-            className="h-[128px] w-[128px] rounded-md bg-white p-1.5 object-contain shadow-sm"
+            className="h-[128px] w-auto rounded-md bg-white p-1.5 object-contain shadow-sm"
           />
         </div>
         <h2 className="text-2xl font-black text-white font-display tracking-tight">

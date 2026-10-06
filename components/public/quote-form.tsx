@@ -14,6 +14,8 @@ const REQUIRED_SERVICE_OPTIONS = [
   'Insulation - Cold/Cryogenic',
   'PFP (Passive Fire Protection)',
   'Scaffolding & Access',
+  'Coating and Painting',
+  'Skilled Manpower',
   'Multiple Services Integrated',
   'Technical Evaluation / Not Sure',
 ];

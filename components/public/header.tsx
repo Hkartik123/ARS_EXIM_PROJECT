@@ -38,12 +38,15 @@ export function Header() {
         { name: 'Hot Insulation', href: '/services/hot-insulation' },
         { name: 'Cold & Cryogenic Insulation', href: '/services/cold-cryogenic-insulation' },
         { name: 'Passive Fire Protection', href: '/services/passive-fire-protection' },
+        { name: 'Coating & Painting', href: '/services/coating-and-painting' },
+        { name: 'Skilled Manpower', href: '/services/skilled-manpower' },
         { name: 'Scaffolding & Access', href: '/services/scaffolding' },
       ],
     },
     { name: 'Industries', href: '/industries' },
     { name: 'Projects', href: '/projects' },
     { name: 'Gallery', href: '/gallery' },
+    { name: 'Careers', href: '/careers' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -101,14 +104,14 @@ export function Header() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center space-x-3 group max-w-[380px]">
+          <Link href="/" className="flex items-center group max-w-[420px]">
             <Image
               src="/ars-exim-logo-transparent.png"
-              alt="ARS EXIM Global Solutions logo"
-              width={96}
-              height={96}
+              alt="ARS EXIM logo"
+              width={220}
+              height={140}
               priority
-              className="h-[76px] w-[76px] sm:h-[92px] sm:w-[92px] object-contain"
+              className="h-[74px] w-auto sm:h-[94px] object-contain"
             />
           </Link>
 

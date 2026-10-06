@@ -4,11 +4,11 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://arsexim.com'),
   title: {
-    default: 'ARS EXIM | Specialist Industrial Contractor — Insulation, PFP & Scaffolding',
+    default: 'ARS EXIM | EXpert Insulation Management',
     template: '%s | ARS EXIM',
   },
   description:
-    'Authoritative industrial contractor providing high-specification Industrial Thermal & Cryogenic Insulation, Passive Fire Protection (PFP), and Scaffolding & Access Management for global process infrastructure.',
+    'ARS EXIM delivers EXpert Insulation Management with industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower services for project infrastructure.',
   keywords: [
     'industrial insulation contractor',
     'passive fire protection',
@@ -37,22 +37,22 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://arsexim.com',
     siteName: 'ARS EXIM',
-    title: 'ARS EXIM | Specialist Industrial Contractor',
+    title: 'ARS EXIM | EXpert Insulation Management',
     description:
-      'Engineered industrial solutions across Industrial Insulation, Passive Fire Protection, and Scaffolding.',
+      'Industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower delivered under EXpert Insulation Management.',
     images: [
       {
         url: '/ars-exim-social.png',
         width: 1200,
         height: 630,
-        alt: 'ARS EXIM industrial insulation, passive fire protection and scaffolding services',
+        alt: 'ARS EXIM EXpert Insulation Management industrial services',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ARS EXIM | Specialist Industrial Contractor',
-    description: 'Engineering excellence in Industrial Insulation, PFP, and Scaffolding.',
+    title: 'ARS EXIM | EXpert Insulation Management',
+    description: 'Industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower delivered by ARS EXIM.',
     images: ['/ars-exim-social.png'],
   },
   robots: {

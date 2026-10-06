@@ -1,14 +1,14 @@
 import React from 'react';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, Layers, Flame, Building, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Layers, Flame, Building, CheckCircle2, Paintbrush2, Users } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export const metadata = {
-  title: 'Specialist Industrial Contracting Services Matrix',
+  title: 'Industrial Services | ARS EXIM',
   description:
-    'Overview of ARS EXIM core industrial capabilities: Industrial Insulation, Passive Fire Protection (PFP), and Scaffolding & Access Management.',
+    'Explore ARS EXIM industrial insulation, passive fire protection, scaffolding, coating and painting, and skilled manpower services.',
 };
 
 export default function ServicesPage() {
@@ -56,6 +56,34 @@ export default function ServicesPage() {
       standards: [],
     },
     {
+      slug: 'coating-and-painting',
+      title: 'Coating and Painting',
+      tagline: 'Protection, durability and industrial finish systems',
+      icon: Paintbrush2,
+      description:
+          'Professional industrial coating and painting solutions support surface protection, corrosion resistance and long-term asset performance across industrial environments.',
+      applications: [
+        'Protective systems for structural steel and process equipment',
+        'Painting and coating requirements for maintenance and refurbishment scopes',
+        'Surface finish upgrades for plant, utility and access assets',
+      ],
+      standards: [],
+    },
+    {
+      slug: 'skilled-manpower',
+      title: 'Skilled Manpower',
+      tagline: 'Experienced project personnel for industrial execution',
+      icon: Users,
+      description:
+          'Provision of skilled and experienced manpower supports industrial insulation, coating, painting, scaffolding and related project requirements with practical site execution capability.',
+      applications: [
+        'Insulation and cladding teams for industrial execution',
+        'Painting, surface prep and finishing labour support',
+        'Scaffolding and access support for shutdown and maintenance work',
+      ],
+      standards: [],
+    },
+    {
       slug: 'scaffolding',
       title: 'Scaffolding & Access Management',
       tagline: 'Engineered modular access and temporary platforms',
@@ -84,7 +112,7 @@ export default function ServicesPage() {
             Industrial Contracting Capabilities Matrix
           </h1>
           <p className="text-base sm:text-lg text-steel-600 leading-relaxed">
-              Explore the three service areas. Final scope, materials, standards and acceptance criteria
+              Explore the core service areas. Final scope, materials, standards and acceptance criteria
               are confirmed against the client’s project documents.
           </p>
         </div>

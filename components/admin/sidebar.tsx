@@ -51,7 +51,7 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
       {/* Brand Header */}
       <div className="p-6 border-b border-[#dfeaf7] flex items-center justify-between">
         <Link href="/admin/dashboard" className="flex items-center space-x-3">
-          <Image src="/ars-exim-logo-transparent.png" alt="ARS EXIM Global Solutions logo" width={132} height={132} className="h-[104px] w-[104px] object-contain" />
+          <Image src="/ars-exim-logo-transparent.png" alt="ARS EXIM logo" width={220} height={120} className="h-[88px] w-auto object-contain" />
         </Link>
       </div>
 

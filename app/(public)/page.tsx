@@ -6,10 +6,13 @@ import {
   Flame,
   HardHat,
   Layers3,
+  Paintbrush2,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { connectToDatabase } from '@/lib/db/mongodb';
 import { Project } from '@/models/Project';
+import { Media } from '@/models/Media';
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 
 export const dynamic = 'force-dynamic';
@@ -42,6 +45,24 @@ const serviceDisciplines = [
     href: '/services/scaffolding',
     icon: HardHat,
   },
+  {
+    number: '04',
+    title: 'Coating and painting',
+    label: 'SURFACE PROTECTION · DURABILITY',
+    description:
+      'Professional industrial coating and painting solutions designed to support surface protection, corrosion resistance and long-term asset performance.',
+    href: '/services/coating-and-painting',
+    icon: Paintbrush2,
+  },
+  {
+    number: '05',
+    title: 'Skilled manpower',
+    label: 'INDUSTRIAL PROJECT SUPPORT',
+    description:
+      'Provision of skilled and experienced manpower for industrial insulation, coating, painting, scaffolding and related project requirements.',
+    href: '/services/skilled-manpower',
+    icon: Users,
+  },
 ];
 
 async function getFeaturedProjects() {
@@ -63,9 +84,43 @@ async function getFeaturedProjects() {
   }
 }
 
+async function getFeaturedMedia() {
+  try {
+    await connectToDatabase();
+    const images = await Media.find({ isDeleted: false, isActive: true })
+      .sort({ isFeatured: -1, displayOrder: 1, createdAt: -1 })
+      .limit(3)
+      .lean();
+    return images.map((image) => ({
+      id: image._id.toString(),
+      title: image.title,
+      category: image.category,
+      url: image.url,
+      altText: image.altText || image.title,
+      isFeatured: image.isFeatured,
+    }));
+  } catch (error) {
+    console.error('Failed to load featured gallery images:', error);
+    return [];
+  }
+}
+
 export default async function HomePage() {
-  const featuredProjects = await getFeaturedProjects();
+  const [featuredProjects, featuredMedia] = await Promise.all([
+    getFeaturedProjects(),
+    getFeaturedMedia(),
+  ]);
   const hasPublishedProjects = featuredProjects.length > 0;
+  const galleryImages = featuredMedia.length > 0
+    ? featuredMedia
+    : [{
+        id: 'illustrative-industrial-team',
+        title: 'Industrial project team at work',
+        category: 'Illustrative',
+        url: '/images/industrial-site-team.webp',
+        altText: 'Industrial workers in safety helmets and high-visibility clothing gathered at a project site.',
+      }];
+  const heroImage = featuredMedia.find((image) => image.isFeatured)?.url || '/images/industrial-site-team.webp';
 
   return (
     <div className="overflow-hidden">
@@ -78,12 +133,16 @@ export default async function HomePage() {
               ARS EXIM · Specialist industrial contractor
             </div>
             <h1 className="max-w-4xl font-display text-5xl font-bold leading-[0.96] text-white sm:text-6xl lg:text-7xl">
-              Industrial insulation,
-              <br />
-              <span className="text-gold">PFP & access.</span>
+              ARS EXIM
             </h1>
+            <p className="mt-3 max-w-3xl text-base font-semibold tracking-[0.12em] text-gold-100 uppercase sm:text-lg">
+              <span className="text-gold">EX</span>pert <span className="text-gold">I</span>nsulation <span className="text-gold">M</span>anagement
+            </p>
+            <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-white/75 sm:text-sm">
+              Industrial insulation · PFP · Scaffolding · Coating & painting · Skilled manpower
+            </p>
             <p className="mt-7 max-w-2xl text-base leading-7 text-white/85 sm:text-lg sm:leading-8">
-              ARS EXIM supports industrial project teams with insulation, passive fire protection and scaffolding services. Share your location, scope and schedule to start a project discussion.
+              ARS EXIM supports industrial project teams with insulation, coating and painting, passive fire protection, scaffolding and skilled manpower services. Share your location, scope and schedule to start a project discussion.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/request-a-quote">
@@ -101,14 +160,33 @@ export default async function HomePage() {
 
           <div className="relative min-h-[300px] sm:min-h-[400px] lg:min-h-[460px]">
             <Image
-              src="/images/industrial-site-team.webp"
+              src={heroImage}
               alt="Industrial workers in helmets and high-visibility vests gathered beneath scaffolding at a project site."
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 45vw"
               className="object-cover object-center"
             />
-            <span className="absolute bottom-3 left-3 bg-[#10233f]/85 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-white/90">Project-site team briefing</span>
+            <span className="absolute bottom-3 left-3 bg-[#10233f]/85 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-white/90">Illustrative industrial site image</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="mb-12 grid gap-8 lg:grid-cols-4">
+            {[
+              { title: 'Technical Expertise', text: 'Professional industrial knowledge applied to insulation, fire protection, scaffolding and surface systems.' },
+              { title: 'Quality Focus', text: 'Project-specific execution built around workmanship, specification review and reliable delivery.' },
+              { title: 'Skilled Workforce', text: 'Experienced site teams and support personnel for active industrial environments and shutdown work.' },
+              { title: 'Safety & Reliability', text: 'Professional safety-minded execution that supports dependable site coordination and project continuity.' },
+            ].map((pillar) => (
+              <div key={pillar.title} className="rounded-2xl border border-steel-200 bg-steel-50 p-6 shadow-sm">
+                <div className="mb-3 h-10 w-10 rounded-full bg-[#10233f] text-gold flex items-center justify-center font-display text-xl font-bold">•</div>
+                <h3 className="font-display text-2xl font-bold text-navy-950">{pillar.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-steel-700">{pillar.text}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -117,7 +195,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
           <div className="mb-10 grid gap-7 lg:grid-cols-[1fr_0.7fr] lg:items-end">
             <div>
-              <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Three disciplines · one delivery partner</span>
+              <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Five disciplines · one delivery partner</span>
               <h2 className="mt-3 max-w-3xl font-display text-5xl font-bold leading-[0.98] text-navy-950 sm:text-6xl">
                 Built around the worksite.
               </h2>
@@ -152,6 +230,98 @@ export default async function HomePage() {
                 </Link>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f1f3f2] py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Our work in action</span>
+              <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] text-navy-950 sm:text-6xl">Industrial execution in the field.</h2>
+            </div>
+            <Link href="/gallery" className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-navy-900 hover:text-gold-700">
+              View gallery <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {galleryImages.map((item) => (
+              <Link key={item.id} href="/gallery" className="group overflow-hidden rounded-2xl border border-steel-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-industrial">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image src={item.url} alt={item.altText} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#10233f]/80 via-transparent to-transparent" />
+                  <span className="absolute left-4 top-4 rounded-full bg-[#10233f]/75 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">{item.category}</span>
+                </div>
+                <div className="p-5">
+                  <p className="font-display text-2xl font-bold text-navy-950">{item.title}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          {featuredMedia.length === 0 && (
+            <p className="mt-4 text-xs leading-5 text-steel-600">
+              This illustrative image is not represented as ARS EXIM project photography. The gallery will show published media uploads here.
+            </p>
+          )}
+        </div>
+      </section>
+
+      <section className="bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Potential application areas</span>
+              <h2 className="mt-3 font-display text-4xl font-bold leading-tight text-navy-950 sm:text-5xl">Industrial requirements, understood in context.</h2>
+            </div>
+            <p className="max-w-2xl text-sm leading-7 text-steel-700 sm:text-base">
+              ARS EXIM can review enquiries for relevant industrial sectors according to the defined scope, site conditions and project documents. These are application areas, not claims of past project history.
+            </p>
+          </div>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              'Oil & gas',
+              'Petrochemical & refining',
+              'Power generation & utilities',
+              'Heavy manufacturing & minerals',
+              'Marine & offshore infrastructure',
+              'Civil & industrial infrastructure',
+            ].map((sector) => (
+              <div key={sector} className="flex items-center gap-3 border-l-2 border-gold bg-steel-50 px-5 py-4 text-sm font-semibold text-navy-900">
+                <span className="h-2 w-2 shrink-0 rotate-45 bg-navy-900" />
+                {sector}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#10233f] py-20 text-white sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="max-w-3xl">
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold">A practical project approach</span>
+            <h2 className="mt-3 font-display text-4xl font-bold leading-tight sm:text-5xl">From first scope to handover.</h2>
+            <p className="mt-4 text-sm leading-7 text-white/75 sm:text-base">The actual work sequence, responsibilities and acceptance criteria are agreed for each project.</p>
+          </div>
+          <ol className="mt-10 grid gap-px overflow-hidden border border-white/15 bg-white/15 sm:grid-cols-2 lg:grid-cols-5">
+            {[
+              ['01', 'Understand', 'Review the requirement, assets, location and available project information.'],
+              ['02', 'Plan', 'Align the work package, interfaces, access and project-specific constraints.'],
+              ['03', 'Execute', 'Coordinate the agreed scope with appropriate site personnel and work fronts.'],
+              ['04', 'Inspect', 'Check work against the project requirements and agreed inspection points.'],
+              ['05', 'Deliver', 'Coordinate close-out and handover information defined for the scope.'],
+            ].map(([number, title, description]) => (
+              <li key={number} className="bg-[#10233f] p-5 sm:p-6">
+                <span className="font-display text-3xl font-bold text-gold">{number}</span>
+                <h3 className="mt-3 font-display text-2xl font-bold">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-white/75">{description}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link href="/request-a-quote" className="inline-flex min-h-12 items-center justify-center gap-2 bg-gold px-5 text-sm font-bold text-navy-950 hover:bg-gold-100">Need industrial support? Request a quote <ArrowRight className="h-4 w-4" /></Link>
+            <Link href="/contact" className="inline-flex min-h-12 items-center justify-center border border-white/35 px-5 text-sm font-bold text-white hover:border-gold">Contact ARS EXIM</Link>
           </div>
         </div>
       </section>

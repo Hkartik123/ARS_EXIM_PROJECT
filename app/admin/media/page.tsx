@@ -4,7 +4,7 @@ export const metadata = {
   title: 'Media Library | ARS EXIM Admin',
 };
 
-export default function AdminGalleryPage() {
+export default function AdminMediaPage() {
   return (
     <div className="space-y-6">
       <div className="rounded border border-steel-200 bg-white p-6 shadow-sm">

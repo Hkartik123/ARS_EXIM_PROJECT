@@ -1,13 +1,14 @@
 import React from 'react';
+import Image from 'next/image';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { ShieldAlert, Target, Compass, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export const metadata = {
-  title: 'Corporate Profile & Engineering Heritage',
+  title: 'About ARS EXIM | EXpert Insulation Management',
   description:
-    'Learn about ARS EXIM and its industrial insulation, passive fire protection, and scaffolding services.',
+    'Learn about ARS EXIM’s industrial insulation, passive fire protection, scaffolding, coating and painting, and skilled manpower capabilities.',
 };
 
 export default function AboutPage() {
@@ -17,18 +18,33 @@ export default function AboutPage() {
         <Breadcrumbs items={[{ label: 'About Us' }]} />
 
         {/* Section Header */}
-        <div className="max-w-3xl my-8">
+        <div className="my-8 grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
+          <div className="max-w-3xl">
           <span className="text-xs font-bold uppercase tracking-widest text-gold-600 block mb-2">
-            Company Overview
+            ARS EXIM · EXpert Insulation Management
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-6">
-            Engineering Precision in Industrial Contracting
+            Specialist support for industrial project requirements
           </h1>
           <p className="text-base sm:text-lg text-steel-600 leading-relaxed">
-            ARS EXIM is an engineering-driven industrial contractor specializing in the execution
-            of mission-critical insulation, structural fireproofing, and specialized scaffolding access
-            across the energy, chemical, and manufacturing sectors.
+            ARS EXIM brings industrial insulation, passive fire protection, scaffolding and access, coating and painting, and skilled manpower into one project enquiry. The work package is shaped around the client’s assets, specifications, site conditions and required interfaces.
           </p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {['Insulation', 'PFP', 'Scaffolding & Access', 'Coating & Painting', 'Skilled Manpower'].map((capability) => (
+              <span key={capability} className="border border-steel-200 bg-steel-50 px-3 py-2 text-xs font-semibold text-navy-900">{capability}</span>
+            ))}
+          </div>
+          </div>
+          <div className="relative min-h-[280px] overflow-hidden rounded bg-steel-100 sm:min-h-[360px]">
+            <Image
+              src="/images/industrial-site-team.webp"
+              alt="Illustrative image of industrial workers in protective equipment at a worksite."
+              fill
+              sizes="(max-width: 1024px) 100vw, 42vw"
+              className="object-cover"
+            />
+            <span className="absolute bottom-3 left-3 bg-[#10233f]/85 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-white">Illustrative industrial site image</span>
+          </div>
         </div>
 
         {/* Heritage & Values Grid */}
@@ -64,18 +80,14 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center my-16 py-12 border-y border-steel-200">
           <div>
             <h2 className="text-2xl sm:text-3xl font-black text-navy-900 tracking-tight font-display mb-5">
-              Three specialist service areas
+              One partner across connected work scopes
             </h2>
             <div className="space-y-4 text-sm text-steel-700 leading-relaxed">
               <p>
-                ARS EXIM focuses on industrial insulation, passive fire protection and scaffolding
-                and access. The required work package depends on the asset, site conditions and
-                project documentation.
+                ARS EXIM supports enquiries for industrial insulation, passive fire protection, scaffolding and access, coating and painting, and skilled manpower. The required work package depends on the asset, site conditions and project documentation.
               </p>
               <p>
-                During an enquiry, project teams can share drawings, BOQs, specifications, location
-                and schedule requirements. Materials, standards, inspection points, responsibilities
-                and acceptance criteria should be confirmed against the client’s project documents.
+                During an enquiry, project teams can share drawings, BOQs, specifications, location and schedule requirements. Materials, standards, inspection points, responsibilities and acceptance criteria should be confirmed against the client’s project documents.
               </p>
             </div>
 

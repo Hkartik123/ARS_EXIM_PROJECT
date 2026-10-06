@@ -20,6 +20,11 @@ export interface IMedia extends Document {
   blurDataUrl?: string;
   altText: string;
   caption?: string;
+  title: string;
+  category: string;
+  displayOrder: number;
+  isActive: boolean;
+  isFeatured: boolean;
   variants: IMediaVariant[];
   uploadedBy: mongoose.Types.ObjectId;
   isDeleted: boolean;
@@ -40,6 +45,27 @@ const MediaSchema = new Schema<IMedia>(
     blurDataUrl: { type: String },
     altText: { type: String, default: '' },
     caption: { type: String },
+    title: { type: String, required: true, trim: true, maxlength: 160 },
+    category: {
+      type: String,
+      required: true,
+      enum: [
+        'Insulation',
+        'Scaffolding',
+        'Coating & Painting',
+        'Skilled Manpower',
+        'Projects',
+        'Industrial Sites',
+        'Workforce',
+        'Equipment',
+        'General',
+      ],
+      default: 'General',
+      index: true,
+    },
+    displayOrder: { type: Number, default: 0, index: true },
+    isActive: { type: Boolean, default: true, index: true },
+    isFeatured: { type: Boolean, default: false, index: true },
     variants: [
       {
         width: { type: Number, required: true },

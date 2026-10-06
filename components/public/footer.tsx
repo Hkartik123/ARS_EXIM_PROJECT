@@ -7,7 +7,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#edf5ff] text-navy-900 pt-16 pb-12 border-t-4 border-navy-900">
+    <footer className="bg-[#edf5ff] text-navy-900 pt-16 pb-32 sm:pb-12 border-t-4 border-navy-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Info */}
@@ -15,14 +15,14 @@ export function Footer() {
             <div className="mb-4">
               <Image
                 src="/ars-exim-logo-transparent.png"
-                alt="ARS EXIM Global Solutions logo"
-                width={144}
-                height={144}
-                className="h-[112px] w-[112px] sm:h-[132px] sm:w-[132px] object-contain"
+                alt="ARS EXIM logo"
+                width={220}
+                height={140}
+                className="h-[100px] w-auto sm:h-[120px] object-contain"
               />
             </div>
             <p className="text-sm text-navy-700 leading-relaxed mb-6">
-              Industrial insulation, passive fire protection and scaffolding services for project enquiries.
+              Industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower services for project enquiries.
             </p>
             <div className="flex items-center space-x-2 text-xs font-semibold text-navy-900 bg-white border border-[#dfeaf7] p-2.5 rounded">
               <ShieldCheck className="w-4 h-4 text-navy-900 flex-shrink-0" />
@@ -61,6 +61,24 @@ export function Footer() {
                 >
                   <ArrowRight className="w-3.5 h-3.5 mr-2 text-steel-500 group-hover:text-gold transition-colors" />
                   Passive Fire Protection
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services/coating-and-painting"
+                  className="hover:text-gold transition-colors flex items-center group"
+                >
+                  <ArrowRight className="w-3.5 h-3.5 mr-2 text-steel-500 group-hover:text-gold transition-colors" />
+                  Coating & Painting
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services/skilled-manpower"
+                  className="hover:text-gold transition-colors flex items-center group"
+                >
+                  <ArrowRight className="w-3.5 h-3.5 mr-2 text-steel-500 group-hover:text-gold transition-colors" />
+                  Skilled Manpower
                 </Link>
               </li>
               <li>
@@ -109,6 +127,11 @@ export function Footer() {
               <li>
                 <Link href="/gallery" className="hover:text-gold transition-colors">
                   Gallery
+                </Link>
+              </li>
+              <li>
+                <Link href="/careers" className="hover:text-gold transition-colors">
+                  Careers
                 </Link>
               </li>
               <li>
