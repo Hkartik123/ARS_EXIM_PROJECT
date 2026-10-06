@@ -9,17 +9,25 @@ export interface SessionPayload {
   role: UserRole;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev_ars_exim_secret_jwt_2026';
 const COOKIE_NAME = process.env.SESSION_COOKIE_NAME || 'ars_session';
 const EXPIRES_IN = '7d';
 
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (secret) return secret;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET must be configured in production.');
+  }
+  return 'dev_ars_exim_secret_jwt_2026';
+}
+
 export function createSessionToken(payload: SessionPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: EXPIRES_IN });
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: EXPIRES_IN });
 }
 
 export function verifySessionToken(token: string): SessionPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as SessionPayload;
+    return jwt.verify(token, getJwtSecret()) as SessionPayload;
   } catch {
     return null;
   }

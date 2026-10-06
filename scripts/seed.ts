@@ -11,11 +11,14 @@ async function seed() {
   await connectToDatabase();
 
   // 1. Seed Initial Super Admin
-  const adminEmail = process.env.ADMIN_INITIAL_EMAIL || 'admin@arsexim.com';
+  const adminEmail = process.env.ADMIN_INITIAL_EMAIL;
+  const initialPassword = process.env.ADMIN_INITIAL_PASSWORD;
+  if (!adminEmail || !initialPassword) {
+    throw new Error('Set ADMIN_INITIAL_EMAIL and ADMIN_INITIAL_PASSWORD before seeding the initial administrator.');
+  }
   const existingAdmin = await User.findOne({ email: adminEmail });
   if (!existingAdmin) {
-    const defaultPassword = process.env.ADMIN_INITIAL_PASSWORD || 'ArsEximSecure2026!';
-    const passwordHash = await hashPassword(defaultPassword);
+    const passwordHash = await hashPassword(initialPassword);
     await User.create({
       email: adminEmail,
       passwordHash,

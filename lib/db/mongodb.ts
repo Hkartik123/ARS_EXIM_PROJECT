@@ -26,6 +26,9 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
       let uri = process.env.MONGODB_URI;
 
       if (!uri) {
+        if (process.env.NODE_ENV === 'production') {
+          throw new Error('MONGODB_URI must be configured in production.');
+        }
         console.warn('⚠️ MONGODB_URI not specified. Falling back to an isolated in-memory MongoDB instance for this session.');
         try {
           const { MongoMemoryServer } = await import('mongodb-memory-server');
