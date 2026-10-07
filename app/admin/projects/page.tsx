@@ -1,15 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PlusCircle, Edit3, Trash2, Eye, ExternalLink } from 'lucide-react';
+import { PlusCircle, Edit3, Trash2, ExternalLink, Eye, Search } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
 
   const fetchProjects = async () => {
     try {
@@ -29,6 +31,24 @@ export default function AdminProjectsPage() {
     fetchProjects();
   }, []);
 
+  const filteredProjects = useMemo(() => {
+    return projects.filter((project) => {
+      const matchesSearch =
+        searchTerm.trim() === '' ||
+        project.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.category?.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === 'ALL' ||
+        project.publishStatus === statusFilter ||
+        (statusFilter === 'PUBLISHED' && project.published) ||
+        (statusFilter === 'DRAFT' && !project.published && project.publishStatus !== 'ARCHIVED');
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [projects, searchTerm, statusFilter]);
+
   const handleDelete = async (id: string, title: string) => {
     if (!confirm(`Are you sure you want to soft-delete project "${title}"?`)) return;
 
@@ -41,6 +61,32 @@ export default function AdminProjectsPage() {
       }
     } catch {
       alert('Error occurred while deleting project.');
+    }
+  };
+
+  const handlePublishToggle = async (project: any) => {
+    const shouldPublish = !Boolean(project.published || project.publishStatus === 'PUBLISHED');
+    try {
+      const res = await fetch(`/api/admin/projects/${project._id}/publish`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ published: shouldPublish }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        throw new Error(json.error?.message || 'Publish toggle failed.');
+      }
+
+      setProjects((prev) =>
+        prev.map((item) =>
+          item._id === project._id
+            ? { ...item, published: shouldPublish, publishStatus: shouldPublish ? 'PUBLISHED' : 'DRAFT' }
+            : item
+        )
+      );
+    } catch (err: any) {
+      alert(err.message || 'Unable to update publishing status.');
     }
   };
 
@@ -60,6 +106,32 @@ export default function AdminProjectsPage() {
             Add New Project Dossier
           </Button>
         </Link>
+      </div>
+
+      <div className="bg-white border border-steel-200 rounded shadow-sm p-4">
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-steel-400" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by title, category, or location"
+              className="w-full h-10 rounded border border-steel-300 bg-steel-50 pl-9 text-sm focus:outline-none focus:border-navy-700"
+            />
+          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="h-10 rounded border border-steel-300 bg-steel-50 px-3 text-sm"
+          >
+            <option value="ALL">All Statuses</option>
+            <option value="PUBLISHED">Published</option>
+            <option value="DRAFT">Draft</option>
+            <option value="REVIEW">Review</option>
+            <option value="ARCHIVED">Archived</option>
+          </select>
+        </div>
       </div>
 
       <div className="bg-white border border-steel-200 rounded shadow-sm overflow-hidden">
@@ -82,26 +154,26 @@ export default function AdminProjectsPage() {
                     Loading project case studies...
                   </td>
                 </tr>
-              ) : projects.length === 0 ? (
+              ) : filteredProjects.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-8 text-center text-steel-400">
                     No project case studies recorded. Click &quot;Add New Project Dossier&quot; to create one.
                   </td>
                 </tr>
               ) : (
-                projects.map((p) => (
+                filteredProjects.map((p) => (
                   <tr key={p._id} className="hover:bg-steel-50">
                     <td className="py-4 px-6">
                       <div className="font-bold text-navy-900">{p.title}</div>
                       <div className="text-[11px] text-steel-400 font-mono">/{p.slug}</div>
                     </td>
                     <td className="py-4 px-6">
-                      <div className="font-semibold text-navy-900">{p.industry}</div>
-                      <div className="text-[11px] text-steel-500">{p.location}, {p.country}</div>
+                      <div className="font-semibold text-navy-900">{p.category || p.industry || 'Other'}</div>
+                      <div className="text-[11px] text-steel-500">{p.location || 'Location pending'}, {p.country || 'N/A'}</div>
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex flex-wrap gap-1">
-                        {p.services.map((svc: string) => (
+                        {(p.services || []).slice(0, 3).map((svc: string) => (
                           <span
                             key={svc}
                             className="bg-steel-100 text-steel-700 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider"
@@ -112,8 +184,8 @@ export default function AdminProjectsPage() {
                       </div>
                     </td>
                     <td className="py-4 px-6">
-                      <Badge variant={p.publishStatus === 'PUBLISHED' ? 'success' : 'steel'}>
-                        {p.publishStatus}
+                      <Badge variant={p.published || p.publishStatus === 'PUBLISHED' ? 'success' : 'steel'}>
+                        {p.publishStatus || (p.published ? 'PUBLISHED' : 'DRAFT')}
                       </Badge>
                     </td>
                     <td className="py-4 px-6 text-steel-500 font-medium">
@@ -135,6 +207,14 @@ export default function AdminProjectsPage() {
                       >
                         <Edit3 className="w-4 h-4" />
                       </Link>
+                      <button
+                        type="button"
+                        onClick={() => handlePublishToggle(p)}
+                        className="p-1.5 text-steel-400 hover:text-gold transition-colors"
+                        title={p.published || p.publishStatus === 'PUBLISHED' ? 'Unpublish project' : 'Publish project'}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(p._id, p.title)}

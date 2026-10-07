@@ -1,3 +1,6 @@
+import { loadEnvConfig } from '@next/env';
+loadEnvConfig(process.cwd());
+
 import { connectToDatabase } from '../lib/db/mongodb';
 import { User } from '../models/User';
 import { Service } from '../models/Service';
@@ -487,6 +490,37 @@ async function seed() {
     },
   ];
 
+  const verifiedProjectReferences = [
+    {
+      slug: 'jafurah-gas-project-phase-i',
+      title: 'Jafurah Gas Project Phase-I',
+      location: 'KSA',
+      country: 'Saudi Arabia',
+      featuredImage: '/images/project-capabilities/insulation-bird-view.webp',
+    },
+    {
+      slug: 'ras-tanura-cfp-ext',
+      title: 'RAS TANURA CFP EXT',
+      location: 'KSA',
+      country: 'Saudi Arabia',
+      featuredImage: '/images/project-capabilities/pfp-sphere-tank.webp',
+    },
+    {
+      slug: 'west-qurna-oil-field',
+      title: 'WEST QURNA OIL FIELD',
+      location: 'Basra',
+      country: 'Iraq',
+      featuredImage: '/images/project-capabilities/tank-scaffolding.webp',
+    },
+    {
+      slug: 'ras-gas-expansion',
+      title: 'RAS GAS EXPANSION',
+      location: 'Doha',
+      country: 'Qatar',
+      featuredImage: '/images/project-capabilities/pfp-structure.webp',
+    },
+  ];
+
   await Project.updateMany(
     { slug: { $in: projects.map((project) => project.slug) } },
     { $set: { publishStatus: 'DRAFT' } }
@@ -495,6 +529,37 @@ async function seed() {
   for (const p of projects.slice(0, 0)) {
     await Project.findOneAndUpdate({ slug: p.slug }, p, { upsert: true, new: true });
     console.log(`✅ Project configured: ${p.title}`);
+  }
+
+  for (const project of verifiedProjectReferences) {
+    await Project.updateOne(
+      { slug: project.slug },
+      {
+        $setOnInsert: {
+          ...project,
+          category: 'Industrial',
+          industry: 'Other',
+          services: [],
+          shortDescription: '',
+          description: '',
+          scopeOfWork: [],
+          technicalChallenges: [],
+          executionApproach: '',
+          safetyConsiderations: [],
+          coverImage: project.featuredImage,
+          coverImageIsIllustrative: true,
+          galleryImages: [],
+          isFeatured: false,
+          featured: false,
+          published: true,
+          publishStatus: 'PUBLISHED',
+          isDeleted: false,
+          seo: { title: project.title, metaDescription: project.title },
+        },
+      },
+      { upsert: true }
+    );
+    console.log(`✅ Verified project reference available: ${project.title}`);
   }
 
   // 4. Seed Global Site Settings

@@ -4,6 +4,7 @@ import { connectToDatabase } from '@/lib/db/mongodb';
 import { Project } from '@/models/Project';
 import { projectSchema } from '@/validators/project.schema';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
+import { normalizeProjectPayload, normalizeProjectRecord } from '@/lib/projects/normalize';
 
 interface RouteProps {
   params: { id: string };
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
     if (!project || project.isDeleted) {
       return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
     }
-    return NextResponse.json({ success: true, data: { project } });
+    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(project) } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: { message: err.message } }, { status: 500 });
   }
@@ -39,6 +40,13 @@ export async function PATCH(req: NextRequest, { params }: RouteProps) {
 
   try {
     const body = await req.json();
+    const normalizedBody = normalizeProjectPayload(body);
+    const validated = projectSchema.partial().safeParse(normalizedBody);
+
+    if (!validated.success) {
+      return NextResponse.json({ success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid project update.', details: validated.error.flatten() } }, { status: 400 });
+    }
+
     await connectToDatabase();
     const existing = await Project.findById(params.id);
     if (!existing || existing.isDeleted) {
@@ -46,9 +54,11 @@ export async function PATCH(req: NextRequest, { params }: RouteProps) {
     }
 
     const before = existing.toObject();
-    Object.assign(existing, body);
+    const updates = normalizeProjectPayload({ ...existing.toObject(), ...validated.data });
 
-    if (body.publishStatus === 'PUBLISHED' && !existing.publishedAt) {
+    Object.assign(existing, updates);
+    existing.published = existing.publishStatus === 'PUBLISHED' || Boolean(existing.published);
+    if (existing.publishStatus === 'PUBLISHED' && !existing.publishedAt) {
       existing.publishedAt = new Date();
     }
 
@@ -61,10 +71,10 @@ export async function PATCH(req: NextRequest, { params }: RouteProps) {
       action: 'UPDATE',
       entity: 'PROJECT',
       entityId: existing._id.toString(),
-      changesDiff: { before, after: body },
+      changesDiff: { before, after: normalizeProjectRecord(existing.toObject()) },
     });
 
-    return NextResponse.json({ success: true, data: { project: existing } });
+    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(existing.toObject()) } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: { message: err.message } }, { status: 500 });
   }
@@ -87,8 +97,9 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
       return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
     }
 
-    // Soft delete
     project.isDeleted = true;
+    project.published = false;
+    project.publishStatus = 'ARCHIVED';
     await project.save();
 
     await recordAuditLog({

@@ -11,20 +11,28 @@ export type IndustryType =
 export interface IProject extends Document {
   slug: string;
   title: string;
+  category?: string;
   client?: string;
+  clientName?: string;
   clientPublishable: boolean;
-  industry: IndustryType;
-  country: string;
+  industry?: IndustryType | string;
+  country?: string;
   location: string;
-  services: string[]; // e.g. ['industrial-insulation', 'scaffolding']
+  status?: 'UPCOMING' | 'ONGOING' | 'COMPLETED' | 'DRAFT' | 'REVIEW' | 'PUBLISHED' | 'ARCHIVED';
+  services: string[];
   shortDescription: string;
+  description?: string;
   scopeOfWork: string[];
   technicalChallenges: string[];
-  executionApproach: string;
+  executionApproach?: string;
   safetyConsiderations: string[];
-  featuredImage: string;
+  coverImage?: string;
+  featuredImage?: string;
+  coverImageIsIllustrative?: boolean;
   galleryImages: string[];
   isFeatured: boolean;
+  featured?: boolean;
+  published?: boolean;
   publishStatus: 'DRAFT' | 'REVIEW' | 'PUBLISHED' | 'ARCHIVED';
   publishedAt?: Date;
   isDeleted: boolean;
@@ -40,11 +48,12 @@ const ProjectSchema = new Schema<IProject>(
   {
     slug: { type: String, required: true, unique: true, index: true },
     title: { type: String, required: true, trim: true },
+    category: { type: String, default: 'Other', index: true },
     client: { type: String, trim: true },
+    clientName: { type: String, trim: true },
     clientPublishable: { type: Boolean, default: false },
     industry: {
       type: String,
-      required: true,
       enum: [
         'Oil & Gas',
         'Petrochemical',
@@ -52,20 +61,32 @@ const ProjectSchema = new Schema<IProject>(
         'Heavy Manufacturing',
         'Marine & Offshore',
         'Infrastructure',
+        'Other',
       ],
+      default: 'Other',
       index: true,
     },
-    country: { type: String, required: true, index: true },
-    location: { type: String, required: true },
-    services: [{ type: String, required: true, index: true }],
-    shortDescription: { type: String, required: true },
-    scopeOfWork: [{ type: String, required: true }],
+    country: { type: String, default: '', index: true },
+    location: { type: String, default: '' },
+    status: {
+      type: String,
+      enum: ['UPCOMING', 'ONGOING', 'COMPLETED', 'DRAFT', 'REVIEW', 'PUBLISHED', 'ARCHIVED'],
+      index: true,
+    },
+    services: [{ type: String, default: [], index: true }],
+    shortDescription: { type: String, default: '' },
+    description: { type: String, default: '' },
+    scopeOfWork: [{ type: String, default: [] }],
     technicalChallenges: [{ type: String }],
-    executionApproach: { type: String, required: true },
+    executionApproach: { type: String, default: '' },
     safetyConsiderations: [{ type: String }],
-    featuredImage: { type: String, required: true },
+    coverImage: { type: String, default: '' },
+    featuredImage: { type: String, default: '/images/industrial-site-team.webp' },
+    coverImageIsIllustrative: { type: Boolean, default: false },
     galleryImages: [{ type: String }],
     isFeatured: { type: Boolean, default: false, index: true },
+    featured: { type: Boolean, default: false },
+    published: { type: Boolean, default: false, index: true },
     publishStatus: {
       type: String,
       enum: ['DRAFT', 'REVIEW', 'PUBLISHED', 'ARCHIVED'],
@@ -75,14 +96,44 @@ const ProjectSchema = new Schema<IProject>(
     publishedAt: { type: Date },
     isDeleted: { type: Boolean, default: false, index: true },
     seo: {
-      title: { type: String, required: true },
-      metaDescription: { type: String, required: true },
+      title: { type: String, default: '' },
+      metaDescription: { type: String, default: '' },
     },
   },
   { timestamps: true }
 );
 
+ProjectSchema.pre('save', function (next) {
+  if (this.published === undefined) {
+    this.published = this.publishStatus === 'PUBLISHED';
+  }
+
+  if (this.publishStatus === 'PUBLISHED') {
+    this.published = true;
+    if (!this.publishedAt) this.publishedAt = new Date();
+  }
+
+  if (this.published === false && this.publishStatus === 'PUBLISHED') {
+    this.publishStatus = 'DRAFT';
+  }
+
+  if (!this.featuredImage && this.coverImage) {
+    this.featuredImage = this.coverImage;
+  }
+
+  if (!this.coverImage && this.featuredImage) {
+    this.coverImage = this.featuredImage;
+  }
+
+  if (!this.isFeatured && this.featured) {
+    this.isFeatured = this.featured;
+  }
+
+  next();
+});
+
 ProjectSchema.index({ publishStatus: 1, isDeleted: 1, isFeatured: -1, createdAt: -1 });
+ProjectSchema.index({ published: 1, isDeleted: 1, createdAt: -1 });
 ProjectSchema.index({ publishStatus: 1, isDeleted: 1, services: 1 });
 ProjectSchema.index({ publishStatus: 1, isDeleted: 1, industry: 1 });
 

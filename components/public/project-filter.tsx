@@ -2,9 +2,10 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { ArrowRight, MapPin, Building2, Tag } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ProjectImage } from '@/components/public/project-image';
 
 export interface ProjectCardData {
   slug: string;
@@ -15,6 +16,9 @@ export interface ProjectCardData {
   services: string[];
   shortDescription: string;
   featuredImage: string;
+  coverImageIsIllustrative?: boolean;
+  category?: string;
+  status?: string;
 }
 
 interface ProjectFilterProps {
@@ -35,7 +39,7 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
 
   const industriesList = useMemo(() => {
     const set = new Set<string>();
-    initialProjects.forEach((p) => set.add(p.industry));
+    initialProjects.forEach((p) => set.add(p.industry || p.category || 'Project reference'));
     return ['ALL', ...Array.from(set)];
   }, [initialProjects]);
 
@@ -44,7 +48,7 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
       const matchService =
         selectedService === 'ALL' || p.services.includes(selectedService);
       const matchIndustry =
-        selectedIndustry === 'ALL' || p.industry === selectedIndustry;
+        selectedIndustry === 'ALL' || (p.industry || p.category || 'Project reference') === selectedIndustry;
       const matchQuery =
         searchQuery === '' ||
         p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -116,7 +120,15 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
       </div>
 
       {/* Projects Grid */}
-      {filteredProjects.length === 0 ? (
+      {initialProjects.length === 0 ? (
+        <div className="border border-steel-200 bg-white px-6 py-16 text-center shadow-sm">
+          <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Project portfolio</span>
+          <h3 className="mt-3 font-display text-2xl font-bold text-navy-900">Projects Coming Soon</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-steel-600">
+            We are currently updating our project portfolio. Please check back soon.
+          </p>
+        </div>
+      ) : filteredProjects.length === 0 ? (
         <div className="text-center py-16 bg-white border border-steel-200 rounded p-8">
           <h3 className="text-lg font-bold text-navy-900 mb-2">No public project references match</h3>
           <p className="text-sm text-steel-500 mb-6">
@@ -134,39 +146,51 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredProjects.map((project) => (
-            <Card key={project.slug} className="flex flex-col h-full overflow-hidden group">
+            <Card key={project.slug} className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-industrial-lg">
               <div className="relative h-56 w-full overflow-hidden bg-navy-950">
-                <img
-                  src={project.featuredImage}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100"
+                <ProjectImage
+                  src={project.featuredImage || '/images/industrial-site-team.webp'}
+                  alt={project.coverImageIsIllustrative ? `Service capability imagery related to ${project.title}; not project-specific photography` : project.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
                 />
-                <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                  <Badge variant="navy">{project.industry}</Badge>
+                <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+                  <Badge variant="navy">{project.category || project.industry || 'Project reference'}</Badge>
                 </div>
+                {project.coverImageIsIllustrative && (
+                  <span className="absolute bottom-3 left-3 rounded bg-navy-950/80 px-2 py-1 text-[10px] font-semibold text-white">
+                    Service imagery · not project-site photography
+                  </span>
+                )}
               </div>
 
               <CardContent className="p-6 flex-1 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center space-x-2 text-xs text-steel-500 mb-2 font-medium">
                     <MapPin className="w-3.5 h-3.5 text-gold flex-shrink-0" />
-                    <span>{project.location}, {project.country}</span>
+                    <span>{[project.location, project.country].filter(Boolean).join(', ') || 'Location not provided'}</span>
                   </div>
 
                   <h3 className="text-lg font-bold text-navy-900 leading-snug mb-3 group-hover:text-gold-600 transition-colors">
                     {project.title}
                   </h3>
 
-                  <p className="text-xs text-steel-600 leading-relaxed line-clamp-3 mb-4">
-                    {project.shortDescription}
-                  </p>
+                  {project.shortDescription && (
+                    <p className="mb-4 line-clamp-3 text-xs leading-relaxed text-steel-600">
+                      {project.shortDescription}
+                    </p>
+                  )}
+                  {project.status && (
+                    <Badge variant="steel" className="mb-4">{project.status}</Badge>
+                  )}
                 </div>
 
                 <div className="pt-4 border-t border-steel-100 flex items-center justify-between">
                   <div className="flex flex-wrap gap-1">
-                    {project.services.map((svc) => (
+                    {(project.services || []).map((svc) => (
                       <span
                         key={svc}
                         className="text-[10px] uppercase tracking-wider font-semibold text-steel-500 bg-steel-100 px-2 py-0.5 rounded"

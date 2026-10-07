@@ -4,6 +4,7 @@ import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { ShieldAlert, Target, Compass, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { FounderProfile } from '@/components/public/founder-profile';
 
 export const metadata = {
   title: 'About ARS EXIM | EXpert Insulation Management',
@@ -46,6 +47,8 @@ export default function AboutPage() {
             <span className="absolute bottom-3 left-3 bg-[#10233f]/85 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-white">Illustrative industrial site image</span>
           </div>
         </div>
+
+        <FounderProfile />
 
         {/* Heritage & Values Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 my-16">

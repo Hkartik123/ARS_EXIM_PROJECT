@@ -4,6 +4,7 @@ import { connectToDatabase } from '@/lib/db/mongodb';
 import { Project } from '@/models/Project';
 import { projectSchema } from '@/validators/project.schema';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
+import { normalizeProjectPayload, normalizeProjectRecord } from '@/lib/projects/normalize';
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -17,7 +18,7 @@ export async function GET() {
   try {
     await connectToDatabase();
     const projects = await Project.find({ isDeleted: false }).sort({ createdAt: -1 }).lean();
-    return NextResponse.json({ success: true, data: { projects } });
+    return NextResponse.json({ success: true, data: { projects: projects.map(normalizeProjectRecord) } });
   } catch (err: any) {
     return NextResponse.json(
       { success: false, error: { code: 'SERVER_ERROR', message: err.message } },
@@ -44,7 +45,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const validated = projectSchema.safeParse(body);
+    const normalizedBody = normalizeProjectPayload(body);
+    const validated = projectSchema.safeParse(normalizedBody);
 
     if (!validated.success) {
       return NextResponse.json(
@@ -62,7 +64,8 @@ export async function POST(req: NextRequest) {
 
     await connectToDatabase();
 
-    const existing = await Project.findOne({ slug: validated.data.slug });
+    const normalized = normalizeProjectPayload(validated.data);
+    const existing = await Project.findOne({ slug: normalized.slug, isDeleted: false });
     if (existing) {
       return NextResponse.json(
         { success: false, error: { code: 'CONFLICT', message: 'A project with this slug already exists.' } },
@@ -71,8 +74,10 @@ export async function POST(req: NextRequest) {
     }
 
     const project = await Project.create({
-      ...validated.data,
-      publishedAt: validated.data.publishStatus === 'PUBLISHED' ? new Date() : undefined,
+      ...normalized,
+      published: normalized.published ?? normalized.publishStatus === 'PUBLISHED',
+      publishStatus: normalized.publishStatus,
+      publishedAt: normalized.publishStatus === 'PUBLISHED' ? new Date() : undefined,
     });
 
     await recordAuditLog({
@@ -82,10 +87,10 @@ export async function POST(req: NextRequest) {
       action: 'CREATE',
       entity: 'PROJECT',
       entityId: project._id.toString(),
-      changesDiff: { after: validated.data },
+      changesDiff: { after: normalizeProjectRecord(project.toObject()) },
     });
 
-    return NextResponse.json({ success: true, data: { project } }, { status: 201 });
+    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(project.toObject()) } }, { status: 201 });
   } catch (err: any) {
     console.error('Project create error:', err);
     return NextResponse.json(

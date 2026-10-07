@@ -342,15 +342,16 @@ export default async function HomePage() {
               {featuredProjects.map((project: any, index: number) => (
                 <Link href={`/projects/${project.slug}`} key={project.slug} className="group min-w-0">
                   <div className="relative aspect-[4/3] overflow-hidden bg-steel-200">
-                    <Image src={project.featuredImage} alt={project.title} fill unoptimized sizes="(max-width: 768px) 100vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image src={project.featuredImage || '/images/industrial-site-team.webp'} alt={project.coverImageIsIllustrative ? `Service capability image related to ${project.title}; not project-site photography` : project.title} fill unoptimized sizes="(max-width: 768px) 100vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                     <span className="absolute left-3 top-3 bg-white px-2.5 py-1 font-display text-lg font-semibold text-navy-950">0{index + 1}</span>
+                    {project.coverImageIsIllustrative && <span className="absolute bottom-3 left-3 bg-navy-950/80 px-2 py-1 text-[9px] font-semibold text-white">Service imagery · not site photography</span>}
                   </div>
                   <div className="flex items-start justify-between gap-3 border-b border-steel-300 py-4">
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-steel-600">{project.location}, {project.country}</span>
                       <h3 className="mt-1 font-display text-2xl font-semibold leading-tight text-navy-950">{project.title}</h3>
-                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-steel-700">{project.shortDescription}</p>
-                      <span className="mt-3 block text-[10px] font-bold uppercase tracking-wider text-gold-700">{project.services.map((service: string) => service.replace(/-/g, ' ')).join(' · ')}</span>
+                      {project.shortDescription && <p className="mt-2 line-clamp-3 text-sm leading-6 text-steel-700">{project.shortDescription}</p>}
+                      {(project.services || []).length > 0 && <span className="mt-3 block text-[10px] font-bold uppercase tracking-wider text-gold-700">{project.services.map((service: string) => service.replace(/-/g, ' ')).join(' · ')}</span>}
                     </div>
                     <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-navy-900 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                   </div>

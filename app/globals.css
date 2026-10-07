@@ -56,6 +56,23 @@ body {
   animation: home-reveal 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.founder-reveal,
+.founder-copy {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.founder-reveal[data-visible='true'],
+.founder-copy[data-visible='true'] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.founder-copy {
+  transition-delay: 150ms;
+}
+
 @keyframes home-reveal {
   from {
     opacity: 0;
@@ -78,6 +95,13 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .founder-reveal,
+  .founder-copy {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 

@@ -1,11 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db/mongodb';
 import { User } from '@/models/User';
-import { comparePassword } from '@/lib/auth/passwords';
+import { comparePassword, hashPassword } from '@/lib/auth/passwords';
 import { createSessionToken, SESSION_COOKIE_OPTIONS } from '@/lib/auth/session';
 import { loginSchema } from '@/validators/auth.schema';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
+
+async function ensureInitialAdminUser(email: string, password: string) {
+  const existingUser = await User.findOne({ email });
+  if (existingUser) return existingUser;
+
+  const passwordHash = await hashPassword(password);
+  return User.create({
+    email,
+    passwordHash,
+    name: 'ARS EXIM Lead Administrator',
+    role: 'SUPER_ADMIN',
+    isActive: true,
+  });
+}
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
@@ -44,7 +58,14 @@ export async function POST(req: NextRequest) {
     }
 
     await connectToDatabase();
-    const user = await User.findOne({ email: validated.data.email });
+
+    const adminEmail = process.env.ADMIN_INITIAL_EMAIL;
+    const adminPassword = process.env.ADMIN_INITIAL_PASSWORD;
+
+    let user = await User.findOne({ email: validated.data.email });
+    if (!user && adminEmail && adminPassword && validated.data.email.toLowerCase() === adminEmail.toLowerCase()) {
+      user = await ensureInitialAdminUser(adminEmail, adminPassword);
+    }
 
     if (!user) {
       return NextResponse.json(
