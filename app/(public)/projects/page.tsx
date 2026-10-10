@@ -1,8 +1,7 @@
+import { prisma } from '@/lib/db/prisma';
 import React from 'react';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { ProjectFilter } from '@/components/public/project-filter';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 import { normalizeProjectRecord } from '@/lib/projects/normalize';
 import { projectServiceImagery } from '@/lib/projects/service-imagery';
@@ -22,15 +21,15 @@ export default async function ProjectsPage() {
   let hasLoadError = false;
 
   try {
-    await connectToDatabase();
-    const rawProjects = await Project.find({
-      $or: [{ publishStatus: 'PUBLISHED' }, { published: true }],
-      isDeleted: false,
-      slug: { $nin: UNVERIFIED_SEED_PROJECT_SLUGS },
-      featuredImage: { $not: /images\.unsplash\.com/i },
-    })
-      .sort({ isFeatured: -1, createdAt: -1 })
-      .lean();
+    const rawProjects = await prisma.project.findMany({
+      where: {
+        OR: [{ publishStatus: 'PUBLISHED' }, { published: true }],
+        isDeleted: false,
+        slug: { notIn: UNVERIFIED_SEED_PROJECT_SLUGS },
+        NOT: { featuredImage: { contains: 'images.unsplash.com', mode: 'insensitive' } },
+      },
+      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+    });
 
     projects = rawProjects.map(normalizeProjectRecord).filter(Boolean);
   } catch (error) {

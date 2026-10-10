@@ -1,8 +1,5 @@
+import { prisma } from '@/lib/db/prisma';
 import { MetadataRoute } from 'next';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
-import { Service } from '@/models/Service';
-import { Career } from '@/models/Career';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,9 +28,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    await connectToDatabase();
-    const projects = await Project.find({ publishStatus: 'PUBLISHED', isDeleted: false }).select('slug updatedAt').lean();
-    const careers = await Career.find({ isOpen: true }).select('slug updatedAt').lean();
+    const projects = await prisma.project.findMany({
+      where: { publishStatus: 'PUBLISHED', isDeleted: false },
+      select: { slug: true, updatedAt: true },
+    });
+    const careers = await prisma.career.findMany({
+      where: { isOpen: true },
+      select: { slug: true, updatedAt: true },
+    });
 
     const projectRoutes: MetadataRoute.Sitemap = projects.map((p) => ({
       url: `${baseUrl}/projects/${p.slug}`,

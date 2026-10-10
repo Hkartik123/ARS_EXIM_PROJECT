@@ -1,0 +1,289 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                  String        @id @default(uuid()) @db.Uuid
+  email               String        @unique
+  passwordHash        String
+  name                String
+  role                String        @default("VIEWER")
+  isActive            Boolean       @default(true)
+  failedLoginAttempts Int           @default(0)
+  lockoutUntil        DateTime?
+  lastLoginAt         DateTime?
+  lastLoginIp         String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  auditLogs           AuditLog[]
+  uploadedMedia       Media[]
+  enquiryNotes        EnquiryNote[]
+
+  @@index([isActive])
+}
+
+model Project {
+  id                       String    @id @default(uuid()) @db.Uuid
+  slug                     String    @unique
+  title                    String
+  category                 String?   @default("Other")
+  client                   String?
+  clientName               String?
+  clientPublishable        Boolean   @default(false)
+  industry                 String?   @default("Other")
+  country                  String?   @default("")
+  location                 String    @default("")
+  status                   String?
+  services                 String[]  @default([])
+  shortDescription         String    @default("")
+  description              String    @default("")
+  scopeOfWork              String[]  @default([])
+  technicalChallenges      String[]  @default([])
+  executionApproach        String    @default("")
+  safetyConsiderations     String[]  @default([])
+  coverImage               String    @default("")
+  featuredImage            String    @default("/images/industrial-site-team.webp")
+  coverImageIsIllustrative Boolean   @default(false)
+  galleryImages            String[]  @default([])
+  isFeatured               Boolean   @default(false)
+  featured                 Boolean   @default(false)
+  published                Boolean   @default(false)
+  publishStatus            String    @default("DRAFT")
+  publishedAt              DateTime?
+  isDeleted                Boolean   @default(false)
+  seo                      Json      @default("{}")
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  @@index([category])
+  @@index([industry])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([published])
+  @@index([publishStatus, isDeleted, isFeatured, createdAt])
+  @@index([published, isDeleted, createdAt])
+  @@index([publishStatus, isDeleted, industry])
+  @@index([services], type: Gin)
+}
+
+model Career {
+  id                 String        @id @default(uuid()) @db.Uuid
+  slug               String        @unique
+  title              String
+  department         String
+  location           String
+  employmentType     String        @default("Full-time")
+  experienceRequired String
+  overview           String
+  responsibilities   String[]      @default([])
+  requirements       String[]      @default([])
+  closingDate        DateTime?
+  isOpen             Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  applications       Application[]
+
+  @@index([department])
+  @@index([isOpen])
+}
+
+model Application {
+  id                 String   @id @default(uuid()) @db.Uuid
+  jobId              String?  @db.Uuid
+  jobTitle           String
+  candidateName      String
+  email              String
+  phone              String
+  currentLocation    String
+  yearsOfExperience  Int
+  resumeStorageKey   String
+  resumeOriginalName String
+  coverLetter        String?
+  status             String   @default("SUBMITTED")
+  internalNotes      String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  job                Career?  @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  @@index([email])
+  @@index([status])
+}
+
+model Enquiry {
+  id                 String        @id @default(uuid()) @db.Uuid
+  referenceNumber    String        @unique
+  type               String
+  status             String        @default("NEW")
+  name               String
+  company            String
+  email              String
+  phone              String
+  country            String
+  projectName        String?
+  projectType        String?
+  industry           String?
+  location           String?
+  requiredServices   String[]      @default([])
+  expectedStartDate  String?
+  projectDuration    String?
+  scopeDescription   String
+  attachments        Json          @default("[]")
+  ipAddress          String
+  userAgent          String?
+  emailDispatched    Boolean       @default(false)
+  emailDispatchError String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  notes              EnquiryNote[]
+
+  @@index([type])
+  @@index([status])
+  @@index([email])
+  @@index([createdAt, status])
+}
+
+model EnquiryNote {
+  id         String   @id @default(uuid()) @db.Uuid
+  enquiryId  String   @db.Uuid
+  authorId   String   @db.Uuid
+  authorName String
+  note       String
+  createdAt  DateTime @default(now())
+  enquiry    Enquiry  @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([enquiryId, createdAt])
+  @@index([authorId])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  userEmail   String
+  userRole    String
+  action      String
+  entity      String
+  entityId    String?
+  ipAddress   String
+  userAgent   String?
+  changesDiff Json?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
+}
+
+model Media {
+  id           String   @id @default(uuid()) @db.Uuid
+  filename     String
+  originalName String
+  mimeType     String
+  fileSize     Int
+  width        Int?
+  height       Int?
+  storageKey   String   @unique
+  url          String
+  blurDataUrl  String?
+  altText      String   @default("")
+  caption      String?
+  title        String
+  category     String   @default("General")
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  isFeatured   Boolean  @default(false)
+  variants     Json     @default("[]")
+  uploadedBy   String?  @db.Uuid
+  isDeleted    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  uploader     User?    @relation(fields: [uploadedBy], references: [id], onDelete: SetNull)
+
+  @@index([category])
+  @@index([displayOrder])
+  @@index([isActive])
+  @@index([isFeatured])
+  @@index([isDeleted])
+}
+
+model Service {
+  id               String   @id @default(uuid()) @db.Uuid
+  slug             String   @unique
+  title            String
+  tagline          String
+  shortDescription String
+  overview         String
+  applications     String[] @default([])
+  capabilities     Json     @default("[]")
+  methodology      Json     @default("[]")
+  safetyPractices  String[] @default([])
+  qualityAssurance String[] @default([])
+  heroImageUrl     String
+  galleryUrls      String[] @default([])
+  faqs             Json     @default("[]")
+  seo              Json     @default("{}")
+  order            Int      @default(0)
+  isPublished      Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([order])
+  @@index([isPublished])
+}
+
+model Faq {
+  id             String   @id @default(uuid()) @db.Uuid
+  question       String
+  answer         String
+  category       String   @default("General")
+  pageAssignment String?
+  order          Int      @default(0)
+  isPublished    Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([category])
+  @@index([order])
+  @@index([isPublished])
+}
+
+model Testimonial {
+  id                  String   @id @default(uuid()) @db.Uuid
+  clientName          String
+  clientTitle         String
+  companyName         String
+  quote               String
+  projectSlug         String?
+  permissionConfirmed Boolean  @default(false)
+  isPublished         Boolean  @default(false)
+  order               Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([isPublished])
+}
+
+model SiteSetting {
+  id                 String   @id @default(uuid()) @db.Uuid
+  companyName        String   @default("ARS EXIM")
+  tagline            String   @default("Specialist Industrial Contractor — Insulation, Passive Fire Protection & Scaffolding")
+  phone              String   @default("+91 9764 425 426")
+  email              String   @default("info@arsexim.com")
+  whatsapp           String   @default("+91 9764 425 426")
+  address            Json     @default("{}")
+  workingHours       String   @default("")
+  socialLinks        Json     @default("{}")
+  notificationEmails Json     @default("{}")
+  safetyMetrics      Json     @default("{}")
+  analytics          Json     @default("{}")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

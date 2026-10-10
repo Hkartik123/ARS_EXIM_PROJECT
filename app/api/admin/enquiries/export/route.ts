@@ -1,7 +1,6 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Enquiry } from '@/models/Enquiry';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
 
 export async function GET(req: NextRequest) {
@@ -15,8 +14,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    await connectToDatabase();
-    const enquiries = await Enquiry.find().sort({ createdAt: -1 }).lean();
+    const enquiries = await prisma.enquiry.findMany({ orderBy: { createdAt: 'desc' } });
 
     const headers = [
       'Reference Number',

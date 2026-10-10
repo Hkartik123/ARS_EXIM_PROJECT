@@ -1,11 +1,11 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import mongoose from 'mongoose';
 import sharp from 'sharp';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Media } from '@/models/Media';
 import { storageService } from '@/lib/storage/storage-service';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
+import { isValidDatabaseId } from '@/lib/db/ids';
+import { withLegacyId } from '@/lib/db/legacy-id';
 
 const MEDIA_CATEGORIES = [
   'Insulation',
@@ -40,7 +40,7 @@ export async function PATCH(request: NextRequest, { params }: RouteProps) {
   const authorization = await authorizeMediaManagement();
   if ('response' in authorization) return authorization.response;
   const { user } = authorization;
-  if (!mongoose.isValidObjectId(params.id)) {
+  if (!isValidDatabaseId(params.id)) {
     return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
   }
 
@@ -59,17 +59,11 @@ export async function PATCH(request: NextRequest, { params }: RouteProps) {
         { success: false, error: { code: 'VALIDATION_ERROR', message: 'No valid media changes were provided.' } },
         { status: 400 }
       );
-    }
-
-    await connectToDatabase();
-    const media = await Media.findOneAndUpdate(
-      { _id: params.id, isDeleted: false },
-      { $set: updates },
-      { new: true, runValidators: true }
-    );
-    if (!media) {
+    }        const existingMedia = await prisma.media.findFirst({ where: { id: params.id, isDeleted: false } });
+    if (!existingMedia) {
       return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
     }
+    const media = await prisma.media.update({ where: { id: existingMedia.id }, data: updates });
 
     await recordAuditLog({
       userId: user.userId,
@@ -77,11 +71,11 @@ export async function PATCH(request: NextRequest, { params }: RouteProps) {
       userRole: user.role,
       action: 'UPDATE',
       entity: 'MEDIA',
-      entityId: media._id.toString(),
+      entityId: media.id,
       changesDiff: { after: updates },
     });
 
-    return NextResponse.json({ success: true, data: { media } });
+    return NextResponse.json({ success: true, data: { media: withLegacyId(media) } });
   } catch (error) {
     console.error('Failed to update media:', error);
     return NextResponse.json(
@@ -95,7 +89,7 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
   const authorization = await authorizeMediaManagement();
   if ('response' in authorization) return authorization.response;
   const { user } = authorization;
-  if (!mongoose.isValidObjectId(params.id)) {
+  if (!isValidDatabaseId(params.id)) {
     return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
   }
 
@@ -127,11 +121,13 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
 
     const optimizedImage = await image.rotate().resize({ width: 2000, height: 2000, fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toBuffer();
     const uploaded = await storageService.uploadBuffer(optimizedImage, `${Date.now()}.webp`, 'image/webp', 'gallery');
-    await connectToDatabase();
-    const media = await Media.findOneAndUpdate(
-      { _id: params.id, isDeleted: false },
-      {
-        $set: {
+    const existingMedia = await prisma.media.findFirst({ where: { id: params.id, isDeleted: false } });
+    if (!existingMedia) {
+      return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
+    }
+    const media = await prisma.media.update({
+      where: { id: existingMedia.id },
+      data: {
           filename: uploaded.storageKey.split('/').pop(),
           originalName: file.name,
           mimeType: 'image/webp',
@@ -141,13 +137,8 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
           storageKey: uploaded.storageKey,
           url: uploaded.url,
           variants: [],
-        },
       },
-      { new: true, runValidators: true }
-    );
-    if (!media) {
-      return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
-    }
+    });
 
     await recordAuditLog({
       userId: user.userId,
@@ -155,11 +146,11 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       userRole: user.role,
       action: 'UPDATE',
       entity: 'MEDIA',
-      entityId: media._id.toString(),
+      entityId: media.id,
       changesDiff: { after: { url: uploaded.url, originalName: file.name } },
     });
 
-    return NextResponse.json({ success: true, data: { media } });
+    return NextResponse.json({ success: true, data: { media: withLegacyId(media) } });
   } catch (error) {
     console.error('Failed to replace media image:', error);
     return NextResponse.json(
@@ -173,20 +164,19 @@ export async function DELETE(_request: NextRequest, { params }: RouteProps) {
   const authorization = await authorizeMediaManagement();
   if ('response' in authorization) return authorization.response;
   const { user } = authorization;
-  if (!mongoose.isValidObjectId(params.id)) {
+  if (!isValidDatabaseId(params.id)) {
     return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
   }
 
   try {
-    await connectToDatabase();
-    const media = await Media.findOneAndUpdate(
-      { _id: params.id, isDeleted: false },
-      { $set: { isDeleted: true, isActive: false } },
-      { new: true }
-    );
-    if (!media) {
-      return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
-    }
+    const existingMedia = await prisma.media.findFirst({ where: { id: params.id, isDeleted: false } });
+  if (!existingMedia) {
+    return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
+  }
+  const media = await prisma.media.update({
+    where: { id: existingMedia.id },
+    data: { isDeleted: true, isActive: false },
+  });
 
     await recordAuditLog({
       userId: user.userId,
@@ -194,7 +184,7 @@ export async function DELETE(_request: NextRequest, { params }: RouteProps) {
       userRole: user.role,
       action: 'DELETE',
       entity: 'MEDIA',
-      entityId: media._id.toString(),
+      entityId: media.id,
     });
 
     return NextResponse.json({ success: true, data: { message: 'Media item removed from the public gallery.' } });

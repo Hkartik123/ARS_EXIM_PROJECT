@@ -1,6 +1,5 @@
+import { prisma } from '@/lib/db/prisma';
 import React from 'react';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Application } from '@/models/Application';
 import { Badge } from '@/components/ui/badge';
 import { FileText, Download, Users } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
@@ -8,9 +7,7 @@ import { formatDate } from '@/lib/utils';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminApplicationsPage() {
-  await connectToDatabase();
-  const rawApps = await Application.find().sort({ createdAt: -1 }).lean();
-  const applications = JSON.parse(JSON.stringify(rawApps));
+  const applications = await prisma.application.findMany({ orderBy: { createdAt: 'desc' } });
 
   return (
     <div className="space-y-6">
@@ -46,7 +43,7 @@ export default async function AdminApplicationsPage() {
                 </tr>
               ) : (
                 applications.map((app: any) => (
-                  <tr key={app._id} className="hover:bg-steel-50">
+                  <tr key={app.id} className="hover:bg-steel-50">
                     <td className="py-4 px-6">
                       <div className="font-bold text-navy-900">{app.candidateName}</div>
                       <div className="text-[11px] text-steel-500">{app.email} • {app.phone}</div>

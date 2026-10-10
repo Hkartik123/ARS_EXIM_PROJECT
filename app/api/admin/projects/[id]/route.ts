@@ -1,10 +1,11 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
 import { projectSchema } from '@/validators/project.schema';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
 import { normalizeProjectPayload, normalizeProjectRecord } from '@/lib/projects/normalize';
+import { normalizeProjectForPersistence } from '@/lib/projects/normalize';
+import { isValidDatabaseId } from '@/lib/db/ids';
 
 interface RouteProps {
   params: { id: string };
@@ -17,8 +18,8 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
   }
 
   try {
-    await connectToDatabase();
-    const project = await Project.findById(params.id).lean();
+    if (!isValidDatabaseId(params.id)) return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
+    const project = await prisma.project.findUnique({ where: { id: params.id } });
     if (!project || project.isDeleted) {
       return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
     }
@@ -46,23 +47,18 @@ export async function PATCH(req: NextRequest, { params }: RouteProps) {
     if (!validated.success) {
       return NextResponse.json({ success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid project update.', details: validated.error.flatten() } }, { status: 400 });
     }
-
-    await connectToDatabase();
-    const existing = await Project.findById(params.id);
+    if (!isValidDatabaseId(params.id)) return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
+    const existing = await prisma.project.findUnique({ where: { id: params.id } });
     if (!existing || existing.isDeleted) {
       return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
     }
 
-    const before = existing.toObject();
-    const updates = normalizeProjectPayload({ ...existing.toObject(), ...validated.data });
-
-    Object.assign(existing, updates);
-    existing.published = existing.publishStatus === 'PUBLISHED' || Boolean(existing.published);
-    if (existing.publishStatus === 'PUBLISHED' && !existing.publishedAt) {
-      existing.publishedAt = new Date();
-    }
-
-    await existing.save();
+    const before = existing;
+    const updates = normalizeProjectForPersistence(validated.data, existing);
+    const updatedProject = await prisma.project.update({
+      where: { id: existing.id },
+      data: updates,
+    });
 
     await recordAuditLog({
       userId: user.userId,
@@ -70,11 +66,11 @@ export async function PATCH(req: NextRequest, { params }: RouteProps) {
       userRole: user.role,
       action: 'UPDATE',
       entity: 'PROJECT',
-      entityId: existing._id.toString(),
-      changesDiff: { before, after: normalizeProjectRecord(existing.toObject()) },
+      entityId: existing.id,
+      changesDiff: { before, after: normalizeProjectRecord(updatedProject) },
     });
 
-    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(existing.toObject()) } });
+    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(updatedProject) } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: { message: err.message } }, { status: 500 });
   }
@@ -91,16 +87,16 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
   }
 
   try {
-    await connectToDatabase();
-    const project = await Project.findById(params.id);
+    if (!isValidDatabaseId(params.id)) return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
+    const project = await prisma.project.findUnique({ where: { id: params.id } });
     if (!project) {
       return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
     }
 
-    project.isDeleted = true;
-    project.published = false;
-    project.publishStatus = 'ARCHIVED';
-    await project.save();
+    await prisma.project.update({
+      where: { id: project.id },
+      data: { isDeleted: true, published: false, publishStatus: 'ARCHIVED' },
+    });
 
     await recordAuditLog({
       userId: user.userId,
@@ -108,7 +104,7 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
       userRole: user.role,
       action: 'DELETE',
       entity: 'PROJECT',
-      entityId: project._id.toString(),
+      entityId: project.id,
     });
 
     return NextResponse.json({ success: true, data: { message: 'Project soft-deleted successfully.' } });

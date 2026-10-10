@@ -113,3 +113,30 @@ export function normalizeProjectPayload(input: any = {}) {
 
   return payload;
 }
+
+export function normalizeProjectForPersistence(input: any = {}, previous?: any) {
+  const normalized = normalizeProjectPayload({ ...previous, ...input });
+  const isPublished = normalized.publishStatus === 'PUBLISHED' || Boolean(normalized.published);
+  const publishedAt = isPublished
+    ? normalized.publishedAt || previous?.publishedAt || new Date()
+    : null;
+
+  const {
+    id: _id,
+    _id: _legacyId,
+    createdAt: _createdAt,
+    updatedAt: _updatedAt,
+    ...data
+  } = normalized;
+
+  return {
+    ...data,
+    published: isPublished,
+    publishStatus: isPublished && normalized.publishStatus === 'PUBLISHED' ? 'PUBLISHED' : normalized.publishStatus,
+    publishedAt,
+    featuredImage: normalized.featuredImage || normalized.coverImage || '/images/industrial-site-team.webp',
+    coverImage: normalized.coverImage || normalized.featuredImage || '',
+    isFeatured: Boolean(normalized.isFeatured ?? normalized.featured),
+    featured: Boolean(normalized.featured ?? normalized.isFeatured),
+  };
+}

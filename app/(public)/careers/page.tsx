@@ -1,3 +1,4 @@
+import { prisma } from '@/lib/db/prisma';
 import React from 'react';
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
@@ -5,8 +6,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Briefcase, Clock, ArrowRight } from 'lucide-react';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Career } from '@/models/Career';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,9 +16,10 @@ export const metadata = {
 };
 
 export default async function CareersPage() {
-  await connectToDatabase();
-  const rawCareers = await Career.find({ isOpen: true }).sort({ createdAt: -1 }).lean();
-  const careers = JSON.parse(JSON.stringify(rawCareers));
+  const careers = await prisma.career.findMany({
+    where: { isOpen: true },
+    orderBy: { createdAt: 'desc' },
+  });
 
   return (
     <div className="py-12 bg-steel-50 min-h-screen">

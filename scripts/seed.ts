@@ -1,34 +1,28 @@
+import { prisma } from '@/lib/db/prisma';
 import { loadEnvConfig } from '@next/env';
 loadEnvConfig(process.cwd());
 
-import { connectToDatabase } from '../lib/db/mongodb';
-import { User } from '../models/User';
-import { Service } from '../models/Service';
-import { Project } from '../models/Project';
-import { Faq } from '../models/Faq';
-import { SiteSetting } from '../models/SiteSetting';
 import { hashPassword } from '../lib/auth/passwords';
+import { normalizeProjectForPersistence } from '../lib/projects/normalize';
 
 async function seed() {
   console.log('🌱 Starting verified ARS EXIM database initialization...');
-  await connectToDatabase();
-
   // 1. Seed Initial Super Admin
   const adminEmail = process.env.ADMIN_INITIAL_EMAIL;
   const initialPassword = process.env.ADMIN_INITIAL_PASSWORD;
   if (!adminEmail || !initialPassword) {
     throw new Error('Set ADMIN_INITIAL_EMAIL and ADMIN_INITIAL_PASSWORD before seeding the initial administrator.');
   }
-  const existingAdmin = await User.findOne({ email: adminEmail });
+  const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail.toLowerCase() } });
   if (!existingAdmin) {
     const passwordHash = await hashPassword(initialPassword);
-    await User.create({
-      email: adminEmail,
+    await prisma.user.create({ data: {
+      email: adminEmail.toLowerCase(),
       passwordHash,
       name: 'ARS EXIM Lead Administrator',
       role: 'SUPER_ADMIN',
       isActive: true,
-    });
+    } });
     console.log(`✅ Super Admin created: ${adminEmail}`);
   } else {
     console.log(`ℹ️ Admin user already exists: ${adminEmail}`);
@@ -318,10 +312,13 @@ async function seed() {
     },
   ];
 
-  await Service.updateMany({ slug: { $in: services.map((service) => service.slug) } }, { $set: { isPublished: false } });
+  await prisma.service.updateMany({
+    where: { slug: { in: services.map((service) => service.slug) } },
+    data: { isPublished: false },
+  });
 
   for (const s of services.slice(0, 0)) {
-    await Service.findOneAndUpdate({ slug: s.slug }, s, { upsert: true, new: true });
+    await prisma.service.upsert({ where: { slug: s.slug }, create: s, update: s });
     console.log(`✅ Service configured: ${s.title}`);
   }
 
@@ -521,21 +518,19 @@ async function seed() {
     },
   ];
 
-  await Project.updateMany(
-    { slug: { $in: projects.map((project) => project.slug) } },
-    { $set: { publishStatus: 'DRAFT' } }
-  );
+  await prisma.project.updateMany({
+    where: { slug: { in: projects.map((project) => project.slug) } },
+    data: { publishStatus: 'DRAFT', published: false, publishedAt: null },
+  });
 
   for (const p of projects.slice(0, 0)) {
-    await Project.findOneAndUpdate({ slug: p.slug }, p, { upsert: true, new: true });
+    const data = normalizeProjectForPersistence(p);
+    await prisma.project.upsert({ where: { slug: p.slug }, create: data, update: data });
     console.log(`✅ Project configured: ${p.title}`);
   }
 
   for (const project of verifiedProjectReferences) {
-    await Project.updateOne(
-      { slug: project.slug },
-      {
-        $setOnInsert: {
+    const data = normalizeProjectForPersistence({
           ...project,
           category: 'Industrial',
           industry: 'Other',
@@ -555,17 +550,19 @@ async function seed() {
           publishStatus: 'PUBLISHED',
           isDeleted: false,
           seo: { title: project.title, metaDescription: project.title },
-        },
-      },
-      { upsert: true }
-    );
+        });
+    await prisma.project.upsert({
+      where: { slug: project.slug },
+      create: data,
+      update: {},
+    });
     console.log(`✅ Verified project reference available: ${project.title}`);
   }
 
   // 4. Seed Global Site Settings
-  const settingsCount = await SiteSetting.countDocuments();
-  if (settingsCount === 0) {
-    await SiteSetting.create({
+  const currentSettings = await prisma.siteSetting.findFirst();
+  if (!currentSettings) {
+    await prisma.siteSetting.create({ data: {
       companyName: 'ARS EXIM',
       tagline: 'Specialist Industrial Contractor — Insulation, Passive Fire Protection & Scaffolding',
       phone: '+91 9764 425 426',
@@ -596,7 +593,7 @@ async function seed() {
       analytics: {
         googleAnalyticsId: '',
       },
-    });
+    } });
     console.log('✅ Site settings initialized with verified coordinates.');
   }
 
@@ -628,18 +625,26 @@ async function seed() {
     },
   ];
 
-  await Faq.updateMany({ question: { $in: faqs.map((faq) => faq.question) } }, { $set: { isPublished: false } });
+  await prisma.faq.updateMany({
+    where: { question: { in: faqs.map((faq) => faq.question) } },
+    data: { isPublished: false },
+  });
 
   for (const f of faqs.slice(0, 0)) {
-    await Faq.findOneAndUpdate({ question: f.question }, f, { upsert: true });
+    const existingFaq = await prisma.faq.findFirst({ where: { question: f.question } });
+    if (existingFaq) {
+      await prisma.faq.update({ where: { id: existingFaq.id }, data: f });
+    } else {
+      await prisma.faq.create({ data: f });
+    }
   }
   console.log('✅ FAQs seeded.');
 
   console.log('🏁 Database initialization completed successfully.');
-  process.exit(0);
 }
 
-seed().catch((err) => {
+seed().then(() => prisma.$disconnect()).catch(async (err) => {
   console.error('Database seed error:', err);
-  process.exit(1);
+  await prisma.$disconnect();
+  process.exitCode = 1;
 });

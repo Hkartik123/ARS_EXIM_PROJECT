@@ -1,17 +1,18 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
 import { toPublicProjectRecord } from '@/lib/projects/normalize';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    await connectToDatabase();
-    const projects = await Project.find({
+    const projects = await prisma.project.findMany({
+    where: {
       isDeleted: false,
-      $or: [{ published: true }, { publishStatus: 'PUBLISHED' }],
-    })
-      .sort({ isFeatured: -1, createdAt: -1 })
-      .lean();
+      OR: [{ published: true }, { publishStatus: 'PUBLISHED' }],
+    },
+    orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+  });
 
     return NextResponse.json({
       success: true,

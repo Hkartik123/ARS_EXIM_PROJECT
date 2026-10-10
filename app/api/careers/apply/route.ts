@@ -1,8 +1,8 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Application } from '@/models/Application';
 import { storageService } from '@/lib/storage/storage-service';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
+import { isValidDatabaseId } from '@/lib/db/ids';
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
@@ -18,6 +18,12 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const jobId = formData.get('jobId') as string;
+    if (jobId && !isValidDatabaseId(jobId)) {
+      return NextResponse.json(
+        { success: false, error: { code: 'VALIDATION_ERROR', message: 'Invalid job reference.' } },
+        { status: 400 }
+      );
+    }
     const jobTitle = (formData.get('jobTitle') as string) || 'Industrial Position';
     const candidateName = formData.get('candidateName') as string;
     const email = formData.get('email') as string;
@@ -50,10 +56,9 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const uploaded = await storageService.uploadBuffer(buffer, file.name, file.type, 'resumes');
-
-    await connectToDatabase();
-    const application = await Application.create({
-      jobId: jobId || undefined,
+    const application = await prisma.application.create({
+      data: {
+      jobId: jobId || null,
       jobTitle,
       candidateName,
       email,
@@ -64,13 +69,14 @@ export async function POST(req: NextRequest) {
       resumeOriginalName: uploaded.originalName,
       coverLetter,
       status: 'SUBMITTED',
+      },
     });
 
     return NextResponse.json(
       {
         success: true,
         data: {
-          applicationId: application._id,
+          applicationId: application.id,
           message: 'Application registered successfully.',
         },
       },

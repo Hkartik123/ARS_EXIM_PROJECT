@@ -1,7 +1,7 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Enquiry } from '@/models/Enquiry';
+import { withLegacyId } from '@/lib/db/legacy-id';
 
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
@@ -19,28 +19,32 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get('search');
 
   try {
-    await connectToDatabase();
-    const query: any = {};
+    const where: any = {};
 
     if (status && status !== 'ALL') {
-      query.status = status;
+      where.status = status;
     }
 
     if (type && type !== 'ALL') {
-      query.type = type;
+      where.type = type;
     }
 
     if (search) {
-      query.$or = [
-        { referenceNumber: { $regex: search, $options: 'i' } },
-        { company: { $regex: search, $options: 'i' } },
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
+      where.OR = [
+        { referenceNumber: { contains: search, mode: 'insensitive' } },
+        { company: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
       ];
     }
 
-    const enquiries = await Enquiry.find(query).sort({ createdAt: -1 }).limit(100).lean();
-    return NextResponse.json({ success: true, data: { enquiries } });
+    const enquiries = await prisma.enquiry.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      take: 100,
+      include: { notes: { select: { authorId: true, authorName: true, note: true, createdAt: true } } },
+    });
+    return NextResponse.json({ success: true, data: { enquiries: enquiries.map(withLegacyId) } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: { message: err.message } }, { status: 500 });
   }

@@ -1,3 +1,4 @@
+import { prisma } from '@/lib/db/prisma';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -10,9 +11,6 @@ import {
   Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
-import { Media } from '@/models/Media';
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 
 export const dynamic = 'force-dynamic';
@@ -67,17 +65,17 @@ const serviceDisciplines = [
 
 async function getFeaturedProjects() {
   try {
-    await connectToDatabase();
-    const projects = await Project.find({
-      publishStatus: 'PUBLISHED',
-      isDeleted: false,
-      slug: { $nin: UNVERIFIED_SEED_PROJECT_SLUGS },
-      featuredImage: { $not: /images\.unsplash\.com/i },
-    })
-      .sort({ isFeatured: -1, createdAt: -1 })
-      .limit(4)
-      .lean();
-    return JSON.parse(JSON.stringify(projects));
+    const projects = await prisma.project.findMany({
+      where: {
+        publishStatus: 'PUBLISHED',
+        isDeleted: false,
+        slug: { notIn: UNVERIFIED_SEED_PROJECT_SLUGS },
+        NOT: { featuredImage: { contains: 'images.unsplash.com', mode: 'insensitive' } },
+      },
+      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+      take: 4,
+    });
+    return projects;
   } catch (error) {
     console.error('Failed to load featured projects:', error);
     return [];
@@ -86,13 +84,13 @@ async function getFeaturedProjects() {
 
 async function getFeaturedMedia() {
   try {
-    await connectToDatabase();
-    const images = await Media.find({ isDeleted: false, isActive: true })
-      .sort({ isFeatured: -1, displayOrder: 1, createdAt: -1 })
-      .limit(3)
-      .lean();
+    const images = await prisma.media.findMany({
+      where: { isDeleted: false, isActive: true },
+      orderBy: [{ isFeatured: 'desc' }, { displayOrder: 'asc' }, { createdAt: 'desc' }],
+      take: 3,
+    });
     return images.map((image) => ({
-      id: image._id.toString(),
+      id: image.id,
       title: image.title,
       category: image.category,
       url: image.url,

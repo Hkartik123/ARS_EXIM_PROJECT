@@ -1,10 +1,10 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Media } from '@/models/Media';
 import { storageService } from '@/lib/storage/storage-service';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
+import { withLegacyId } from '@/lib/db/legacy-id';
 
 const MEDIA_CATEGORIES = [
   'Insulation',
@@ -37,11 +37,11 @@ export async function GET() {
   if ('response' in authorization) return authorization.response;
 
   try {
-    await connectToDatabase();
-    const media = await Media.find({ isDeleted: false })
-      .sort({ displayOrder: 1, createdAt: -1 })
-      .lean();
-    return NextResponse.json({ success: true, data: { media } });
+    const media = await prisma.media.findMany({
+    where: { isDeleted: false },
+    orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
+  });
+    return NextResponse.json({ success: true, data: { media: media.map(withLegacyId) } });
   } catch (error) {
     console.error('Failed to load media library:', error);
     return NextResponse.json(
@@ -108,9 +108,8 @@ export async function POST(request: NextRequest) {
 
     const optimizedImage = await image.rotate().resize({ width: 2000, height: 2000, fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toBuffer();
     const uploaded = await storageService.uploadBuffer(optimizedImage, `${Date.now()}.webp`, 'image/webp', 'gallery');
-    await connectToDatabase();
-    const media = await Media.create({
-      filename: uploaded.storageKey.split('/').pop(),
+    const media = await prisma.media.create({ data: {
+      filename: uploaded.storageKey.split('/').pop() || uploaded.storageKey,
       originalName: file.name,
       mimeType: 'image/webp',
       fileSize: uploaded.fileSize,
@@ -126,7 +125,7 @@ export async function POST(request: NextRequest) {
       isActive: false,
       uploadedBy: user.userId,
       variants: [],
-    });
+    } });
 
     await recordAuditLog({
       userId: user.userId,
@@ -134,11 +133,11 @@ export async function POST(request: NextRequest) {
       userRole: user.role,
       action: 'CREATE',
       entity: 'MEDIA',
-      entityId: media._id.toString(),
+      entityId: media.id,
       changesDiff: { after: { title, category, url: uploaded.url } },
     });
 
-    return NextResponse.json({ success: true, data: { media } }, { status: 201 });
+    return NextResponse.json({ success: true, data: { media: withLegacyId(media) } }, { status: 201 });
   } catch (error) {
     console.error('Failed to upload media:', error);
     return NextResponse.json(

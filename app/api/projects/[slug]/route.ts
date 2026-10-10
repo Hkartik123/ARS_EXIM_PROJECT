@@ -1,16 +1,16 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
 import { toPublicProjectRecord } from '@/lib/projects/normalize';
 
 export async function GET(_request: Request, { params }: { params: { slug: string } }) {
   try {
-    await connectToDatabase();
-    const project = await Project.findOne({
+    const project = await prisma.project.findFirst({
+    where: {
       slug: params.slug,
       isDeleted: false,
-      $or: [{ published: true }, { publishStatus: 'PUBLISHED' }],
-    }).lean();
+      OR: [{ published: true }, { publishStatus: 'PUBLISHED' }],
+    },
+  });
 
     if (!project) {
       return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });

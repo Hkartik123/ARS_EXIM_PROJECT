@@ -1,11 +1,12 @@
+import type { IEnquiryFile } from '@/models/Enquiry';
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Enquiry, IEnquiryFile } from '@/models/Enquiry';
 import { quoteEnquirySchema } from '@/validators/enquiry.schema';
 import { generateEnquiryReference } from '@/lib/utils';
 import { storageService } from '@/lib/storage/storage-service';
 import { emailService } from '@/lib/email/email-service';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
+import { Prisma } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
@@ -101,14 +102,11 @@ export async function POST(req: NextRequest) {
         });
       }
     }
-
-    await connectToDatabase();
-
     // 4. Generate unique atomic reference number: QR-YYYY-XXXXXX
     const referenceNumber = generateEnquiryReference('QR');
 
-    // 5. DATABASE-FIRST RESILIENCE: Save record to MongoDB before triggering external services
-    const enquiry = await Enquiry.create({
+    // 5. DATABASE-FIRST RESILIENCE: Save the record before triggering external services
+    const enquiry = await prisma.enquiry.create({ data: {
       referenceNumber,
       type: 'QUOTE',
       status: 'NEW',
@@ -125,11 +123,11 @@ export async function POST(req: NextRequest) {
       expectedStartDate: validated.data.expectedStartDate,
       projectDuration: validated.data.projectDuration,
       scopeDescription: validated.data.scopeDescription,
-      attachments: savedAttachments,
+      attachments: savedAttachments as unknown as Prisma.InputJsonValue,
       ipAddress: ip,
       userAgent: req.headers.get('user-agent') || undefined,
       emailDispatched: false,
-    });
+    } });
 
     // 6. Asynchronously dispatch transactional emails without blocking client response
     (async () => {
@@ -166,12 +164,16 @@ export async function POST(req: NextRequest) {
           }),
         });
 
-        enquiry.emailDispatched = true;
-        await enquiry.save();
+        await prisma.enquiry.update({
+          where: { id: enquiry.id },
+          data: { emailDispatched: true },
+        });
       } catch (emailErr: any) {
         console.error('Email notification failure for enquiry:', emailErr);
-        enquiry.emailDispatchError = emailErr?.message || 'Email delivery failed';
-        await enquiry.save();
+        await prisma.enquiry.update({
+          where: { id: enquiry.id },
+          data: { emailDispatchError: emailErr?.message || 'Email delivery failed' },
+        });
       }
     })();
 

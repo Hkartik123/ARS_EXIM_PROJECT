@@ -1,8 +1,8 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
-import { normalizeProjectRecord } from '@/lib/projects/normalize';
+import { normalizeProjectForPersistence, normalizeProjectRecord } from '@/lib/projects/normalize';
+import { isValidDatabaseId } from '@/lib/db/ids';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const user = await getCurrentUser();
@@ -17,19 +17,23 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   try {
     const body = await req.json().catch(() => ({}));
     const shouldPublish = body.published ?? body.publishStatus === 'PUBLISHED';
-
-    await connectToDatabase();
-    const project = await Project.findById(params.id);
+    if (!isValidDatabaseId(params.id)) return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
+    const project = await prisma.project.findUnique({ where: { id: params.id } });
     if (!project || project.isDeleted) {
       return NextResponse.json({ success: false, error: { code: 'NOT_FOUND' } }, { status: 404 });
     }
 
-    project.published = Boolean(shouldPublish);
-    project.publishStatus = shouldPublish ? 'PUBLISHED' : 'DRAFT';
-    project.publishedAt = shouldPublish ? project.publishedAt || new Date() : undefined;
-    await project.save();
+    const updatedProject = await prisma.project.update({
+      where: { id: project.id },
+      data: normalizeProjectForPersistence({
+        ...project,
+        published: Boolean(shouldPublish),
+        publishStatus: shouldPublish ? 'PUBLISHED' : 'DRAFT',
+        publishedAt: shouldPublish ? project.publishedAt || new Date() : null,
+      }, project),
+    });
 
-    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(project.toObject()) } });
+    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(updatedProject) } });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: { code: 'SERVER_ERROR', message: error.message } }, { status: 500 });
   }

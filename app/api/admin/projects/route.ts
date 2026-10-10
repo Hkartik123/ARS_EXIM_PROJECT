@@ -1,10 +1,9 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
 import { projectSchema } from '@/validators/project.schema';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
-import { normalizeProjectPayload, normalizeProjectRecord } from '@/lib/projects/normalize';
+import { normalizeProjectForPersistence, normalizeProjectPayload, normalizeProjectRecord } from '@/lib/projects/normalize';
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -16,8 +15,10 @@ export async function GET() {
   }
 
   try {
-    await connectToDatabase();
-    const projects = await Project.find({ isDeleted: false }).sort({ createdAt: -1 }).lean();
+    const projects = await prisma.project.findMany({
+      where: { isDeleted: false },
+      orderBy: { createdAt: 'desc' },
+    });
     return NextResponse.json({ success: true, data: { projects: projects.map(normalizeProjectRecord) } });
   } catch (err: any) {
     return NextResponse.json(
@@ -61,11 +62,8 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    await connectToDatabase();
-
-    const normalized = normalizeProjectPayload(validated.data);
-    const existing = await Project.findOne({ slug: normalized.slug, isDeleted: false });
+    const normalized = normalizeProjectForPersistence(validated.data);
+    const existing = await prisma.project.findFirst({ where: { slug: normalized.slug, isDeleted: false } });
     if (existing) {
       return NextResponse.json(
         { success: false, error: { code: 'CONFLICT', message: 'A project with this slug already exists.' } },
@@ -73,11 +71,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const project = await Project.create({
-      ...normalized,
-      published: normalized.published ?? normalized.publishStatus === 'PUBLISHED',
-      publishStatus: normalized.publishStatus,
-      publishedAt: normalized.publishStatus === 'PUBLISHED' ? new Date() : undefined,
+    const project = await prisma.project.create({
+      data: normalized,
     });
 
     await recordAuditLog({
@@ -86,11 +81,11 @@ export async function POST(req: NextRequest) {
       userRole: user.role,
       action: 'CREATE',
       entity: 'PROJECT',
-      entityId: project._id.toString(),
-      changesDiff: { after: normalizeProjectRecord(project.toObject()) },
+      entityId: project.id,
+      changesDiff: { after: normalizeProjectRecord(project) },
     });
 
-    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(project.toObject()) } }, { status: 201 });
+    return NextResponse.json({ success: true, data: { project: normalizeProjectRecord(project) } }, { status: 201 });
   } catch (err: any) {
     console.error('Project create error:', err);
     return NextResponse.json(

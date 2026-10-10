@@ -1,5 +1,5 @@
-import { AuditLog } from '@/models/AuditLog';
-import { connectToDatabase } from '@/lib/db/mongodb';
+import { prisma } from '@/lib/db/prisma';
+import { Prisma } from '@prisma/client';
 
 export interface AuditLogParams {
   userId: any;
@@ -15,8 +15,8 @@ export interface AuditLogParams {
 
 export async function recordAuditLog(params: AuditLogParams): Promise<void> {
   try {
-    await connectToDatabase();
-    await AuditLog.create({
+    await prisma.auditLog.create({
+      data: {
       userId: params.userId,
       userEmail: params.userEmail,
       userRole: params.userRole,
@@ -25,7 +25,8 @@ export async function recordAuditLog(params: AuditLogParams): Promise<void> {
       entityId: params.entityId,
       ipAddress: params.ipAddress || '127.0.0.1',
       userAgent: params.userAgent,
-      changesDiff: params.changesDiff,
+      changesDiff: params.changesDiff as Prisma.InputJsonValue | undefined,
+      },
     });
   } catch (err) {
     console.error('Failed to write audit log record:', err);

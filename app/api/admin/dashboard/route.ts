@@ -1,10 +1,7 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Enquiry } from '@/models/Enquiry';
-import { Project } from '@/models/Project';
-import { Application } from '@/models/Application';
-import { AuditLog } from '@/models/AuditLog';
+import { withLegacyId } from '@/lib/db/legacy-id';
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -16,8 +13,6 @@ export async function GET() {
   }
 
   try {
-    await connectToDatabase();
-
     const [
       totalQuotes,
       newQuotes,
@@ -26,12 +21,16 @@ export async function GET() {
       recentEnquiries,
       recentAuditLogs,
     ] = await Promise.all([
-      Enquiry.countDocuments({ type: 'QUOTE' }),
-      Enquiry.countDocuments({ type: 'QUOTE', status: 'NEW' }),
-      Project.countDocuments({ isDeleted: false }),
-      Application.countDocuments(),
-      Enquiry.find().sort({ createdAt: -1 }).limit(5).lean(),
-      AuditLog.find().sort({ createdAt: -1 }).limit(5).lean(),
+      prisma.enquiry.count({ where: { type: 'QUOTE' } }),
+      prisma.enquiry.count({ where: { type: 'QUOTE', status: 'NEW' } }),
+      prisma.project.count({ where: { isDeleted: false } }),
+      prisma.application.count(),
+      prisma.enquiry.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        include: { notes: { select: { authorId: true, authorName: true, note: true, createdAt: true } } },
+      }),
+      prisma.auditLog.findMany({ orderBy: { createdAt: 'desc' }, take: 5 }),
     ]);
 
     return NextResponse.json({
@@ -43,8 +42,8 @@ export async function GET() {
           totalProjects,
           totalApplications,
         },
-        recentEnquiries,
-        recentAuditLogs,
+        recentEnquiries: recentEnquiries.map(withLegacyId),
+        recentAuditLogs: recentAuditLogs.map(withLegacyId),
       },
     });
   } catch (err: any) {

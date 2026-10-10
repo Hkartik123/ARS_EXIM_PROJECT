@@ -1,3 +1,4 @@
+import { prisma } from '@/lib/db/prisma';
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -13,8 +14,6 @@ import {
   ArrowRight,
   AlertTriangle,
 } from 'lucide-react';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 import { normalizeProjectRecord } from '@/lib/projects/normalize';
 import { ProjectImage } from '@/components/public/project-image';
@@ -24,29 +23,40 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  await connectToDatabase();
-  const project = await Project.findOne({
-    slug: { $eq: params.slug, $nin: UNVERIFIED_SEED_PROJECT_SLUGS },
-    $or: [{ publishStatus: 'PUBLISHED' }, { published: true }],
-    isDeleted: false,
-    featuredImage: { $not: /images\.unsplash\.com/i },
-  }).lean();
+  const project = await prisma.project.findFirst({
+    where: {
+      slug: params.slug,
+      NOT: [
+        { slug: { in: UNVERIFIED_SEED_PROJECT_SLUGS } },
+        { featuredImage: { contains: 'images.unsplash.com', mode: 'insensitive' } },
+      ],
+      OR: [{ publishStatus: 'PUBLISHED' }, { published: true }],
+      isDeleted: false,
+    },
+  });
   if (!project) return { title: 'Project Dossier Not Found' };
+  const seo = project.seo && typeof project.seo === 'object' && !Array.isArray(project.seo)
+    ? project.seo as { title?: string; metaDescription?: string }
+    : {};
 
   return {
-    title: project.seo?.title || project.title,
-    description: project.seo?.metaDescription || project.shortDescription,
+    title: seo.title || project.title,
+    description: seo.metaDescription || project.shortDescription,
   };
 }
 
 export default async function ProjectDetailPage({ params }: PageProps) {
-  await connectToDatabase();
-  const rawProject = await Project.findOne({
-    slug: { $eq: params.slug, $nin: UNVERIFIED_SEED_PROJECT_SLUGS },
-    $or: [{ publishStatus: 'PUBLISHED' }, { published: true }],
-    isDeleted: false,
-    featuredImage: { $not: /images\.unsplash\.com/i },
-  }).lean();
+  const rawProject = await prisma.project.findFirst({
+    where: {
+      slug: params.slug,
+      NOT: [
+        { slug: { in: UNVERIFIED_SEED_PROJECT_SLUGS } },
+        { featuredImage: { contains: 'images.unsplash.com', mode: 'insensitive' } },
+      ],
+      OR: [{ publishStatus: 'PUBLISHED' }, { published: true }],
+      isDeleted: false,
+    },
+  });
 
   if (!rawProject) {
     notFound();
@@ -55,17 +65,18 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const project = normalizeProjectRecord(rawProject);
 
   // Find related projects by service or industry
-  const relatedProjects = await Project.find({
-    slug: { $nin: [...UNVERIFIED_SEED_PROJECT_SLUGS, project.slug] },
-    isDeleted: false,
-    featuredImage: { $not: /images\.unsplash\.com/i },
-    $and: [
-      { $or: [{ publishStatus: 'PUBLISHED' }, { published: true }] },
-      { $or: [{ services: { $in: project.services } }, { industry: project.industry }] },
-    ],
-  })
-    .limit(2)
-    .lean();
+  const relatedProjects = await prisma.project.findMany({
+    where: {
+      slug: { notIn: [...UNVERIFIED_SEED_PROJECT_SLUGS, project.slug] },
+      isDeleted: false,
+      NOT: { featuredImage: { contains: 'images.unsplash.com', mode: 'insensitive' } },
+      AND: [
+        { OR: [{ publishStatus: 'PUBLISHED' }, { published: true }] },
+        { OR: [{ services: { hasSome: project.services } }, { industry: project.industry }] },
+      ],
+    },
+    take: 2,
+  });
 
   return (
     <div className="py-12 bg-white">

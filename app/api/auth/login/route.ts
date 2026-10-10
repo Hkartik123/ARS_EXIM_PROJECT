@@ -1,23 +1,25 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { User } from '@/models/User';
 import { comparePassword, hashPassword } from '@/lib/auth/passwords';
 import { createSessionToken, SESSION_COOKIE_OPTIONS } from '@/lib/auth/session';
 import { loginSchema } from '@/validators/auth.schema';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
+import type { UserRole } from '@/models/User';
 
 async function ensureInitialAdminUser(email: string, password: string) {
-  const existingUser = await User.findOne({ email });
+  const existingUser = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
   if (existingUser) return existingUser;
 
   const passwordHash = await hashPassword(password);
-  return User.create({
-    email,
-    passwordHash,
-    name: 'ARS EXIM Lead Administrator',
-    role: 'SUPER_ADMIN',
-    isActive: true,
+  return prisma.user.create({
+    data: {
+      email: email.toLowerCase(),
+      passwordHash,
+      name: 'ARS EXIM Lead Administrator',
+      role: 'SUPER_ADMIN',
+      isActive: true,
+    },
   });
 }
 
@@ -56,13 +58,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    await connectToDatabase();
-
     const adminEmail = process.env.ADMIN_INITIAL_EMAIL;
     const adminPassword = process.env.ADMIN_INITIAL_PASSWORD;
 
-    let user = await User.findOne({ email: validated.data.email });
+    let user = await prisma.user.findUnique({ where: { email: validated.data.email.toLowerCase() } });
     if (!user && adminEmail && adminPassword && validated.data.email.toLowerCase() === adminEmail.toLowerCase()) {
       user = await ensureInitialAdminUser(adminEmail, adminPassword);
     }
@@ -98,19 +97,22 @@ export async function POST(req: NextRequest) {
     const passwordMatches = await comparePassword(validated.data.password, user.passwordHash);
 
     if (!passwordMatches) {
-      user.failedLoginAttempts += 1;
-      if (user.failedLoginAttempts >= 5) {
-        user.lockoutUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 min lockout
-      }
-      await user.save();
+      const failedLoginAttempts = user.failedLoginAttempts + 1;
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          failedLoginAttempts,
+          lockoutUntil: failedLoginAttempts >= 5 ? new Date(Date.now() + 30 * 60 * 1000) : user.lockoutUntil,
+        },
+      });
 
       await recordAuditLog({
-        userId: user._id,
+        userId: user.id,
         userEmail: user.email,
         userRole: user.role,
         action: 'FAILED_LOGIN',
         entity: 'USER',
-        entityId: user._id.toString(),
+        entityId: user.id,
         ipAddress: ip,
         userAgent: req.headers.get('user-agent') || undefined,
       });
@@ -122,26 +124,25 @@ export async function POST(req: NextRequest) {
     }
 
     // Reset failed attempts on success
-    user.failedLoginAttempts = 0;
-    user.lockoutUntil = undefined;
-    user.lastLoginAt = new Date();
-    user.lastLoginIp = ip;
-    await user.save();
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: { failedLoginAttempts: 0, lockoutUntil: null, lastLoginAt: new Date(), lastLoginIp: ip },
+    });
 
     const token = createSessionToken({
-      userId: user._id.toString(),
+      userId: user.id,
       email: user.email,
       name: user.name,
-      role: user.role,
+      role: user.role as UserRole,
     });
 
     await recordAuditLog({
-      userId: user._id,
+      userId: user.id,
       userEmail: user.email,
       userRole: user.role,
       action: 'LOGIN',
       entity: 'USER',
-      entityId: user._id.toString(),
+      entityId: user.id,
       ipAddress: ip,
       userAgent: req.headers.get('user-agent') || undefined,
     });
@@ -150,7 +151,7 @@ export async function POST(req: NextRequest) {
       success: true,
       data: {
         user: {
-          id: user._id,
+          id: updatedUser.id,
           email: user.email,
           name: user.name,
           role: user.role,

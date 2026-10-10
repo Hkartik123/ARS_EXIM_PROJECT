@@ -1,16 +1,16 @@
+import { prisma } from '@/lib/db/prisma';
 import React from 'react';
 import { ProjectEditor } from '@/components/admin/project-editor';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Project } from '@/models/Project';
 import { notFound } from 'next/navigation';
+import { isValidDatabaseId } from '@/lib/db/ids';
 
 interface EditProjectPageProps {
   params: { id: string };
 }
 
 export default async function EditProjectPage({ params }: EditProjectPageProps) {
-  await connectToDatabase();
-  const rawProject = await Project.findById(params.id).lean();
+  if (!isValidDatabaseId(params.id)) notFound();
+  const rawProject = await prisma.project.findUnique({ where: { id: params.id } });
 
   if (!rawProject) {
     notFound();

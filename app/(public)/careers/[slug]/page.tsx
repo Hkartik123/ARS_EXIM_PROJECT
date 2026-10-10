@@ -1,25 +1,23 @@
+import { prisma } from '@/lib/db/prisma';
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { Badge } from '@/components/ui/badge';
 import { CareerApplyForm } from '@/components/public/career-apply-form';
 import { MapPin, Clock, Briefcase, CheckCircle2 } from 'lucide-react';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Career } from '@/models/Career';
 
 interface PageProps {
   params: { slug: string };
 }
 
 export default async function CareerDetailPage({ params }: PageProps) {
-  await connectToDatabase();
-  const rawJob = await Career.findOne({ slug: params.slug, isOpen: true }).lean();
+  const rawJob = await prisma.career.findFirst({ where: { slug: params.slug, isOpen: true } });
 
   if (!rawJob) {
     notFound();
   }
 
-  const job = JSON.parse(JSON.stringify(rawJob));
+  const job = rawJob;
 
   return (
     <div className="py-12 bg-steel-50 min-h-screen">
@@ -89,7 +87,7 @@ export default async function CareerDetailPage({ params }: PageProps) {
 
           {/* Application Form Sidebar */}
           <div>
-            <CareerApplyForm jobId={job._id} jobTitle={job.title} />
+            <CareerApplyForm jobId={job.id} jobTitle={job.title} />
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
+import type { UserRole } from '@/models/User';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
-import { UserRole } from '@/models/User';
 
 export interface SessionPayload {
   userId: string;

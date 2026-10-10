@@ -1,6 +1,5 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Enquiry } from '@/models/Enquiry';
 import { contactEnquirySchema } from '@/validators/enquiry.schema';
 import { generateEnquiryReference } from '@/lib/utils';
 import { emailService } from '@/lib/email/email-service';
@@ -41,12 +40,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    await connectToDatabase();
     const referenceNumber = generateEnquiryReference('CR');
 
     // Database-first commit
-    const enquiry = await Enquiry.create({
+    const enquiry = await prisma.enquiry.create({ data: {
       referenceNumber,
       type: 'CONTACT',
       status: 'NEW',
@@ -60,7 +57,7 @@ export async function POST(req: NextRequest) {
       ipAddress: ip,
       userAgent: req.headers.get('user-agent') || undefined,
       emailDispatched: false,
-    });
+    } });
 
     // Background transactional email dispatch
     (async () => {
@@ -71,8 +68,10 @@ export async function POST(req: NextRequest) {
           subject: `[INQUIRY ${referenceNumber}] ${validated.data.company} - ${validated.data.name}`,
           html: `<p>New contact message from <strong>${validated.data.name}</strong> (${validated.data.company}):</p><p>${validated.data.message}</p>`,
         });
-        enquiry.emailDispatched = true;
-        await enquiry.save();
+        await prisma.enquiry.update({
+          where: { id: enquiry.id },
+          data: { emailDispatched: true },
+        });
       } catch (err) {
         console.error('Email dispatch error on contact inquiry:', err);
       }

@@ -167,7 +167,7 @@ export default function AdminDashboardPage() {
             <tbody className="divide-y divide-steel-100 text-steel-800">
               {data?.recentEnquiries && data.recentEnquiries.length > 0 ? (
                 data.recentEnquiries.map((enq: any) => (
-                  <tr key={enq._id} className="hover:bg-steel-50">
+                  <tr key={enq.id} className="hover:bg-steel-50">
                     <td className="py-4 px-6 font-bold text-navy-900">{enq.referenceNumber}</td>
                     <td className="py-4 px-6 text-steel-500">{formatDate(enq.createdAt)}</td>
                     <td className="py-4 px-6">
@@ -182,7 +182,7 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="py-4 px-6 text-right">
                       <Link
-                        href={`/admin/enquiries/${enq._id}`}
+                        href={`/admin/enquiries/${enq.id}`}
                         className="text-xs font-bold text-navy-900 hover:text-gold uppercase tracking-wider"
                       >
                         Review &rarr;
@@ -221,7 +221,7 @@ export default function AdminDashboardPage() {
           {data?.recentAuditLogs && data.recentAuditLogs.length > 0 ? (
             data.recentAuditLogs.map((log: any) => (
               <div
-                key={log._id}
+                key={log.id}
                 className="flex items-center justify-between p-3 bg-steel-50 rounded text-xs"
               >
                 <div>

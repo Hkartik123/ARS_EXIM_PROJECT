@@ -1,10 +1,9 @@
+import { prisma } from '@/lib/db/prisma';
 import Link from 'next/link';
 import { ArrowRight, Images } from 'lucide-react';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { GalleryGrid, GalleryImage } from '@/components/public/gallery-grid';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Media } from '@/models/Media';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,12 +14,12 @@ export const metadata = {
 
 async function getGalleryImages(): Promise<GalleryImage[]> {
   try {
-    await connectToDatabase();
-    const items = await Media.find({ isDeleted: false, isActive: true })
-      .sort({ isFeatured: -1, displayOrder: 1, createdAt: -1 })
-      .lean();
+    const items = await prisma.media.findMany({
+    where: { isDeleted: false, isActive: true },
+    orderBy: [{ isFeatured: 'desc' }, { displayOrder: 'asc' }, { createdAt: 'desc' }],
+  });
     return items.map((item) => ({
-      id: item._id.toString(),
+      id: item.id,
       title: item.title,
       category: item.category,
       url: item.url,

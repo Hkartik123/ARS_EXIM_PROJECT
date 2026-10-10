@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/db/mongodb';
+import { prisma } from '@/lib/db/prisma';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const startTime = Date.now();
   let dbStatus = 'DISCONNECTED';
 
   try {
-    const conn = await connectToDatabase();
-    if (conn.connection.readyState === 1) {
-      dbStatus = 'CONNECTED';
-    }
+    await prisma.$queryRaw`SELECT 1`;
+    dbStatus = 'CONNECTED';
   } catch (err: any) {
     dbStatus = `ERROR: ${err.message}`;
   }

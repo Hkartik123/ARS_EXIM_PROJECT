@@ -140,7 +140,7 @@ export default function AdminEnquiriesPage() {
                 </tr>
               ) : (
                 enquiries.map((enq) => (
-                  <tr key={enq._id} className="hover:bg-steel-50">
+                  <tr key={enq.id} className="hover:bg-steel-50">
                     <td className="py-4 px-6 font-bold text-navy-900 font-mono">
                       {enq.referenceNumber}
                       <span className="block text-[10px] text-steel-400 uppercase font-sans">
@@ -175,7 +175,7 @@ export default function AdminEnquiriesPage() {
                     </td>
                     <td className="py-4 px-6 text-right">
                       <Link
-                        href={`/admin/enquiries/${enq._id}`}
+                        href={`/admin/enquiries/${enq.id}`}
                         className="inline-flex items-center text-xs font-bold text-navy-900 hover:text-gold uppercase tracking-wider"
                       >
                         <span>Review</span>

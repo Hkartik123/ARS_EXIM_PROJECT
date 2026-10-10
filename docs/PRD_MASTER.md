@@ -27,7 +27,7 @@ The corporate website serves as an engineering-focused, high-credibility digital
 ## 2. Core Stack Requirements
 - **Frontend:** Next.js (App Router), React, TypeScript, Tailwind CSS, Lucide Icons.
 - **Backend:** Node.js, TypeScript, Next.js Server Actions / API Routes + modular Express architecture.
-- **Database:** MongoDB (Atlas production / Mongoose ODM / Memory-server fallback for local dev).
+- **Database:** Supabase-hosted PostgreSQL with Prisma ORM. Configure `DATABASE_URL` (pooled runtime connection) and `DIRECT_URL` (direct migration connection); see `docs/DATABASE.md`.
 - **Authentication:** HttpOnly Secure Session Cookies / JWT, Argon2id/Bcrypt password hashing, Role-Based Access Control (RBAC).
 - **Storage:** Abstracted S3-compatible object storage provider (AWS S3 / Cloudflare R2 / Local FS adapter fallback).
 - **Email:** Abstracted Transactional Email Service (Resend / SendGrid / SES / SMTP fallback).
@@ -86,5 +86,5 @@ The corporate website serves as an engineering-focused, high-credibility digital
 ## 6. Strict Compliance Rules
 - **No Fake Data / No Invented Clients:** Zero placeholder text, zero generic stock claims. If proof does not exist, the section remains hidden or in CMS draft state.
 - **Banned Content Scanner:** Automated pre-launch scanner enforcing zero occurrences of lorem ipsum, Urban Nest, example.com, etc.
-- **Database-First Submission:** Enquiries are persistently committed to MongoDB before dispatching transactional notifications.
+- **Database-First Submission:** Enquiries are persistently committed to PostgreSQL before dispatching transactional notifications.
 - **WCAG 2.2 AA & Core Web Vitals:** Strict performance targets (LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1).

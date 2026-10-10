@@ -1,7 +1,6 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { User } from '@/models/User';
 
 export async function GET() {
   const session = await getCurrentUser();
@@ -14,8 +13,10 @@ export async function GET() {
   }
 
   try {
-    await connectToDatabase();
-    const user = await User.findById(session.userId).select('-passwordHash');
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+      omit: { passwordHash: true },
+    });
 
     if (!user || !user.isActive) {
       return NextResponse.json(
@@ -26,7 +27,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      data: { user },
+      data: { user: user ? { ...user, _id: user.id } : user },
     });
   } catch (err: any) {
     return NextResponse.json(

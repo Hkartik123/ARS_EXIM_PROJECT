@@ -1,7 +1,7 @@
+import { prisma } from '@/lib/db/prisma';
 import { NextResponse } from 'next/server';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { AuditLog } from '@/models/AuditLog';
+import { withLegacyId } from '@/lib/db/legacy-id';
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -14,9 +14,8 @@ export async function GET() {
   }
 
   try {
-    await connectToDatabase();
-    const logs = await AuditLog.find().sort({ createdAt: -1 }).limit(200).lean();
-    return NextResponse.json({ success: true, data: { logs } });
+    const logs = await prisma.auditLog.findMany({ orderBy: { createdAt: 'desc' }, take: 200 });
+    return NextResponse.json({ success: true, data: { logs: logs.map(withLegacyId) } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: { message: err.message } }, { status: 500 });
   }

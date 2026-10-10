@@ -1,6 +1,5 @@
+import { prisma } from '@/lib/db/prisma';
 import React from 'react';
-import { connectToDatabase } from '@/lib/db/mongodb';
-import { Career } from '@/models/Career';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Briefcase, PlusCircle, MapPin } from 'lucide-react';
@@ -9,9 +8,7 @@ import { formatDate } from '@/lib/utils';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminCareersPage() {
-  await connectToDatabase();
-  const rawCareers = await Career.find().sort({ createdAt: -1 }).lean();
-  const careers = JSON.parse(JSON.stringify(rawCareers));
+  const careers = await prisma.career.findMany({ orderBy: { createdAt: 'desc' } });
 
   return (
     <div className="space-y-6">
@@ -46,7 +43,7 @@ export default async function AdminCareersPage() {
                 </tr>
               ) : (
                 careers.map((job: any) => (
-                  <tr key={job._id} className="hover:bg-steel-50">
+                  <tr key={job.id} className="hover:bg-steel-50">
                     <td className="py-4 px-6 font-bold text-navy-900">{job.title}</td>
                     <td className="py-4 px-6">{job.department}</td>
                     <td className="py-4 px-6 text-steel-600">{job.location}</td>
