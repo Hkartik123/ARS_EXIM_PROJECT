@@ -27,32 +27,47 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const formData = await req.formData();
+    let formData: FormData;
+    try {
+      formData = await req.formData();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: { code: 'INVALID_FORM_DATA', message: 'The quotation form submission was not valid.' } },
+        { status: 400 }
+      );
+    }
 
-    const rawServices = formData.get('requiredServices') as string;
+    const getString = (key: string) => {
+      const value = formData.get(key);
+      return typeof value === 'string' ? value : '';
+    };
+    const rawServices = getString('requiredServices');
     let parsedServices: string[] = [];
     try {
-      parsedServices = rawServices ? JSON.parse(rawServices) : [];
+      const parsed: unknown = rawServices ? JSON.parse(rawServices) : [];
+      parsedServices = Array.isArray(parsed) && parsed.every((value) => typeof value === 'string')
+        ? parsed
+        : [];
     } catch {
-      parsedServices = rawServices ? [rawServices] : [];
+      parsedServices = [];
     }
 
     const payload = {
-      name: (formData.get('name') as string) || '',
-      company: (formData.get('company') as string) || '',
-      email: (formData.get('email') as string) || '',
-      phone: (formData.get('phone') as string) || '',
-      country: (formData.get('country') as string) || '',
-      projectName: (formData.get('projectName') as string) || undefined,
-      projectType: (formData.get('projectType') as string) || undefined,
-      industry: (formData.get('industry') as string) || undefined,
-      location: (formData.get('location') as string) || undefined,
+      name: getString('name'),
+      company: getString('company'),
+      email: getString('email'),
+      phone: getString('phone'),
+      country: getString('country'),
+      projectName: getString('projectName') || undefined,
+      projectType: getString('projectType') || undefined,
+      industry: getString('industry') || undefined,
+      location: getString('location') || undefined,
       requiredServices: parsedServices,
-      expectedStartDate: (formData.get('expectedStartDate') as string) || undefined,
-      projectDuration: (formData.get('projectDuration') as string) || undefined,
-      scopeDescription: (formData.get('scopeDescription') as string) || '',
-      consent: formData.get('consent') === 'true',
-      turnstileToken: (formData.get('turnstileToken') as string) || undefined,
+      expectedStartDate: getString('expectedStartDate') || undefined,
+      projectDuration: getString('projectDuration') || undefined,
+      scopeDescription: getString('scopeDescription'),
+      consent: getString('consent') === 'true',
+      turnstileToken: getString('turnstileToken') || undefined,
     };
 
     // 2. Validate payload
@@ -72,7 +87,27 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Process file attachments (up to 5 files, 10MB per file)
-    const files = formData.getAll('files') as File[];
+    const rawFiles = formData.getAll('files');
+    if (rawFiles.some((file) => typeof file === 'string')) {
+      return NextResponse.json(
+        { success: false, error: { code: 'FILE_VALIDATION_ERROR', message: 'Invalid file attachment submitted.' } },
+        { status: 400 }
+      );
+    }
+    const files = rawFiles as File[];
+    if (files.length > 5) {
+      return NextResponse.json(
+        { success: false, error: { code: 'FILE_VALIDATION_ERROR', message: 'A maximum of 5 files may be uploaded.' } },
+        { status: 400 }
+      );
+    }
+    const totalUploadSize = files.reduce((total, file) => total + (file.size > 0 ? file.size : 0), 0);
+    if (totalUploadSize > 25 * 1024 * 1024) {
+      return NextResponse.json(
+        { success: false, error: { code: 'FILE_VALIDATION_ERROR', message: 'Total upload size cannot exceed 25MB.' } },
+        { status: 400 }
+      );
+    }
     const savedAttachments: IEnquiryFile[] = [];
 
     for (const file of files) {
@@ -106,28 +141,47 @@ export async function POST(req: NextRequest) {
     const referenceNumber = generateEnquiryReference('QR');
 
     // 5. DATABASE-FIRST RESILIENCE: Save the record before triggering external services
-    const enquiry = await prisma.enquiry.create({ data: {
-      referenceNumber,
-      type: 'QUOTE',
-      status: 'NEW',
-      name: validated.data.name,
-      company: validated.data.company,
-      email: validated.data.email,
-      phone: validated.data.phone,
-      country: validated.data.country,
-      projectName: validated.data.projectName,
-      projectType: validated.data.projectType,
-      industry: validated.data.industry,
-      location: validated.data.location,
-      requiredServices: validated.data.requiredServices,
-      expectedStartDate: validated.data.expectedStartDate,
-      projectDuration: validated.data.projectDuration,
-      scopeDescription: validated.data.scopeDescription,
-      attachments: savedAttachments as unknown as Prisma.InputJsonValue,
-      ipAddress: ip,
-      userAgent: req.headers.get('user-agent') || undefined,
-      emailDispatched: false,
-    } });
+    let enquiry;
+    try {
+      enquiry = await prisma.enquiry.create({ data: {
+        referenceNumber,
+        type: 'QUOTE',
+        status: 'NEW',
+        name: validated.data.name,
+        company: validated.data.company,
+        email: validated.data.email,
+        phone: validated.data.phone,
+        country: validated.data.country,
+        projectName: validated.data.projectName,
+        projectType: validated.data.projectType,
+        industry: validated.data.industry,
+        location: validated.data.location,
+        requiredServices: validated.data.requiredServices,
+        expectedStartDate: validated.data.expectedStartDate,
+        projectDuration: validated.data.projectDuration,
+        scopeDescription: validated.data.scopeDescription,
+        attachments: savedAttachments as unknown as Prisma.InputJsonValue,
+        ipAddress: ip,
+        userAgent: req.headers.get('user-agent') || undefined,
+        emailDispatched: false,
+      } });
+    } catch (err) {
+      const error = err as { name?: string; code?: string };
+      console.error('Quotation database write failed:', {
+        name: error.name,
+        code: error.code,
+      });
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'DATABASE_UNAVAILABLE',
+            message: 'We could not save your quotation request right now. Please try again later.',
+          },
+        },
+        { status: 503 }
+      );
+    }
 
     // 6. Asynchronously dispatch transactional emails without blocking client response
     (async () => {
@@ -189,9 +243,12 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (err: any) {
-    console.error('Quotation submission error:', err);
+    console.error('Quotation submission failed:', {
+      name: err?.name,
+      code: err?.code,
+    });
     return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR', message: err.message || 'Quotation could not be processed.' } },
+      { success: false, error: { code: 'SERVER_ERROR', message: 'The quotation request could not be processed.' } },
       { status: 500 }
     );
   }

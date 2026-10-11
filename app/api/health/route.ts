@@ -10,8 +10,13 @@ export async function GET() {
   try {
     await prisma.$queryRaw`SELECT 1`;
     dbStatus = 'CONNECTED';
-  } catch (err: any) {
-    dbStatus = `ERROR: ${err.message}`;
+  } catch (err) {
+    const error = err as { name?: string; code?: string };
+    console.error('Database health check failed:', {
+      name: error.name,
+      code: error.code,
+    });
+    dbStatus = 'DISCONNECTED';
   }
 
   const responseTime = Date.now() - startTime;

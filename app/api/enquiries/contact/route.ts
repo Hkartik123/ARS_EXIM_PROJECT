@@ -24,7 +24,16 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json();
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: { code: 'INVALID_JSON', message: 'The contact form submission was not valid JSON.' } },
+        { status: 400 }
+      );
+    }
+
     const validated = contactEnquirySchema.safeParse(body);
 
     if (!validated.success) {
@@ -43,21 +52,40 @@ export async function POST(req: NextRequest) {
     const referenceNumber = generateEnquiryReference('CR');
 
     // Database-first commit
-    const enquiry = await prisma.enquiry.create({ data: {
-      referenceNumber,
-      type: 'CONTACT',
-      status: 'NEW',
-      name: validated.data.name,
-      company: validated.data.company,
-      email: validated.data.email,
-      phone: validated.data.phone,
-      country: validated.data.country,
-      requiredServices: validated.data.serviceCategory ? [validated.data.serviceCategory] : [],
-      scopeDescription: validated.data.message,
-      ipAddress: ip,
-      userAgent: req.headers.get('user-agent') || undefined,
-      emailDispatched: false,
-    } });
+    let enquiry;
+    try {
+      enquiry = await prisma.enquiry.create({ data: {
+        referenceNumber,
+        type: 'CONTACT',
+        status: 'NEW',
+        name: validated.data.name,
+        company: validated.data.company,
+        email: validated.data.email,
+        phone: validated.data.phone,
+        country: validated.data.country,
+        requiredServices: validated.data.serviceCategory ? [validated.data.serviceCategory] : [],
+        scopeDescription: validated.data.message,
+        ipAddress: ip,
+        userAgent: req.headers.get('user-agent') || undefined,
+        emailDispatched: false,
+      } });
+    } catch (err) {
+      const error = err as { name?: string; code?: string };
+      console.error('Contact enquiry database write failed:', {
+        name: error.name,
+        code: error.code,
+      });
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'DATABASE_UNAVAILABLE',
+            message: 'We could not save your inquiry right now. Please try again later.',
+          },
+        },
+        { status: 503 }
+      );
+    }
 
     // Background transactional email dispatch
     (async () => {
@@ -88,9 +116,12 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (err: any) {
-    console.error('Contact inquiry error:', err);
+    console.error('Contact inquiry request failed:', {
+      name: err?.name,
+      code: err?.code,
+    });
     return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR', message: err.message || 'Contact inquiry failed.' } },
+      { success: false, error: { code: 'SERVER_ERROR', message: 'The contact inquiry could not be processed.' } },
       { status: 500 }
     );
   }

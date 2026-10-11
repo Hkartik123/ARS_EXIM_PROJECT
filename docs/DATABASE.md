@@ -1,9 +1,11 @@
 # Supabase/PostgreSQL setup
 
-This project uses Prisma with Supabase-hosted PostgreSQL. No database credentials are included in this repository. Copy `.env.example` to `.env.local` and enter your own values from the Supabase project settings:
+This project uses Prisma with Supabase-hosted PostgreSQL. No database credentials are included in this repository. Copy `.env.example` to the repository-root `.env` file and enter your own values from the Supabase project settings. Prisma CLI commands load this root `.env` file; Next.js also supports `.env.local`.
 
-- `DATABASE_URL`: the Supavisor/session or transaction pooler URL for application traffic. If using transaction mode, retain the parameters Supabase provides (including `pgbouncer=true` when applicable).
-- `DIRECT_URL`: the direct, non-pooled PostgreSQL URL for Prisma migrations. Keep SSL enabled (`sslmode=require`).
+- `DATABASE_URL`: the Supavisor/session or transaction pooler URL for application traffic. Use the complete URI Supabase provides, including its pooler username (often `postgres.<project-ref>`), host, and port. Retain the provider query parameters and SSL (`sslmode=require`).
+- `DIRECT_URL`: the direct, non-pooled PostgreSQL URL for Prisma migrations. Keep SSL enabled (`sslmode=require`). Direct connections may require IPv6; use the Supabase session pooler if your network cannot reach the direct endpoint.
+- URL-encode reserved characters in the database password (for example, `@` as `%40`). Do not add surrounding quotes when entering the URL as a Vercel environment variable.
+- Configure both variables separately in Vercel for every environment you deploy (at least Production and Preview). Local `.env` values are not automatically uploaded to Vercel. Redeploy after changing a Vercel variable.
 
 Install dependencies and create the client:
 

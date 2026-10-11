@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +22,7 @@ export function ContactForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isSubmitting = useRef(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -37,6 +38,7 @@ export function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting.current) return;
     setError(null);
 
     if (!formData.consent) {
@@ -44,6 +46,7 @@ export function ContactForm() {
       return;
     }
 
+    isSubmitting.current = true;
     setLoading(true);
 
     try {
@@ -72,6 +75,7 @@ export function ContactForm() {
     } catch (err: any) {
       setError(err.message || 'Error occurred while submitting inquiry.');
     } finally {
+      isSubmitting.current = false;
       setLoading(false);
     }
   };
