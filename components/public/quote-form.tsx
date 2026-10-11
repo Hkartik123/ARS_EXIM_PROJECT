@@ -141,6 +141,10 @@ export function QuoteForm() {
         body: data,
       });
 
+      if (!res.headers.get('content-type')?.includes('application/json')) {
+        throw new Error('The quotation service is temporarily unavailable. Please try again later.');
+      }
+
       const json = await res.json();
 
       if (!res.ok || !json.success) {

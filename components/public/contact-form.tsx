@@ -53,6 +53,10 @@ export function ContactForm() {
         body: JSON.stringify(formData),
       });
 
+      if (!res.headers.get('content-type')?.includes('application/json')) {
+        throw new Error('The contact service is temporarily unavailable. Please try again later.');
+      }
+
       const json = await res.json();
       if (!res.ok || !json.success) {
         const fieldErrors = json.error?.details?.fieldErrors;
