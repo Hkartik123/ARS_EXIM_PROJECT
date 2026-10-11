@@ -55,7 +55,13 @@ export function ContactForm() {
 
       const json = await res.json();
       if (!res.ok || !json.success) {
-        throw new Error(json.error?.message || 'Failed to submit contact message.');
+        const fieldErrors = json.error?.details?.fieldErrors;
+        const validationMessages = fieldErrors && typeof fieldErrors === 'object'
+          ? Object.values(fieldErrors)
+            .flat()
+            .filter((message): message is string => typeof message === 'string')
+          : [];
+        throw new Error(validationMessages.join(' ') || json.error?.message || 'Failed to submit contact message.');
       }
 
       router.push(`/thank-you?ref=${encodeURIComponent(json.data.referenceNumber)}`);
