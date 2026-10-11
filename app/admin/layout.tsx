@@ -14,9 +14,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(true);
 
   const isLoginPage = pathname === '/admin/login';
+  const isAdminRoot = pathname === '/admin';
 
   useEffect(() => {
-    if (isLoginPage) {
+    if (isLoginPage || isAdminRoot) {
       setLoading(false);
       return;
     }
@@ -38,7 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     checkAuth();
-  }, [pathname, isLoginPage, router]);
+  }, [pathname, isLoginPage, isAdminRoot, router]);
 
   const handleLogout = async () => {
     try {
@@ -49,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   };
 
-  if (isLoginPage) {
+  if (isLoginPage || isAdminRoot) {
     return <>{children}</>;
   }
 
