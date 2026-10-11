@@ -7,14 +7,23 @@ import { storageService } from '@/lib/storage/storage-service';
 import { emailService } from '@/lib/email/email-service';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 import { Prisma } from '@prisma/client';
+import {
+  addRequestId,
+  createRequestId,
+  logDatabaseFailure,
+  logRequestFailure,
+} from '@/lib/api/request-diagnostics';
 
 export async function POST(req: NextRequest) {
+  const requestId = createRequestId();
+  const respond = (body: unknown, init?: ResponseInit) =>
+    addRequestId(NextResponse.json(body, init), requestId);
   const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
 
   // 1. Rate limiting: 5 submissions per hour per IP
   const rateLimit = checkRateLimit(`quote-${ip}`, { windowMs: 60 * 60 * 1000, maxRequests: 5 });
   if (!rateLimit.allowed) {
-    return NextResponse.json(
+    return respond(
       {
         success: false,
         error: {
@@ -31,7 +40,7 @@ export async function POST(req: NextRequest) {
     try {
       formData = await req.formData();
     } catch {
-      return NextResponse.json(
+      return respond(
         { success: false, error: { code: 'INVALID_FORM_DATA', message: 'The quotation form submission was not valid.' } },
         { status: 400 }
       );
@@ -73,7 +82,7 @@ export async function POST(req: NextRequest) {
     // 2. Validate payload
     const validated = quoteEnquirySchema.safeParse(payload);
     if (!validated.success) {
-      return NextResponse.json(
+      return respond(
         {
           success: false,
           error: {
@@ -89,21 +98,21 @@ export async function POST(req: NextRequest) {
     // 3. Process file attachments (up to 5 files, 10MB per file)
     const rawFiles = formData.getAll('files');
     if (rawFiles.some((file) => typeof file === 'string')) {
-      return NextResponse.json(
+      return respond(
         { success: false, error: { code: 'FILE_VALIDATION_ERROR', message: 'Invalid file attachment submitted.' } },
         { status: 400 }
       );
     }
     const files = rawFiles as File[];
     if (files.length > 5) {
-      return NextResponse.json(
+      return respond(
         { success: false, error: { code: 'FILE_VALIDATION_ERROR', message: 'A maximum of 5 files may be uploaded.' } },
         { status: 400 }
       );
     }
     const totalUploadSize = files.reduce((total, file) => total + (file.size > 0 ? file.size : 0), 0);
     if (totalUploadSize > 25 * 1024 * 1024) {
-      return NextResponse.json(
+      return respond(
         { success: false, error: { code: 'FILE_VALIDATION_ERROR', message: 'Total upload size cannot exceed 25MB.' } },
         { status: 400 }
       );
@@ -119,7 +128,7 @@ export async function POST(req: NextRequest) {
         });
 
         if (!validation.valid) {
-          return NextResponse.json(
+          return respond(
             { success: false, error: { code: 'FILE_VALIDATION_ERROR', message: validation.error } },
             { status: 400 }
           );
@@ -141,9 +150,8 @@ export async function POST(req: NextRequest) {
     const referenceNumber = generateEnquiryReference('QR');
 
     // 5. DATABASE-FIRST RESILIENCE: Save the record before triggering external services
-    let enquiry;
     try {
-      enquiry = await prisma.enquiry.create({ data: {
+      const enquiry = await prisma.enquiry.create({ data: {
         referenceNumber,
         type: 'QUOTE',
         status: 'NEW',
@@ -165,90 +173,109 @@ export async function POST(req: NextRequest) {
         userAgent: req.headers.get('user-agent') || undefined,
         emailDispatched: false,
       } });
+
+      // Email delivery happens only after PostgreSQL confirms the insert.
+      void (async () => {
+        try {
+          const adminEmail = process.env.SALES_NOTIFY_EMAIL || 'info@arsexim.com';
+          await emailService.sendEmail({
+            to: adminEmail,
+            subject: `[NEW RFQ ${referenceNumber}] ${validated.data.company} - ${validated.data.name}`,
+            html: emailService.generateQuoteAdminHtml({
+              referenceNumber,
+              name: validated.data.name,
+              company: validated.data.company,
+              email: validated.data.email,
+              phone: validated.data.phone,
+              country: validated.data.country,
+              projectName: validated.data.projectName,
+              projectType: validated.data.projectType,
+              industry: validated.data.industry,
+              requiredServices: validated.data.requiredServices,
+              scopeDescription: validated.data.scopeDescription,
+              attachmentsCount: savedAttachments.length,
+            }),
+          });
+
+          await emailService.sendEmail({
+            to: validated.data.email,
+            subject: `ARS EXIM Quotation Request Received [${referenceNumber}]`,
+            html: emailService.generateQuoteCustomerHtml({
+              referenceNumber,
+              name: validated.data.name,
+              company: validated.data.company,
+            }),
+          });
+
+          await prisma.enquiry.update({
+            where: { id: enquiry.id },
+            data: { emailDispatched: true },
+          });
+        } catch (emailError) {
+          logRequestFailure(emailError, {
+            requestId,
+            endpoint: '/api/enquiries/quote',
+            operation: 'dispatch_email',
+          });
+          const details = emailError as { message?: string };
+          await prisma.enquiry.update({
+            where: { id: enquiry.id },
+            data: { emailDispatchError: details.message || 'Email delivery failed' },
+          }).catch((updateError: unknown) => {
+            logRequestFailure(updateError, {
+              requestId,
+              endpoint: '/api/enquiries/quote',
+              operation: 'record_email_failure',
+            });
+          });
+        }
+      })();
+
+      return respond(
+        {
+          success: true,
+          data: {
+            referenceNumber,
+            message: 'Quotation request successfully registered.',
+          },
+        },
+        { status: 201 }
+      );
     } catch (err) {
-      const error = err as { name?: string; code?: string };
-      console.error('Quotation database write failed:', {
-        name: error.name,
-        code: error.code,
+      const failure = logDatabaseFailure(err, {
+        requestId,
+        endpoint: '/api/enquiries/quote',
+        operation: 'prisma.enquiry.create',
       });
-      return NextResponse.json(
+      return respond(
         {
           success: false,
           error: {
-            code: 'DATABASE_UNAVAILABLE',
-            message: 'We could not save your quotation request right now. Please try again later.',
+            code: failure.code,
+            category: failure.category,
+            message: failure.message,
+            requestId,
           },
         },
-        { status: 503 }
+        { status: failure.status }
       );
     }
 
-    // 6. Asynchronously dispatch transactional emails without blocking client response
-    (async () => {
-      try {
-        const adminEmail = process.env.SALES_NOTIFY_EMAIL || 'info@arsexim.com';
-        // Send alert to admin
-        await emailService.sendEmail({
-          to: adminEmail,
-          subject: `[NEW RFQ ${referenceNumber}] ${validated.data.company} - ${validated.data.name}`,
-          html: emailService.generateQuoteAdminHtml({
-            referenceNumber,
-            name: validated.data.name,
-            company: validated.data.company,
-            email: validated.data.email,
-            phone: validated.data.phone,
-            country: validated.data.country,
-            projectName: validated.data.projectName,
-            projectType: validated.data.projectType,
-            industry: validated.data.industry,
-            requiredServices: validated.data.requiredServices,
-            scopeDescription: validated.data.scopeDescription,
-            attachmentsCount: savedAttachments.length,
-          }),
-        });
-
-        // Send confirmation to customer
-        await emailService.sendEmail({
-          to: validated.data.email,
-          subject: `ARS EXIM Quotation Request Received [${referenceNumber}]`,
-          html: emailService.generateQuoteCustomerHtml({
-            referenceNumber,
-            name: validated.data.name,
-            company: validated.data.company,
-          }),
-        });
-
-        await prisma.enquiry.update({
-          where: { id: enquiry.id },
-          data: { emailDispatched: true },
-        });
-      } catch (emailErr: any) {
-        console.error('Email notification failure for enquiry:', emailErr);
-        await prisma.enquiry.update({
-          where: { id: enquiry.id },
-          data: { emailDispatchError: emailErr?.message || 'Email delivery failed' },
-        });
-      }
-    })();
-
-    // 7. Return 201 Created with Reference Number
-    return NextResponse.json(
+  } catch (err) {
+    logRequestFailure(err, {
+      requestId,
+      endpoint: '/api/enquiries/quote',
+      operation: 'parse_validate_or_upload_request',
+    });
+    return respond(
       {
-        success: true,
-        data: {
-          referenceNumber,
-          message: 'Quotation request successfully registered.',
+        success: false,
+        error: {
+          code: 'SERVER_ERROR',
+          message: 'The quotation request could not be processed.',
+          requestId,
         },
       },
-      { status: 201 }
-    );
-  } catch (err: any) {
-    console.error('Quotation submission failed:', {
-      name: err?.name,
-      code: err?.code,
-    });
-    return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR', message: 'The quotation request could not be processed.' } },
       { status: 500 }
     );
   }

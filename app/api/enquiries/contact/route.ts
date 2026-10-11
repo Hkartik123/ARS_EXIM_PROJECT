@@ -4,14 +4,23 @@ import { contactEnquirySchema } from '@/validators/enquiry.schema';
 import { generateEnquiryReference } from '@/lib/utils';
 import { emailService } from '@/lib/email/email-service';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
+import {
+  addRequestId,
+  createRequestId,
+  logDatabaseFailure,
+  logRequestFailure,
+} from '@/lib/api/request-diagnostics';
 
 export async function POST(req: NextRequest) {
+  const requestId = createRequestId();
+  const respond = (body: unknown, init?: ResponseInit) =>
+    addRequestId(NextResponse.json(body, init), requestId);
   const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
 
   // Rate limiting: 5 submissions per hour per IP
   const rateLimit = checkRateLimit(`contact-${ip}`, { windowMs: 60 * 60 * 1000, maxRequests: 5 });
   if (!rateLimit.allowed) {
-    return NextResponse.json(
+    return respond(
       {
         success: false,
         error: {
@@ -28,7 +37,7 @@ export async function POST(req: NextRequest) {
     try {
       body = await req.json();
     } catch {
-      return NextResponse.json(
+      return respond(
         { success: false, error: { code: 'INVALID_JSON', message: 'The contact form submission was not valid JSON.' } },
         { status: 400 }
       );
@@ -37,7 +46,7 @@ export async function POST(req: NextRequest) {
     const validated = contactEnquirySchema.safeParse(body);
 
     if (!validated.success) {
-      return NextResponse.json(
+      return respond(
         {
           success: false,
           error: {
@@ -52,9 +61,8 @@ export async function POST(req: NextRequest) {
     const referenceNumber = generateEnquiryReference('CR');
 
     // Database-first commit
-    let enquiry;
     try {
-      enquiry = await prisma.enquiry.create({ data: {
+      const enquiry = await prisma.enquiry.create({ data: {
         referenceNumber,
         type: 'CONTACT',
         status: 'NEW',
@@ -69,59 +77,74 @@ export async function POST(req: NextRequest) {
         userAgent: req.headers.get('user-agent') || undefined,
         emailDispatched: false,
       } });
+
+      // Email delivery happens only after PostgreSQL confirms the insert.
+      void (async () => {
+        try {
+          const adminEmail = process.env.EMAIL_FROM || 'info@arsexim.com';
+          await emailService.sendEmail({
+            to: adminEmail,
+            subject: `[INQUIRY ${referenceNumber}] ${validated.data.company} - ${validated.data.name}`,
+            html: `<p>New contact message from <strong>${validated.data.name}</strong> (${validated.data.company}):</p><p>${validated.data.message}</p>`,
+          });
+          await prisma.enquiry.update({
+            where: { id: enquiry.id },
+            data: { emailDispatched: true },
+          });
+        } catch (err) {
+          logRequestFailure(err, {
+            requestId,
+            endpoint: '/api/enquiries/contact',
+            operation: 'dispatch_email',
+          });
+        }
+      })();
+
+      return respond(
+        {
+          success: true,
+          data: {
+            referenceNumber,
+            message: 'Your inquiry has been successfully transmitted.',
+          },
+        },
+        { status: 201 }
+      );
     } catch (err) {
-      const error = err as { name?: string; code?: string };
-      console.error('Contact enquiry database write failed:', {
-        name: error.name,
-        code: error.code,
+      const failure = logDatabaseFailure(err, {
+        requestId,
+        endpoint: '/api/enquiries/contact',
+        operation: 'prisma.enquiry.create',
       });
-      return NextResponse.json(
+      return respond(
         {
           success: false,
           error: {
-            code: 'DATABASE_UNAVAILABLE',
-            message: 'We could not save your inquiry right now. Please try again later.',
+            code: failure.code,
+            category: failure.category,
+            message: failure.message,
+            requestId,
           },
         },
-        { status: 503 }
+        { status: failure.status }
       );
     }
 
-    // Background transactional email dispatch
-    (async () => {
-      try {
-        const adminEmail = process.env.EMAIL_FROM || 'info@arsexim.com';
-        await emailService.sendEmail({
-          to: adminEmail,
-          subject: `[INQUIRY ${referenceNumber}] ${validated.data.company} - ${validated.data.name}`,
-          html: `<p>New contact message from <strong>${validated.data.name}</strong> (${validated.data.company}):</p><p>${validated.data.message}</p>`,
-        });
-        await prisma.enquiry.update({
-          where: { id: enquiry.id },
-          data: { emailDispatched: true },
-        });
-      } catch (err) {
-        console.error('Email dispatch error on contact inquiry:', err);
-      }
-    })();
-
-    return NextResponse.json(
+  } catch (err) {
+    logRequestFailure(err, {
+      requestId,
+      endpoint: '/api/enquiries/contact',
+      operation: 'parse_or_process_request',
+    });
+    return respond(
       {
-        success: true,
-        data: {
-          referenceNumber,
-          message: 'Your inquiry has been successfully transmitted.',
+        success: false,
+        error: {
+          code: 'SERVER_ERROR',
+          message: 'The contact inquiry could not be processed.',
+          requestId,
         },
       },
-      { status: 201 }
-    );
-  } catch (err: any) {
-    console.error('Contact inquiry request failed:', {
-      name: err?.name,
-      code: err?.code,
-    });
-    return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR', message: 'The contact inquiry could not be processed.' } },
       { status: 500 }
     );
   }

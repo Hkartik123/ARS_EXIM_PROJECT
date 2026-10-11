@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
 import { Turnstile } from '@/components/public/turnstile';
 import { UploadCloud, CheckCircle2, AlertCircle, FileText, X } from 'lucide-react';
+import { getApiErrorMessage } from '@/lib/api/client-error-message';
 
 const REQUIRED_SERVICE_OPTIONS = [
   'Insulation - Hot',
@@ -151,7 +152,7 @@ export function QuoteForm() {
       const json = await res.json();
 
       if (!res.ok || !json.success) {
-        throw new Error(json.error?.message || 'Failed to submit quotation request.');
+        throw new Error(getApiErrorMessage(json, 'Failed to submit quotation request.'));
       }
 
       // Successful database persistence -> redirect to confirmation page

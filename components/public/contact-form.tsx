@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
 import { Turnstile } from '@/components/public/turnstile';
 import { AlertCircle } from 'lucide-react';
+import { getApiErrorMessage } from '@/lib/api/client-error-message';
 
 const SERVICE_OPTIONS = [
   { label: 'General Technical Inquiry', value: 'General Inquiry' },
@@ -62,13 +63,7 @@ export function ContactForm() {
 
       const json = await res.json();
       if (!res.ok || !json.success) {
-        const fieldErrors = json.error?.details?.fieldErrors;
-        const validationMessages = fieldErrors && typeof fieldErrors === 'object'
-          ? Object.values(fieldErrors)
-            .flat()
-            .filter((message): message is string => typeof message === 'string')
-          : [];
-        throw new Error(validationMessages.join(' ') || json.error?.message || 'Failed to submit contact message.');
+        throw new Error(getApiErrorMessage(json, 'Failed to submit contact message.'));
       }
 
       router.push(`/thank-you?ref=${encodeURIComponent(json.data.referenceNumber)}`);
