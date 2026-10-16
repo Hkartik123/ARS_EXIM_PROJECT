@@ -22,6 +22,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.public-site .max-w-7xl {
+  max-width: none;
+}
+
 ::selection {
   background-color: #10233F;
   color: #C9A961;
