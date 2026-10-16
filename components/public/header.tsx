@@ -62,7 +62,7 @@ export function Header() {
 
       {/* Top Utility Bar */}
       <div className="bg-[#edf5ff] text-navy-900 text-xs py-2 border-b border-[#d9eafc]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="hidden items-center space-x-6 sm:flex">
             <span className="flex items-center space-x-1.5">
               <ShieldAlert className="w-3.5 h-3.5 text-safety-red" />
@@ -102,7 +102,7 @@ export function Header() {
           scrolled ? 'shadow-industrial-lg py-2.5' : 'py-4'
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Brand Logo */}
           <Link href="/" className="flex items-center group max-w-[420px]">
             <Image

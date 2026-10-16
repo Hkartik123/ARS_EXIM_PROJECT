@@ -195,7 +195,7 @@ export function ServiceScopeView({ slug }: { slug: keyof typeof serviceContent }
 
   return (
     <div className="bg-white py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
         <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: service.title }]} />
 
         <header className="my-8 border-b border-steel-200 pb-10">

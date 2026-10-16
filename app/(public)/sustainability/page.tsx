@@ -34,7 +34,7 @@ export default function SustainabilityPage() {
 
   return (
     <div className="py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <Breadcrumbs items={[{ label: 'Sustainability' }]} />
 
         <div className="max-w-3xl my-8">

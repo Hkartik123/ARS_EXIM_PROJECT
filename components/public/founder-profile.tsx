@@ -34,7 +34,7 @@ export function FounderProfile() {
       aria-labelledby="founders-heading"
       className="overflow-hidden bg-[#10233f] py-16 text-white sm:py-20 lg:py-24"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16 lg:px-12">
+      <div className="mx-auto grid max-w-full items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16 lg:px-12">
         <div
           data-visible={isVisible}
           className="founder-reveal relative mx-auto w-full max-w-md"

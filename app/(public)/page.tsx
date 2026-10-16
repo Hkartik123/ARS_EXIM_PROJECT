@@ -124,7 +124,7 @@ export default async function HomePage() {
     <div className="overflow-hidden">
       <section className="relative isolate overflow-hidden bg-[#10233f] text-white">
         <div aria-hidden="true" className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
-        <div className="relative mx-auto grid min-h-[640px] w-full max-w-7xl items-center gap-8 px-5 pb-14 pt-24 sm:px-8 sm:py-20 lg:min-h-[690px] lg:grid-cols-[1fr_0.9fr] lg:px-12">
+        <div className="relative mx-auto grid min-h-[640px] w-full max-w-full items-center gap-8 px-5 pb-14 pt-24 sm:px-8 sm:py-20 lg:min-h-[690px] lg:grid-cols-[1fr_0.9fr] lg:px-12">
           <div className="home-reveal max-w-4xl">
             <div className="mb-6 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.14em] text-gold-100">
               <span className="h-px w-10 bg-gold" />
@@ -171,7 +171,7 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-white py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
           <div className="mb-12 grid gap-8 lg:grid-cols-4">
             {[
               { title: 'Technical Expertise', text: 'Professional industrial knowledge applied to insulation, fire protection, scaffolding and surface systems.' },
@@ -190,7 +190,7 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-white py-20 sm:py-28" id="capabilities">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
           <div className="mb-10 grid gap-7 lg:grid-cols-[1fr_0.7fr] lg:items-end">
             <div>
               <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Five disciplines · one delivery partner</span>
@@ -233,7 +233,7 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-[#f1f3f2] py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
           <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <div>
               <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Our work in action</span>
@@ -267,7 +267,7 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-white py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
           <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <div>
               <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Potential application areas</span>
@@ -296,7 +296,7 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-[#10233f] py-20 text-white sm:py-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
           <div className="max-w-3xl">
             <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold">A practical project approach</span>
             <h2 className="mt-3 font-display text-4xl font-bold leading-tight sm:text-5xl">From first scope to handover.</h2>
@@ -325,7 +325,7 @@ export default async function HomePage() {
       </section>
 
       {hasPublishedProjects && <section className="bg-[#f1f3f2] py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
           <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <div>
               <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Work across energy regions</span>
@@ -360,7 +360,7 @@ export default async function HomePage() {
       </section>}
 
       <section className="bg-white py-20 sm:py-28">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-12">
+        <div className="mx-auto grid max-w-full gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-12">
           <div>
             <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Project engagement</span>
             <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] text-navy-950 sm:text-6xl">Start with the site requirements.</h2>
@@ -386,7 +386,7 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-[#10233f] text-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_auto] lg:px-12">
+        <div className="mx-auto grid max-w-full items-center gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_auto] lg:px-12">
           <div className="max-w-3xl">
             <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold">Commercial enquiries</span>
             <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] sm:text-6xl">Have a live project scope?</h2>
@@ -402,7 +402,7 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-gold px-5 py-14 text-navy-950 sm:px-8 sm:py-20">
-        <div className="mx-auto flex max-w-7xl flex-col gap-7 sm:flex-row sm:items-end sm:justify-between lg:px-4">
+        <div className="mx-auto flex max-w-full flex-col gap-7 sm:flex-row sm:items-end sm:justify-between lg:px-4">
           <div className="max-w-3xl">
             <span className="text-xs font-bold uppercase tracking-[0.16em]">Project estimating & proposals</span>
             <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] sm:text-6xl">Let’s talk about the work ahead.</h2>

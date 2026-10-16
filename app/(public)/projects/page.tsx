@@ -39,7 +39,7 @@ export default async function ProjectsPage() {
 
   return (
     <div className="py-12 bg-steel-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <Breadcrumbs items={[{ label: 'Projects' }]} />
 
         <div className="max-w-3xl my-8">
