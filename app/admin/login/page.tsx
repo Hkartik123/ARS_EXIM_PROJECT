@@ -46,8 +46,8 @@ export default function AdminLoginPage() {
           <Image
             src="/ars-exim-logo-transparent.png"
             alt="ARS EXIM logo"
-            width={220}
-            height={160}
+            width={622}
+            height={522}
             priority
             className="h-[128px] w-auto rounded-md bg-white p-1.5 object-contain shadow-sm"
           />

@@ -16,8 +16,8 @@ export function Footer() {
               <Image
                 src="/ars-exim-logo-transparent.png"
                 alt="ARS EXIM logo"
-                width={220}
-                height={140}
+                width={622}
+                height={522}
                 className="h-[100px] w-auto sm:h-[120px] object-contain"
               />
             </div>

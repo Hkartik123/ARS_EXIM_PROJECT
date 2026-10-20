@@ -108,8 +108,8 @@ export function Header() {
             <Image
               src="/ars-exim-logo-transparent.png"
               alt="ARS EXIM logo"
-              width={220}
-              height={140}
+              width={622}
+              height={522}
               priority
               className="h-[74px] w-auto sm:h-[94px] object-contain"
             />
