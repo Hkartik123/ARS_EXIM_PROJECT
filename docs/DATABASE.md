@@ -21,3 +21,14 @@ The first migration SQL is checked in at `prisma/migrations/20261010110700_initi
 IDs are UUIDs in PostgreSQL. Existing Mongo ObjectId values are not carried forward or translated. This migration changes the schema and application persistence layer only; it does not transfer existing MongoDB data. Back up/export and plan a separate data migration before switching a populated production site.
 
 Supabase may provide a transaction-pooler URL that is appropriate for app queries, but Prisma migrations need a direct connection. Connection details are only used when running the app or Prisma commands; this code change does not validate cloud connectivity.
+
+## Vercel file storage
+
+Vercel's function filesystem is temporary and must not be used for uploaded files. Configure an S3-compatible bucket (for example, Cloudflare R2) for Production and Preview:
+
+- Set `STORAGE_PROVIDER` to `r2` or `s3`.
+- Set `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, and `S3_SECRET_ACCESS_KEY` from the storage provider. For R2, use the account's S3 API endpoint and region `auto`.
+- Set `S3_PUBLIC_URL` to the bucket's public read-only custom domain/base URL. The bucket must allow public reads for gallery assets; keep resumes and enquiry attachments private.
+- Use the Vercel admin download endpoint for private files; it enforces HR access for resumes and Sales/BD access for quotation attachments.
+
+`STORAGE_PROVIDER=local` is supported only outside production. Production uploads fail explicitly when persistent storage is not configured instead of writing files to an ephemeral function directory.

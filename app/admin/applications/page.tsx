@@ -57,7 +57,7 @@ export default async function AdminApplicationsPage() {
                     <td className="py-4 px-6 text-steel-500">{formatDate(app.createdAt)}</td>
                     <td className="py-4 px-6 text-right">
                       <a
-                        href={`/uploads/${app.resumeStorageKey}`}
+                        href={`/api/admin/storage/download?key=${encodeURIComponent(app.resumeStorageKey)}`}
                         target="_blank"
                         download
                         className="inline-flex items-center px-3 py-1 bg-navy-900 text-gold rounded font-bold uppercase tracking-wider text-[11px] hover:bg-navy-800"

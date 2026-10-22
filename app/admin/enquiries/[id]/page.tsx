@@ -248,7 +248,7 @@ export default function EnquiryDetailPage({ params }: EnquiryDetailPageProps) {
                       <span className="text-steel-400">({(file.fileSize / (1024 * 1024)).toFixed(2)} MB)</span>
                     </div>
                     <a
-                      href={`/uploads/${file.storageKey}`}
+                      href={`/api/admin/storage/download?key=${encodeURIComponent(file.storageKey)}`}
                       target="_blank"
                       download
                       className="inline-flex items-center px-3 py-1.5 bg-navy-900 text-gold rounded font-bold uppercase tracking-wider text-[11px] hover:bg-navy-800"

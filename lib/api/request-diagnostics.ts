@@ -31,7 +31,7 @@ export function addRequestId<T>(response: NextResponse<T>, requestId: string): N
 export function logDatabaseFailure(
   error: unknown,
   context: { requestId: string; endpoint: string; operation: string }
-): { status: number; code: string; category: string; message: string } {
+): { status: number; code: string; category: string; message: string; prismaCode?: string } {
   const details = getErrorDetails(error);
   const prismaCode = details.code || details.errorCode;
   let category = 'DATABASE_OPERATION_FAILED';
@@ -43,12 +43,22 @@ export function logDatabaseFailure(
     category = 'DATABASE_AUTHENTICATION_FAILED';
   } else if (prismaCode === 'P1001') {
     category = 'DATABASE_UNREACHABLE';
+  } else if (prismaCode === 'P1002') {
+    category = 'DATABASE_CONNECTION_TIMEOUT';
+  } else if (prismaCode === 'P1008') {
+    category = 'DATABASE_OPERATION_TIMEOUT';
   } else if (prismaCode === 'P1010') {
     category = 'DATABASE_ACCESS_DENIED';
   } else if (prismaCode === 'P1011') {
     category = 'DATABASE_TLS_FAILED';
+  } else if (prismaCode === 'P1012') {
+    category = 'DATABASE_CONFIGURATION_ERROR';
+  } else if (prismaCode === 'P1017') {
+    category = 'DATABASE_CONNECTION_CLOSED';
   } else if (prismaCode === 'P2021' || prismaCode === 'P2022') {
     category = 'DATABASE_SCHEMA_MISMATCH';
+  } else if (prismaCode === 'P2024') {
+    category = 'DATABASE_CONNECTION_POOL_TIMEOUT';
   } else if (prismaCode === 'P2002') {
     category = 'DATABASE_CONSTRAINT_CONFLICT';
     code = 'DUPLICATE_SUBMISSION';
@@ -61,7 +71,7 @@ export function logDatabaseFailure(
     message = 'We could not process your request right now. Please try again later.';
   }
 
-  console.error('Enquiry persistence failure', {
+  console.error('Database operation failure', {
     ...context,
     category,
     prismaCode,
@@ -69,7 +79,7 @@ export function logDatabaseFailure(
     clientVersion: details.clientVersion,
   });
 
-  return { status, code, category, message };
+  return { status, code, category, message, prismaCode };
 }
 
 export function logRequestFailure(

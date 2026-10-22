@@ -2,7 +2,7 @@ import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { getCurrentUser, checkRolePermission } from '@/lib/auth/session';
-import { storageService } from '@/lib/storage/storage-service';
+import { StorageConfigurationError, storageService } from '@/lib/storage/storage-service';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
 import { withLegacyId } from '@/lib/db/legacy-id';
 
@@ -139,6 +139,12 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: { media: withLegacyId(media) } }, { status: 201 });
   } catch (error) {
+    if (error instanceof StorageConfigurationError) {
+      return NextResponse.json(
+        { success: false, error: { code: 'STORAGE_UNAVAILABLE', message: error.message } },
+        { status: 503 }
+      );
+    }
     console.error('Failed to upload media:', error);
     return NextResponse.json(
       { success: false, error: { code: 'SERVER_ERROR', message: 'Could not upload this image.' } },

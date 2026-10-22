@@ -23,4 +23,24 @@ describe('logDatabaseFailure', () => {
     expect(JSON.stringify(log.mock.calls)).toContain('P1000');
     log.mockRestore();
   });
+
+  it('classifies connection pool timeouts for production diagnosis', () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const failure = logDatabaseFailure(
+      Object.assign(new Error('connection pool timeout'), {
+        name: 'PrismaClientKnownRequestError',
+        code: 'P2024',
+      }),
+      { requestId: 'request-456', endpoint: '/api/health', operation: 'prisma.$queryRaw' }
+    );
+
+    expect(failure).toMatchObject({
+      status: 503,
+      code: 'DATABASE_UNAVAILABLE',
+      category: 'DATABASE_CONNECTION_POOL_TIMEOUT',
+      prismaCode: 'P2024',
+    });
+    expect(JSON.stringify(log.mock.calls)).not.toContain('connection pool timeout');
+    log.mockRestore();
+  });
 });

@@ -9,6 +9,7 @@ export async function GET() {
   const startTime = Date.now();
   let dbStatus = 'DISCONNECTED';
   let dbCategory: string | undefined;
+  let dbErrorCode: string | undefined;
 
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -20,6 +21,7 @@ export async function GET() {
       operation: 'prisma.$queryRaw',
     });
     dbCategory = failure.category;
+    dbErrorCode = failure.prismaCode;
   }
 
   const responseTime = Date.now() - startTime;
@@ -30,6 +32,7 @@ export async function GET() {
     uptimeSeconds: process.uptime(),
     database: dbStatus,
     databaseCategory: dbCategory,
+    databaseErrorCode: dbErrorCode,
     responseTimeMs: responseTime,
     environment: process.env.NODE_ENV,
     requestId,

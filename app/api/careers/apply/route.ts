@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import { storageService } from '@/lib/storage/storage-service';
+import { StorageConfigurationError, storageService } from '@/lib/storage/storage-service';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 import { isValidDatabaseId } from '@/lib/db/ids';
 
@@ -83,6 +83,12 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (err: any) {
+    if (err instanceof StorageConfigurationError) {
+      return NextResponse.json(
+        { success: false, error: { code: 'STORAGE_UNAVAILABLE', message: 'Resume uploads are temporarily unavailable. Please contact ARS EXIM.' } },
+        { status: 503 }
+      );
+    }
     console.error('Candidate application error:', err);
     return NextResponse.json(
       { success: false, error: { code: 'SERVER_ERROR', message: err.message || 'Application submission failed.' } },

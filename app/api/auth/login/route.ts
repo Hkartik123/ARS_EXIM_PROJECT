@@ -6,6 +6,12 @@ import { loginSchema } from '@/validators/auth.schema';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 import { recordAuditLog } from '@/lib/audit/audit-logger';
 import type { UserRole } from '@/models/User';
+import {
+  addRequestId,
+  createRequestId,
+  logDatabaseFailure,
+  logRequestFailure,
+} from '@/lib/api/request-diagnostics';
 
 async function ensureInitialAdminUser(email: string, password: string) {
   const existingUser = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
@@ -24,6 +30,7 @@ async function ensureInitialAdminUser(email: string, password: string) {
 }
 
 export async function POST(req: NextRequest) {
+  const requestId = createRequestId();
   const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
 
   // 1. Rate limiting: 10 attempts per 15 minutes per IP
@@ -165,11 +172,46 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } catch (err: any) {
-    console.error('Login error:', err);
-    return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR', message: 'Authentication service encountered an error.' } },
-      { status: 500 }
+  } catch (err: unknown) {
+    const details = err && typeof err === 'object' ? err as Record<string, unknown> : {};
+    const respond = (body: unknown, status: number) =>
+      addRequestId(NextResponse.json(body, { status }), requestId);
+
+    if (typeof details.name === 'string' && details.name.startsWith('Prisma')) {
+      const failure = logDatabaseFailure(err, {
+        requestId,
+        endpoint: '/api/auth/login',
+        operation: 'authenticate_user',
+      });
+      return respond(
+        {
+          success: false,
+          error: {
+            code: failure.code,
+            category: failure.category,
+            message: 'Authentication is temporarily unavailable. Please try again later.',
+            requestId,
+          },
+        },
+        failure.status
+      );
+    }
+
+    logRequestFailure(err, {
+      requestId,
+      endpoint: '/api/auth/login',
+      operation: 'authenticate_or_create_session',
+    });
+    return respond(
+      {
+        success: false,
+        error: {
+          code: 'SERVER_ERROR',
+          message: 'Authentication service encountered an error.',
+          requestId,
+        },
+      },
+      500
     );
   }
 }
