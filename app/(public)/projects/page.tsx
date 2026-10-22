@@ -5,9 +5,9 @@ import { ProjectFilter } from '@/components/public/project-filter';
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 import { normalizeProjectRecord } from '@/lib/projects/normalize';
 import { projectServiceImagery } from '@/lib/projects/service-imagery';
+import { clientSiteImages } from '@/lib/projects/client-site-imagery';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LoadError } from '@/components/public/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,13 +57,45 @@ export default async function ProjectsPage() {
         </div>
 
         {hasLoadError ? (
-          <LoadError
-            title="Projects are temporarily unavailable"
-            message="Unable to load projects at the moment. Please try again."
-          />
+          <div className="mb-10 border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950" role="status">
+            Published project references are temporarily unavailable. Client-provided site photography is shown below;
+            project identity and service scope have not been confirmed.
+          </div>
         ) : (
           <ProjectFilter initialProjects={projects} />
         )}
+
+        <section aria-labelledby="client-site-photography-heading" className="mt-10">
+          <div className="mb-5 max-w-3xl">
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Industrial Sites</span>
+            <h2 id="client-site-photography-heading" className="mt-2 font-display text-2xl font-bold text-navy-950 sm:text-3xl">
+              Client-provided site photography
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-steel-700">
+              Site imagery is presented separately from verified project references.
+            </p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {clientSiteImages.map((image) => (
+              <figure key={image.id} className="overflow-hidden border border-steel-200 bg-white shadow-sm">
+                <div className="relative aspect-[16/9] bg-steel-100">
+                  <Image
+                    src={image.url}
+                    alt={image.altText}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover"
+                  />
+                </div>
+                <figcaption className="p-4">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-700">{image.category}</span>
+                  <h3 className="mt-1 font-semibold text-navy-900">{image.title}</h3>
+                  <p className="mt-2 text-xs leading-5 text-steel-700">{image.caption}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
 
         <div className="mt-10 flex flex-col items-start justify-between gap-4 border border-[#dfeaf7] bg-white p-6 sm:flex-row sm:items-center">
           <div>

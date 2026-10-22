@@ -5,6 +5,7 @@ import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { GalleryGrid, GalleryImage } from '@/components/public/gallery-grid';
 import { LoadError } from '@/components/public/load-error';
+import { clientSiteImages } from '@/lib/projects/client-site-imagery';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,17 +14,6 @@ export const metadata = {
   description: 'Client-provided industrial site photography and approved images managed by ARS EXIM.',
 };
 
-const clientProvidedImages: GalleryImage[] = [
-  {
-    id: 'client-industrial-facility-site',
-    title: 'Industrial facility',
-    category: 'Industrial Sites',
-    url: '/images/client-gallery/industrial-facility-site.jpg',
-    altText: 'Wide view of an industrial processing facility with pipe racks and process equipment.',
-    caption: 'Client-provided site photograph. Project identity and ARS EXIM scope have not been confirmed.',
-  },
-];
-
 async function getGalleryImages(): Promise<{ images: GalleryImage[]; hasLoadError: boolean }> {
   try {
     const items = await prisma.media.findMany({
@@ -31,7 +21,7 @@ async function getGalleryImages(): Promise<{ images: GalleryImage[]; hasLoadErro
       orderBy: [{ isFeatured: 'desc' }, { displayOrder: 'asc' }, { createdAt: 'desc' }],
     });
     const mediaImages = items
-      .filter((item) => !clientProvidedImages.some((image) => image.url === item.url))
+      .filter((item) => !clientSiteImages.some((image) => image.url === item.url))
       .map((item) => ({
         id: item.id,
         title: item.title,
@@ -40,10 +30,10 @@ async function getGalleryImages(): Promise<{ images: GalleryImage[]; hasLoadErro
         altText: item.altText || '',
         caption: item.caption || undefined,
       }));
-    return { images: [...clientProvidedImages, ...mediaImages], hasLoadError: false };
+    return { images: [...clientSiteImages, ...mediaImages], hasLoadError: false };
   } catch (error) {
     console.error('Failed to load gallery images:', error);
-    return { images: clientProvidedImages, hasLoadError: true };
+    return { images: [...clientSiteImages], hasLoadError: true };
   }
 }
 
