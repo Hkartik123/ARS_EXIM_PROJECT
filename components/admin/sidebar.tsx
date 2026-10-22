@@ -7,11 +7,13 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   FolderGit2,
+  FolderPlus,
   Wrench,
   Inbox,
   Briefcase,
   Users,
   Image as ImageIcon,
+  ImagePlus,
   MessageSquareQuote,
   HelpCircle,
   Settings,
@@ -45,6 +47,7 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
     { name: 'Staff Users', href: '/admin/users', icon: Users, roles: ['SUPER_ADMIN'] },
     { name: 'Audit Logs', href: '/admin/audit-logs', icon: ShieldCheck, roles: ['SUPER_ADMIN'] },
   ];
+  const canManageContent = userRole === 'SUPER_ADMIN' || userRole === 'ADMIN_CONTENT';
 
   return (
     <aside className="w-64 bg-[#edf5ff] text-navy-900 flex flex-col border-r border-[#dfeaf7] flex-shrink-0 min-h-screen">
@@ -54,6 +57,30 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
           <Image src="/ars-exim-logo-transparent.png" alt="ARS EXIM logo" width={622} height={522} className="h-[88px] w-auto object-contain" />
         </Link>
       </div>
+
+      {canManageContent && (
+        <div className="border-b border-[#dfeaf7] px-4 py-4">
+          <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-steel-500">
+            Quick Upload
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <Link
+              href="/admin/projects/new"
+              className="flex min-h-16 flex-col items-center justify-center gap-1 rounded border border-[#dfeaf7] bg-white px-2 py-2 text-center text-[11px] font-semibold text-navy-900 transition-colors hover:border-gold hover:bg-[#fffdf7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            >
+              <FolderPlus className="h-4 w-4 text-gold-700" aria-hidden="true" />
+              Project details
+            </Link>
+            <Link
+              href="/admin/media"
+              className="flex min-h-16 flex-col items-center justify-center gap-1 rounded border border-[#dfeaf7] bg-white px-2 py-2 text-center text-[11px] font-semibold text-navy-900 transition-colors hover:border-gold hover:bg-[#fffdf7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            >
+              <ImagePlus className="h-4 w-4 text-gold-700" aria-hidden="true" />
+              Upload image
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">

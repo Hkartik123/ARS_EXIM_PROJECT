@@ -7,6 +7,7 @@ import { normalizeProjectRecord } from '@/lib/projects/normalize';
 import { projectServiceImagery } from '@/lib/projects/service-imagery';
 import Image from 'next/image';
 import Link from 'next/link';
+import { LoadError } from '@/components/public/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,19 +51,32 @@ export default async function ProjectsPage() {
             Our Projects
           </h1>
           <p className="text-base text-steel-600 leading-relaxed">
-            ARS EXIM shares project details only where they are approved for public release. Explore
-            published project references and the industrial service capabilities supporting our work.
+            Explore approved project references and the industrial services ARS EXIM provides.
+            Project details are shared only where they are approved for public release.
           </p>
         </div>
 
         {hasLoadError ? (
-          <div role="alert" className="rounded border border-steel-200 bg-white px-6 py-12 text-center">
-            <h2 className="font-display text-2xl font-bold text-navy-900">Projects are temporarily unavailable</h2>
-            <p className="mt-2 text-sm text-steel-600">Unable to load projects at the moment. Please try again later.</p>
-          </div>
+          <LoadError
+            title="Projects are temporarily unavailable"
+            message="Unable to load projects at the moment. Please try again."
+          />
         ) : (
           <ProjectFilter initialProjects={projects} />
         )}
+
+        <div className="mt-10 flex flex-col items-start justify-between gap-4 border border-[#dfeaf7] bg-white p-6 sm:flex-row sm:items-center">
+          <div>
+            <h2 className="font-display text-xl font-bold text-navy-900">Planning a similar scope?</h2>
+            <p className="mt-1 text-sm text-steel-600">Share your project specifications with our team.</p>
+          </div>
+          <Link
+            href="/request-a-quote"
+            className="inline-flex min-h-11 items-center justify-center rounded bg-gold px-5 py-2 text-xs font-bold uppercase tracking-wider text-navy-950 transition-colors hover:bg-gold-600"
+          >
+            Submit Project Specifications
+          </Link>
+        </div>
 
         <section aria-labelledby="project-capabilities-heading" className="mt-20">
           <div className="mb-8 max-w-3xl">
