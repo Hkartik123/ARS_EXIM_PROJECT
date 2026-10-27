@@ -4,68 +4,99 @@ import Link from 'next/link';
 import {
   ArrowRight,
   ArrowUpRight,
+  Building2,
   Flame,
-  HardHat,
   Layers3,
+  Mail,
+  MapPin,
   Paintbrush2,
+  Phone,
+  ShieldCheck,
+  Snowflake,
   Users,
+  Warehouse,
+  Waves,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ContactForm } from '@/components/public/contact-form';
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Global Trade & Industrial Services',
+  description:
+    'ARS EXIM Global Solutions supports industrial project teams with insulation, passive fire protection, scaffolding, coating and painting, and skilled manpower.',
+};
+
 const serviceDisciplines = [
   {
     number: '01',
-    title: 'Industrial insulation',
-    label: 'HOT · COLD · CRYOGENIC',
+    title: 'Hot insulation',
+    label: 'THERMAL SYSTEMS',
     description:
-      'Insulation scope for process piping, vessels and temperature-controlled systems, defined against project requirements.',
-    href: '/services/industrial-insulation',
+      'Thermal insulation for hot-service lines, vessels and equipment, defined against project requirements.',
+    href: '/services/hot-insulation',
     icon: Layers3,
   },
   {
     number: '02',
+    title: 'Cold & cryogenic insulation',
+    label: 'LOW-TEMPERATURE SYSTEMS',
+    description:
+      'Insulation enquiries for low-temperature assets, with requirements aligned to project documentation.',
+    href: '/services/cold-cryogenic-insulation',
+    icon: Snowflake,
+  },
+  {
+    number: '03',
     title: 'Passive fire protection',
     label: 'STRUCTURAL STEEL · PFP',
     description:
-      'Fire protection scope for structural steel and process assets, coordinated to the specified system and project documents.',
+      'Fire protection scope for structural steel and process assets, coordinated to the specified system.',
     href: '/services/passive-fire-protection',
     icon: Flame,
   },
   {
-    number: '03',
+    number: '04',
     title: 'Scaffolding & access',
-    label: 'ENGINEERED TEMPORARY ACCESS',
+    label: 'TEMPORARY ACCESS',
     description:
-      'Temporary access requirements for maintenance and project work, planned around the work front and site constraints.',
+      'Access requirements for maintenance and project work, planned around the work front and site constraints.',
     href: '/services/scaffolding',
-    icon: HardHat,
+    icon: Building2,
   },
   {
-    number: '04',
-    title: 'Coating and painting',
-    label: 'SURFACE PROTECTION · DURABILITY',
+    number: '05',
+    title: 'Coating & painting',
+    label: 'SURFACE PROTECTION',
     description:
-      'Professional industrial coating and painting solutions designed to support surface protection, corrosion resistance and long-term asset performance.',
+      'Industrial coating and painting solutions for surface protection and project-specific asset requirements.',
     href: '/services/coating-and-painting',
     icon: Paintbrush2,
   },
   {
-    number: '05',
+    number: '06',
     title: 'Skilled manpower',
-    label: 'INDUSTRIAL PROJECT SUPPORT',
+    label: 'PROJECT SUPPORT',
     description:
-      'Provision of skilled and experienced manpower for industrial insulation, coating, painting, scaffolding and related project requirements.',
+      'Skilled personnel for insulation, coating, painting, scaffolding and related industrial project scopes.',
     href: '/services/skilled-manpower',
     icon: Users,
   },
 ];
 
+const industries = [
+  { title: 'Oil & gas', icon: Waves },
+  { title: 'Petrochemical', icon: Building2 },
+  { title: 'Refineries', icon: Warehouse },
+  { title: 'Energy & power', icon: Layers3 },
+  { title: 'Industrial plants', icon: ShieldCheck },
+  { title: 'Process industries', icon: Flame },
+];
+
 async function getFeaturedProjects() {
   try {
-    const projects = await prisma.project.findMany({
+    return await prisma.project.findMany({
       where: {
         publishStatus: 'PUBLISHED',
         isDeleted: false,
@@ -75,7 +106,6 @@ async function getFeaturedProjects() {
       orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
       take: 4,
     });
-    return projects;
   } catch (error) {
     console.error('Failed to load featured projects:', error);
     return [];
@@ -95,7 +125,6 @@ async function getFeaturedMedia() {
       category: image.category,
       url: image.url,
       altText: image.altText || image.title,
-      isFeatured: image.isFeatured,
     }));
   } catch (error) {
     console.error('Failed to load featured gallery images:', error);
@@ -108,7 +137,6 @@ export default async function HomePage() {
     getFeaturedProjects(),
     getFeaturedMedia(),
   ]);
-  const hasPublishedProjects = featuredProjects.length > 0;
   const galleryImages = featuredMedia.length > 0
     ? featuredMedia
     : [{
@@ -116,305 +144,433 @@ export default async function HomePage() {
         title: 'Industrial project team at work',
         category: 'Illustrative',
         url: '/images/industrial-site-team.webp',
-        altText: 'Industrial workers in safety helmets and high-visibility clothing gathered at a project site.',
+        altText: 'Industrial workers in safety helmets at a project site.',
       }];
-  const heroImage = featuredMedia.find((image) => image.isFeatured)?.url || '/images/industrial-site-team.webp';
 
   return (
     <div className="overflow-hidden">
-      <section className="relative isolate overflow-hidden bg-[#10233f] text-white">
-        <div aria-hidden="true" className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
-        <div className="relative mx-auto grid min-h-[640px] w-full max-w-full items-center gap-8 px-5 pb-14 pt-24 sm:px-8 sm:py-20 lg:min-h-[690px] lg:grid-cols-[1fr_0.9fr] lg:px-12">
-          <div className="home-reveal max-w-4xl">
-            <div className="mb-6 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.14em] text-gold-100">
-              <span className="h-px w-10 bg-gold" />
-              ARS EXIM · Specialist industrial contractor
-            </div>
-            <h1 className="max-w-4xl font-display text-5xl font-bold leading-[0.96] text-white sm:text-6xl lg:text-7xl">
-              ARS EXIM
+      <section
+        aria-labelledby="home-title"
+        className="relative isolate flex min-h-[680px] items-center overflow-hidden bg-[#071D38] text-white sm:min-h-[720px]"
+      >
+        <Image
+          src="/images/corporate-harbor.webp"
+          alt="Container ship at a commercial port surrounded by gantry cranes."
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[62%_center]"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-r from-[#071D38] via-[#071D38]/90 to-[#071D38]/35"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-t from-[#071D38]/70 via-transparent to-[#071D38]/10"
+        />
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 640 440"
+          fill="none"
+          className="pointer-events-none absolute right-0 top-1/2 hidden h-[85%] w-[52%] -translate-y-1/2 opacity-30 lg:block"
+        >
+          <path d="M92 231C176 145 241 309 326 207S475 145 557 234" stroke="white" strokeWidth="1.5" strokeDasharray="5 8" />
+          <path d="M129 89C199 161 229 277 199 354M313 47C282 155 284 286 334 397M466 82C405 172 410 296 482 364" stroke="white" strokeOpacity=".55" />
+          <circle cx="92" cy="231" r="5" fill="#C4CED8" />
+          <circle cx="326" cy="207" r="5" fill="#C4CED8" />
+          <circle cx="557" cy="234" r="5" fill="#C4CED8" />
+        </svg>
+
+        <div className="relative mx-auto w-full max-w-7xl px-5 py-24 sm:px-8 lg:px-12">
+          <div className="home-reveal max-w-3xl">
+            <p className="mb-6 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#C4CED8] sm:text-sm">
+              <span className="h-px w-9 bg-[#C4CED8]" />
+              Global trade <span className="text-white/45">|</span> Stronger together
+            </p>
+            <h1
+              id="home-title"
+              className="max-w-3xl font-sans text-5xl font-bold leading-[1.04] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl"
+            >
+              Connecting Businesses
+              <br className="hidden sm:block" /> Across Borders
             </h1>
-            <p className="mt-3 max-w-3xl text-base font-semibold tracking-[0.12em] text-gold-100 uppercase sm:text-lg">
-              <span className="text-gold">EX</span>pert <span className="text-gold">I</span>nsulation <span className="text-gold">M</span>anagement
-            </p>
-            <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-white/75 sm:text-sm">
-              Industrial insulation · PFP · Scaffolding · Coating & painting · Skilled manpower
-            </p>
-            <p className="mt-7 max-w-2xl text-base leading-7 text-white/85 sm:text-lg sm:leading-8">
-              ARS EXIM supports industrial project teams with insulation, coating and painting, passive fire protection, scaffolding and skilled manpower services. Share your location, scope and schedule to start a project discussion.
+            <p className="mt-7 max-w-2xl text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
+              ARS EXIM supports industrial project teams with insulation, passive fire protection,
+              scaffolding, coating and painting, and skilled manpower. Share your scope, location
+              and schedule to start a project discussion.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link href="/request-a-quote">
-                <Button variant="primary" size="lg" className="min-h-12 w-full sm:w-auto">
-                  Request a project quote <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+              <Link
+                href="#services"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-white px-6 text-sm font-bold text-[#071D38] transition-colors hover:bg-[#C4CED8]"
+              >
+                Explore Our Services <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/services">
-                <Button variant="secondary" size="lg" className="min-h-12 w-full border border-white/35 bg-white/10 text-white hover:bg-white/20 sm:w-auto">
-                  Explore our services <ArrowUpRight className="ml-2 h-4 w-4" />
-                </Button>
+              <Link
+                href="#contact"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-white/50 px-6 text-sm font-bold text-white transition-colors hover:border-white hover:bg-white/10"
+              >
+                Contact Us <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>
-          </div>
-
-          <div className="relative min-h-[300px] sm:min-h-[400px] lg:min-h-[460px]">
-            <Image
-              src={heroImage}
-              alt="Industrial workers in helmets and high-visibility vests gathered beneath scaffolding at a project site."
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 45vw"
-              className="object-cover object-center"
-            />
-            <span className="absolute bottom-3 left-3 bg-[#10233f]/85 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-white/90">Illustrative industrial site image</span>
+            <p className="mt-10 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
+              Industrial insulation <span className="mx-2 text-[#C4CED8]">/</span> PFP
+              <span className="mx-2 text-[#C4CED8]">/</span> Access
+              <span className="mx-2 text-[#C4CED8]">/</span> Coatings
+            </p>
           </div>
         </div>
+        <span className="absolute bottom-4 right-5 text-[10px] font-medium tracking-wide text-white/60 sm:right-8">
+          Illustrative commercial port imagery
+        </span>
       </section>
 
-      <section className="bg-white py-20 sm:py-28">
-        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
-          <div className="mb-12 grid gap-8 lg:grid-cols-4">
-            {[
-              { title: 'Technical Expertise', text: 'Professional industrial knowledge applied to insulation, fire protection, scaffolding and surface systems.' },
-              { title: 'Quality Focus', text: 'Project-specific execution built around workmanship, specification review and reliable delivery.' },
-              { title: 'Skilled Workforce', text: 'Experienced site teams and support personnel for active industrial environments and shutdown work.' },
-              { title: 'Safety & Reliability', text: 'Professional safety-minded execution that supports dependable site coordination and project continuity.' },
-            ].map((pillar) => (
-              <div key={pillar.title} className="rounded-2xl border border-steel-200 bg-steel-50 p-6 shadow-sm">
-                <div className="mb-3 h-10 w-10 rounded-full bg-[#10233f] text-gold flex items-center justify-center font-display text-xl font-bold">•</div>
-                <h3 className="font-display text-2xl font-bold text-navy-950">{pillar.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-steel-700">{pillar.text}</p>
+      <section id="about" className="scroll-mt-24 bg-white py-20 sm:py-28">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-12">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#527493]">
+              About ARS EXIM
+            </p>
+            <h2 className="mt-4 max-w-2xl text-4xl font-bold leading-tight tracking-[-0.035em] text-[#071D38] sm:text-5xl">
+              Specialist support for industrial project requirements.
+            </h2>
+            <p className="mt-6 max-w-2xl text-base leading-7 text-[#526273]">
+              ARS EXIM brings industrial insulation, passive fire protection, scaffolding and access,
+              coating and painting, and skilled manpower into one project enquiry. Each work package
+              is shaped around the client’s assets, specifications, site conditions and required interfaces.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-2">
+              {['Insulation', 'Passive fire protection', 'Scaffolding & access', 'Coating & painting', 'Skilled manpower'].map((capability) => (
+                <span
+                  key={capability}
+                  className="border border-[#D7E0E8] bg-[#F2F5F8] px-3 py-2 text-xs font-semibold text-[#12365A]"
+                >
+                  {capability}
+                </span>
+              ))}
+            </div>
+            <Link
+              href="/about"
+              className="mt-8 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#12365A] transition-colors hover:text-[#527493]"
+            >
+              More about the company <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="relative">
+            <div className="absolute -left-3 -top-3 h-full w-full border border-[#C4CED8] sm:-left-5 sm:-top-5" />
+            <div className="relative overflow-hidden bg-[#F2F5F8]">
+              <Image
+                src="/images/industrial-site-team.webp"
+                alt="Industrial workers in safety equipment at a project site."
+                width={1600}
+                height={1067}
+                sizes="(max-width: 1024px) 100vw, 44vw"
+                className="aspect-[4/3] w-full object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-[#071D38]/80 to-transparent p-5 pt-16 text-white sm:p-7 sm:pt-20">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C4CED8]">ARS EXIM</p>
+                  <p className="mt-1 font-semibold">EXpert Insulation Management</p>
+                </div>
+                <Image
+                  src="/ars-exim-logo-transparent.png"
+                  alt="ARS EXIM Global Solutions logo"
+                  width={622}
+                  height={522}
+                  className="h-14 w-auto rounded-sm bg-white p-1.5 sm:h-16"
+                />
               </div>
-            ))}
+            </div>
+            <p className="mt-2 text-right text-[10px] text-[#69798A]">Illustrative industrial site image</p>
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-20 sm:py-28" id="capabilities">
-        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
-          <div className="mb-10 grid gap-7 lg:grid-cols-[1fr_0.7fr] lg:items-end">
+      <section id="services" className="scroll-mt-24 bg-[#F2F5F8] py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="mb-12 grid gap-6 lg:grid-cols-[1fr_0.65fr] lg:items-end">
             <div>
-              <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Five disciplines · one delivery partner</span>
-              <h2 className="mt-3 max-w-3xl font-display text-5xl font-bold leading-[0.98] text-navy-950 sm:text-6xl">
-                Built around the worksite.
+              <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#527493]">
+                Our services
+              </p>
+              <h2 className="mt-4 max-w-3xl text-4xl font-bold leading-tight tracking-[-0.035em] text-[#071D38] sm:text-5xl">
+                The right expertise for the work in front of you.
               </h2>
             </div>
-            <p className="max-w-xl text-sm leading-6 text-steel-700 sm:text-base sm:leading-7">
-              From temperature control to fire resistance and safe temporary access, our teams support the work that keeps complex industrial sites moving.
+            <p className="max-w-xl text-sm leading-7 text-[#526273] sm:text-base">
+              Explore ARS EXIM’s specialist service areas. Final scope, materials, standards and
+              acceptance criteria are confirmed against project documents.
             </p>
           </div>
-
-          <div className="grid gap-px overflow-hidden bg-steel-200 md:grid-cols-3">
-            {serviceDisciplines.map((service) => {
-              const Icon = service.icon;
-              return (
-                <Link key={service.number} href={service.href} className="group relative isolate min-h-[390px] overflow-hidden bg-[#10233f] text-white focus-visible:outline-gold">
-                  <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-gold transition-all group-hover:h-2" />
-                  <div className="relative flex min-h-[390px] flex-col justify-between p-6 sm:p-8">
-                    <div className="flex items-start justify-between">
-                      <span className="font-display text-4xl font-semibold text-gold">{service.number}</span>
-                      <span className="flex h-11 w-11 items-center justify-center border border-white/40 text-white transition-colors group-hover:border-gold group-hover:bg-gold group-hover:text-navy-950">
-                        <Icon className="h-5 w-5" />
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-gold-100">{service.label}</span>
-                      <h3 className="mt-2 font-display text-3xl font-bold leading-tight sm:text-4xl">{service.title}</h3>
-                      <p className="mt-3 max-w-md text-sm leading-6 text-white/80">{service.description}</p>
-                      <span className="mt-6 inline-flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-wider text-white">
-                        View discipline <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#f1f3f2] py-20 sm:py-28">
-        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
-          <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Our work in action</span>
-              <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] text-navy-950 sm:text-6xl">Industrial execution in the field.</h2>
-            </div>
-            <Link href="/gallery" className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-navy-900 hover:text-gold-700">
-              View gallery <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {galleryImages.map((item) => (
-              <Link key={item.id} href="/gallery" className="group overflow-hidden rounded-2xl border border-steel-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-industrial">
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image src={item.url} alt={item.altText} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#10233f]/80 via-transparent to-transparent" />
-                  <span className="absolute left-4 top-4 rounded-full bg-[#10233f]/75 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">{item.category}</span>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {serviceDisciplines.map(({ number, title, label, description, href, icon: Icon }) => (
+              <Link
+                key={number}
+                href={href}
+                className="group flex min-h-[258px] flex-col border border-[#D7E0E8] bg-white p-6 transition duration-200 hover:-translate-y-1 hover:border-[#527493] hover:shadow-[0_16px_40px_-24px_rgba(7,29,56,.45)] sm:p-7"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold tracking-[0.14em] text-[#8798A8]">{number}</span>
+                  <span className="flex h-11 w-11 items-center justify-center bg-[#E8EEF3] text-[#12365A] transition-colors group-hover:bg-[#12365A] group-hover:text-white">
+                    <Icon className="h-5 w-5" strokeWidth={1.7} aria-hidden="true" />
+                  </span>
                 </div>
-                <div className="p-5">
-                  <p className="font-display text-2xl font-bold text-navy-950">{item.title}</p>
-                </div>
+                <p className="mt-7 text-[10px] font-bold uppercase tracking-[0.16em] text-[#527493]">{label}</p>
+                <h3 className="mt-2 text-xl font-bold tracking-tight text-[#071D38]">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-[#526273]">{description}</p>
+                <span className="mt-auto inline-flex items-center gap-2 pt-5 text-xs font-bold uppercase tracking-wider text-[#12365A]">
+                  View service <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
               </Link>
             ))}
           </div>
-          {featuredMedia.length === 0 && (
-            <p className="mt-4 text-xs leading-5 text-steel-600">
-              This illustrative image is not represented as ARS EXIM project photography. The gallery will show published media uploads here.
-            </p>
-          )}
+          <div className="mt-8 text-center">
+            <Link
+              href="/services"
+              className="inline-flex min-h-11 items-center gap-2 border border-[#12365A] px-5 text-sm font-bold text-[#12365A] transition-colors hover:bg-[#12365A] hover:text-white"
+            >
+              View all services <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="bg-white py-20 sm:py-24">
-        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+      <section id="industries" className="scroll-mt-24 bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
             <div>
-              <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Potential application areas</span>
-              <h2 className="mt-3 font-display text-4xl font-bold leading-tight text-navy-950 sm:text-5xl">Industrial requirements, understood in context.</h2>
+              <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#527493]">Industries</p>
+              <h2 className="mt-4 max-w-xl text-4xl font-bold leading-tight tracking-[-0.035em] text-[#071D38] sm:text-5xl">
+                Industrial needs, understood in context.
+              </h2>
             </div>
-            <p className="max-w-2xl text-sm leading-7 text-steel-700 sm:text-base">
-              ARS EXIM can review enquiries for relevant industrial sectors according to the defined scope, site conditions and project documents. These are application areas, not claims of past project history.
+            <p className="max-w-2xl text-sm leading-7 text-[#526273] sm:text-base">
+              ARS EXIM reviews enquiries for relevant industrial sectors according to the defined
+              scope, site conditions and project documents. These are potential application areas,
+              not claims of past project history.
             </p>
           </div>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              'Oil & gas',
-              'Petrochemical & refining',
-              'Power generation & utilities',
-              'Heavy manufacturing & minerals',
-              'Marine & offshore infrastructure',
-              'Civil & industrial infrastructure',
-            ].map((sector) => (
-              <div key={sector} className="flex items-center gap-3 border-l-2 border-gold bg-steel-50 px-5 py-4 text-sm font-semibold text-navy-900">
-                <span className="h-2 w-2 shrink-0 rotate-45 bg-navy-900" />
-                {sector}
+          <div className="mt-9 grid border-l border-t border-[#D7E0E8] sm:grid-cols-2 lg:grid-cols-3">
+            {industries.map(({ title, icon: Icon }) => (
+              <div
+                key={title}
+                className="flex min-h-[94px] items-center gap-4 border-b border-r border-[#D7E0E8] px-5 py-5 sm:px-6"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center bg-[#F2F5F8] text-[#527493]">
+                  <Icon className="h-5 w-5" strokeWidth={1.7} aria-hidden="true" />
+                </span>
+                <span className="text-sm font-semibold text-[#182536]">{title}</span>
               </div>
             ))}
           </div>
+          <Link
+            href="/industries"
+            className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#12365A] hover:text-[#527493]"
+          >
+            Explore industries <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
-      <section className="bg-[#10233f] py-20 text-white sm:py-24">
-        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
-          <div className="max-w-3xl">
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold">A practical project approach</span>
-            <h2 className="mt-3 font-display text-4xl font-bold leading-tight sm:text-5xl">From first scope to handover.</h2>
-            <p className="mt-4 text-sm leading-7 text-white/75 sm:text-base">The actual work sequence, responsibilities and acceptance criteria are agreed for each project.</p>
-          </div>
-          <ol className="mt-10 grid gap-px overflow-hidden border border-white/15 bg-white/15 sm:grid-cols-2 lg:grid-cols-5">
-            {[
-              ['01', 'Understand', 'Review the requirement, assets, location and available project information.'],
-              ['02', 'Plan', 'Align the work package, interfaces, access and project-specific constraints.'],
-              ['03', 'Execute', 'Coordinate the agreed scope with appropriate site personnel and work fronts.'],
-              ['04', 'Inspect', 'Check work against the project requirements and agreed inspection points.'],
-              ['05', 'Deliver', 'Coordinate close-out and handover information defined for the scope.'],
-            ].map(([number, title, description]) => (
-              <li key={number} className="bg-[#10233f] p-5 sm:p-6">
-                <span className="font-display text-3xl font-bold text-gold">{number}</span>
-                <h3 className="mt-3 font-display text-2xl font-bold">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-white/75">{description}</p>
-              </li>
-            ))}
-          </ol>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/request-a-quote" className="inline-flex min-h-12 items-center justify-center gap-2 bg-gold px-5 text-sm font-bold text-navy-950 hover:bg-gold-100">Need industrial support? Request a quote <ArrowRight className="h-4 w-4" /></Link>
-            <Link href="/contact" className="inline-flex min-h-12 items-center justify-center border border-white/35 px-5 text-sm font-bold text-white hover:border-gold">Contact ARS EXIM</Link>
-          </div>
+      <section className="relative isolate overflow-hidden bg-[#071D38] py-20 text-white sm:py-24">
+        <div aria-hidden="true" className="absolute inset-0 opacity-[0.12]">
+          <svg viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" className="h-full w-full">
+            <g fill="none" stroke="#C4CED8" strokeWidth="1">
+              <path d="M104 180l48-33 42 13 12 30 48 13 9 23-25 16 11 31-31 16-9 37-30 6-14-25-37 5-15-34-33-2 8-37-23-23 13-27-15-21 41-8zM274 350l36 8 21 25-16 21 9 28-24 34-15-17-1-37-20-20 10-42zM485 175l38-19 35 12 23-18 37 21 13 26 41 2 28 26-18 28-36 3-10 34-29 12-17 35-30 4-24 32-27-15 2-36-26-22 8-37-29-24 14-29-31-13 13-22-20-20zM657 164l48-16 45 14 29-8 39 28 11 29-28 15-7 32-35 5-26 24-37-8-20-25-40-7-13-34 25-15-6-34zM797 267l35-13 38 14 14 26 36 13 17 36-26 22-4 38-31 22-17-19-32 8-18-33-23-17 11-35-20-24 20-38zM1011 171l29-21 47 10 29-13 43 23 25 37-17 22-39-5-21 20-31-14-35 10-29-18-42-5-12-25 32-21-9-20zM1136 289l31-18 38 13 7 28-28 26-6 34-29 4-18-25-25-13 3-29z" />
+              <path d="M133 205c168-82 266 208 462 48s342-138 525-5" strokeDasharray="5 9" />
+              <path d="M210 216c165 8 301 5 417 34s282 63 470 7" strokeOpacity=".7" />
+            </g>
+            <g fill="#C4CED8">
+              <circle cx="133" cy="205" r="4" /><circle cx="595" cy="253" r="4" /><circle cx="1120" cy="248" r="4" />
+            </g>
+          </svg>
         </div>
-      </section>
-
-      {hasPublishedProjects && <section className="bg-[#f1f3f2] py-20 sm:py-28">
-        <div className="mx-auto max-w-full px-5 sm:px-8 lg:px-12">
-          <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Work across energy regions</span>
-              <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] text-navy-950 sm:text-6xl">Selected project references.</h2>
-            </div>
-            <Link href="/projects" className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-navy-900 hover:text-gold-700">
-              All projects <ArrowUpRight className="h-4 w-4" />
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-12">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#C4CED8]">
+              Global trade · Business capabilities
+            </p>
+            <h2 className="mt-4 max-w-xl text-4xl font-bold leading-tight tracking-[-0.035em] sm:text-5xl">
+              Connected thinking. Project-specific execution.
+            </h2>
+            <p className="mt-6 max-w-xl text-sm leading-7 text-white/75 sm:text-base">
+              Industrial work can involve multiple disciplines, site interfaces and supply
+              considerations. ARS EXIM works from the scope and requirements shared by each
+              project team to shape a practical service enquiry.
+            </p>
+            <Link
+              href="/request-a-quote"
+              className="mt-8 inline-flex min-h-12 items-center gap-2 bg-white px-5 text-sm font-bold text-[#071D38] transition-colors hover:bg-[#C4CED8]"
+            >
+              Discuss your requirements <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
+          <div className="border border-white/20 bg-white/[0.04] p-5 sm:p-7">
+            <div className="flex items-center gap-3 border-b border-white/15 pb-4">
+              <MapPin className="h-5 w-5 text-[#C4CED8]" aria-hidden="true" />
+              <p className="text-xs font-bold uppercase tracking-[0.15em] text-white/85">
+                An illustrative view of connected trade
+              </p>
+            </div>
+            <div className="mt-5 grid grid-cols-3 gap-3">
+              {[
+                ['01', 'Project scope'],
+                ['02', 'Site requirements'],
+                ['03', 'Service coordination'],
+              ].map(([number, title]) => (
+                <div key={number} className="border-l border-[#C4CED8]/55 pl-3 sm:pl-4">
+                  <span className="text-[10px] font-bold tracking-wider text-[#C4CED8]">{number}</span>
+                  <p className="mt-2 text-xs font-semibold leading-5 text-white sm:text-sm">{title}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-6 text-[11px] leading-5 text-white/55">
+              Map and route graphics are illustrative and do not indicate ARS EXIM offices,
+              destinations or operating coverage.
+            </p>
+          </div>
+        </div>
+      </section>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {featuredProjects.map((project: any, index: number) => (
-                <Link href={`/projects/${project.slug}`} key={project.slug} className="group min-w-0">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-steel-200">
-                    <Image src={project.featuredImage || '/images/industrial-site-team.webp'} alt={project.coverImageIsIllustrative ? `Service capability image related to ${project.title}; not project-site photography` : project.title} fill unoptimized sizes="(max-width: 768px) 100vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <span className="absolute left-3 top-3 bg-white px-2.5 py-1 font-display text-lg font-semibold text-navy-950">0{index + 1}</span>
-                    {project.coverImageIsIllustrative && <span className="absolute bottom-3 left-3 bg-navy-950/80 px-2 py-1 text-[9px] font-semibold text-white">Service imagery · not site photography</span>}
+      {galleryImages.length > 0 && (
+        <section className="bg-[#F2F5F8] py-20 sm:py-24">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+            <div className="mb-9 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#527493]">Project gallery</p>
+                <h2 className="mt-4 max-w-2xl text-4xl font-bold leading-tight tracking-[-0.035em] text-[#071D38] sm:text-5xl">
+                  Industrial execution in the field.
+                </h2>
+              </div>
+              <Link
+                href="/gallery"
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#12365A] hover:text-[#527493]"
+              >
+                View gallery <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="grid gap-5 md:grid-cols-3">
+              {galleryImages.map((item) => (
+                <Link
+                  key={item.id}
+                  href="/gallery"
+                  className="group overflow-hidden border border-[#D7E0E8] bg-white transition-shadow hover:shadow-[0_16px_40px_-24px_rgba(7,29,56,.45)]"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[#D7E0E8]">
+                    <Image
+                      src={item.url}
+                      alt={item.altText}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                    <span className="absolute left-4 top-4 bg-[#071D38]/85 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white">
+                      {item.category}
+                    </span>
                   </div>
-                  <div className="flex items-start justify-between gap-3 border-b border-steel-300 py-4">
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-steel-600">{project.location}, {project.country}</span>
-                      <h3 className="mt-1 font-display text-2xl font-semibold leading-tight text-navy-950">{project.title}</h3>
-                      {project.shortDescription && <p className="mt-2 line-clamp-3 text-sm leading-6 text-steel-700">{project.shortDescription}</p>}
-                      {(project.services || []).length > 0 && <span className="mt-3 block text-[10px] font-bold uppercase tracking-wider text-gold-700">{project.services.map((service: string) => service.replace(/-/g, ' ')).join(' · ')}</span>}
-                    </div>
-                    <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-navy-900 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+                  <div className="flex items-center justify-between gap-3 p-5">
+                    <h3 className="text-lg font-bold text-[#071D38]">{item.title}</h3>
+                    <ArrowUpRight className="h-5 w-5 shrink-0 text-[#527493]" aria-hidden="true" />
                   </div>
                 </Link>
               ))}
+            </div>
+            {featuredMedia.length === 0 && (
+              <p className="mt-4 text-xs leading-5 text-[#69798A]">
+                This illustrative image is not represented as ARS EXIM project photography.
+              </p>
+            )}
           </div>
-        </div>
-      </section>}
+        </section>
+      )}
 
-      <section className="bg-white py-20 sm:py-28">
-        <div className="mx-auto grid max-w-full gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-12">
+      {featuredProjects.length > 0 && (
+        <section className="bg-white py-20 sm:py-24">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+            <div className="mb-9 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#527493]">Published projects</p>
+                <h2 className="mt-4 text-4xl font-bold leading-tight tracking-[-0.035em] text-[#071D38] sm:text-5xl">
+                  Selected project references.
+                </h2>
+              </div>
+              <Link
+                href="/projects"
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#12365A] hover:text-[#527493]"
+              >
+                All projects <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredProjects.map((project, index) => (
+                <Link href={`/projects/${project.slug}`} key={project.slug} className="group min-w-0">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[#D7E0E8]">
+                    <Image
+                      src={project.featuredImage || '/images/industrial-site-team.webp'}
+                      alt={project.coverImageIsIllustrative ? `Service capability image related to ${project.title}; not project-site photography` : project.title}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                    <span className="absolute left-3 top-3 bg-white px-2.5 py-1 text-sm font-bold text-[#071D38]">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    {project.coverImageIsIllustrative && (
+                      <span className="absolute bottom-3 left-3 bg-[#071D38]/85 px-2 py-1 text-[9px] font-semibold text-white">
+                        Service imagery · not site photography
+                      </span>
+                    )}
+                  </div>
+                  <div className="border-b border-[#D7E0E8] py-4">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#69798A]">
+                      {project.location}, {project.country}
+                    </span>
+                    <h3 className="mt-1 text-lg font-bold text-[#071D38]">{project.title}</h3>
+                    {project.shortDescription && (
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-[#526273]">{project.shortDescription}</p>
+                    )}
+                    {(project.services || []).length > 0 && (
+                      <span className="mt-3 block text-[10px] font-bold uppercase tracking-wider text-[#527493]">
+                        {project.services.map((service) => service.replace(/-/g, ' ')).join(' · ')}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section id="contact" className="scroll-mt-24 bg-[#F2F5F8] py-20 sm:py-28">
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14 lg:px-12">
           <div>
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Project engagement</span>
-            <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] text-navy-950 sm:text-6xl">Start with the site requirements.</h2>
-            <p className="mt-5 max-w-xl text-sm leading-7 text-steel-700 sm:text-base">
-              Every enquiry is different. Share the work location, service needed, project type and target schedule so the team can assess the request.
+            <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#527493]">Contact ARS EXIM</p>
+            <h2 className="mt-4 text-4xl font-bold leading-tight tracking-[-0.035em] text-[#071D38] sm:text-5xl">
+              Let’s discuss your project requirements.
+            </h2>
+            <p className="mt-5 text-sm leading-7 text-[#526273] sm:text-base">
+              Share the work location, service needed, project type and target schedule to start
+              an enquiry with the team.
             </p>
+            <div className="mt-8 space-y-4 border-t border-[#D7E0E8] pt-6 text-sm">
+              <a href="tel:+919764425426" className="flex min-h-11 items-center gap-3 font-semibold text-[#12365A] hover:text-[#527493]">
+                <Phone className="h-4 w-4 shrink-0 text-[#527493]" aria-hidden="true" />
+                +91 9764 425 426
+              </a>
+              <a href="mailto:info@arsexim.com" className="flex min-h-11 items-center gap-3 font-semibold text-[#12365A] hover:text-[#527493]">
+                <Mail className="h-4 w-4 shrink-0 text-[#527493]" aria-hidden="true" />
+                info@arsexim.com
+              </a>
+              <p className="flex items-center gap-3 text-xs leading-5 text-[#69798A]">
+                <ShieldCheck className="h-4 w-4 shrink-0 text-[#527493]" aria-hidden="true" />
+                Project requirements and acceptance criteria are confirmed against your documents.
+              </p>
+            </div>
           </div>
-          <ol className="grid gap-0 border-y border-steel-200 sm:grid-cols-2">
-            {[
-              ['01', 'Define the scope', 'Tell us the discipline, work area and project type.'],
-              ['02', 'Share the documents', 'Attach drawings, BOQ or specifications if available.'],
-              ['03', 'Discuss the constraints', 'Include access, operating conditions and schedule needs.'],
-              ['04', 'Request an assessment', 'The team can review the information and follow up.'],
-            ].map(([number, title, description]) => (
-              <li key={number} className="border-b border-r border-steel-200 bg-white p-6 sm:p-8">
-                <span className="font-display text-3xl font-bold text-gold-700">{number}</span>
-                <h3 className="mt-3 font-display text-2xl font-semibold text-navy-950">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-steel-700">{description}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className="bg-[#10233f] text-white">
-        <div className="mx-auto grid max-w-full items-center gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_auto] lg:px-12">
-          <div className="max-w-3xl">
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold">Commercial enquiries</span>
-            <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] sm:text-6xl">Have a live project scope?</h2>
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-white/80 sm:text-base">
-              Contact ARS EXIM by WhatsApp, email or the project quote form. Include the country, discipline and timeline to help route your enquiry.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-            <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#1f8f5f] px-5 text-sm font-bold text-white hover:bg-[#19784f]">WhatsApp the team <ArrowUpRight className="h-4 w-4" /></a>
-            <Link href="/request-a-quote" className="inline-flex min-h-12 items-center justify-center gap-2 border border-white/50 px-5 text-sm font-bold text-white hover:border-gold hover:bg-gold hover:text-navy-950">Send project details <ArrowRight className="h-4 w-4" /></Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-gold px-5 py-14 text-navy-950 sm:px-8 sm:py-20">
-        <div className="mx-auto flex max-w-full flex-col gap-7 sm:flex-row sm:items-end sm:justify-between lg:px-4">
-          <div className="max-w-3xl">
-            <span className="text-xs font-bold uppercase tracking-[0.16em]">Project estimating & proposals</span>
-            <h2 className="mt-3 font-display text-5xl font-bold leading-[0.98] sm:text-6xl">Let’s talk about the work ahead.</h2>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-navy-950/80 sm:text-base">
-              Share your scope, site requirements and project timeline with our team.
-            </p>
-          </div>
-          <Link href="/request-a-quote">
-            <Button variant="secondary" size="lg" className="min-h-12 w-full border-navy-950 bg-navy-950 text-white hover:bg-navy-800 sm:w-auto">
-              Request a project quote <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <ContactForm />
         </div>
       </section>
     </div>

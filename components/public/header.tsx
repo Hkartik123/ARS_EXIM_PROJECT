@@ -1,257 +1,271 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, Phone, Mail, ShieldAlert, MessageCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { ArrowRight, ChevronDown, Mail, Menu, MessageCircle, Phone, X } from 'lucide-react';
+
+const serviceLinks = [
+  { name: 'All services', href: '/services' },
+  { name: 'Hot insulation', href: '/services/hot-insulation' },
+  { name: 'Cold & cryogenic insulation', href: '/services/cold-cryogenic-insulation' },
+  { name: 'Passive fire protection', href: '/services/passive-fire-protection' },
+  { name: 'Coating & painting', href: '/services/coating-and-painting' },
+  { name: 'Skilled manpower', href: '/services/skilled-manpower' },
+  { name: 'Scaffolding & access', href: '/services/scaffolding' },
+];
+
+const navigation = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about' },
+  { name: 'Industries', href: '/industries' },
+  { name: 'Contact', href: '/contact' },
+];
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const servicesActive = pathname.startsWith('/services');
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
     setMobileMenuOpen(false);
+    setMobileServicesOpen(false);
     setServicesOpen(false);
   }, [pathname]);
 
-  const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    {
-      name: 'Services',
-      href: '/services',
-      subLinks: [
-        { name: 'Overview', href: '/services' },
-        { name: 'Hot Insulation', href: '/services/hot-insulation' },
-        { name: 'Cold & Cryogenic Insulation', href: '/services/cold-cryogenic-insulation' },
-        { name: 'Passive Fire Protection', href: '/services/passive-fire-protection' },
-        { name: 'Coating & Painting', href: '/services/coating-and-painting' },
-        { name: 'Skilled Manpower', href: '/services/skilled-manpower' },
-        { name: 'Scaffolding & Access', href: '/services/scaffolding' },
-      ],
-    },
-    { name: 'Industries', href: '/industries' },
-    { name: 'Projects', href: '/projects' },
-    { name: 'Gallery', href: '/gallery' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'Contact', href: '/contact' },
-  ];
-
   return (
     <>
-      {/* Skip to Main Content for WCAG 2.2 AA Accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 bg-gold text-navy-950 font-bold px-4 py-2 rounded shadow-lg"
+        className="sr-only fixed left-4 top-4 z-[60] bg-white px-4 py-3 font-bold text-[#071D38] focus:not-sr-only"
       >
         Skip to main content
       </a>
 
-      {/* Top Utility Bar */}
-      <div className="bg-[#edf5ff] text-navy-900 text-xs py-2 border-b border-[#d9eafc]">
-        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="hidden items-center space-x-6 sm:flex">
-            <span className="flex items-center space-x-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-safety-red" />
-              <span className="font-semibold text-navy-900">Site safety · Quality · Coordination</span>
-            </span>
-            <span className="hidden sm:inline-block text-navy-700">
-              Insulation · PFP · Scaffolding & Access
-            </span>
-          </div>
-          <div className="flex items-center space-x-5">
-            <a
-              href="tel:+919764425426"
-              className="hover:text-navy-700 transition-colors flex items-center space-x-1 text-navy-900"
-            >
-              <Phone className="w-3 h-3 text-navy-900" />
+      <div className="bg-[#071D38] text-white">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 text-[11px] sm:px-8 lg:px-12">
+          <p className="hidden items-center gap-2 font-semibold tracking-wide text-white/75 sm:flex">
+            Industrial services <span className="text-[#C4CED8]">·</span> Project enquiries
+          </p>
+          <div className="ml-auto flex items-center gap-4 sm:gap-6">
+            <a href="tel:+919764425426" className="inline-flex min-h-7 items-center gap-1.5 text-white/85 transition-colors hover:text-white">
+              <Phone className="h-3 w-3 text-[#C4CED8]" aria-hidden="true" />
               <span>+91 9764 425 426</span>
             </a>
-            <a
-              href="mailto:info@arsexim.com"
-              className="hover:text-navy-700 transition-colors hidden md:flex items-center space-x-1 text-navy-900"
-            >
-              <Mail className="w-3 h-3 text-navy-900" />
+            <a href="mailto:info@arsexim.com" className="hidden min-h-7 items-center gap-1.5 text-white/85 transition-colors hover:text-white md:inline-flex">
+              <Mail className="h-3 w-3 text-[#C4CED8]" aria-hidden="true" />
               <span>info@arsexim.com</span>
             </a>
-            <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 font-semibold text-[#177d53] transition-colors hover:text-[#105d3e]">
-              <MessageCircle className="h-3.5 w-3.5" />
+            <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="inline-flex min-h-7 items-center gap-1.5 font-semibold text-white/85 transition-colors hover:text-white">
+              <MessageCircle className="h-3.5 w-3.5 text-[#C4CED8]" aria-hidden="true" />
               <span>WhatsApp</span>
             </a>
           </div>
         </div>
       </div>
 
-      {/* Main Header */}
-      <header
-        className={cn(
-          'sticky top-0 z-40 w-full transition-all duration-200 bg-white text-navy-900 border-b border-[#dfe9f6]',
-          scrolled ? 'shadow-industrial-lg py-2.5' : 'py-4'
-        )}
-      >
-        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center group max-w-[420px]">
-            <Image
-              src="/ars-exim-logo-transparent.png"
-              alt="ARS EXIM logo"
-              width={622}
-              height={522}
-              priority
-              className="h-[74px] w-auto sm:h-[94px] object-contain"
-            />
+      <header className={`sticky top-0 z-50 border-b border-white/10 bg-[#071D38] text-white transition-shadow duration-200 ${scrolled ? 'shadow-[0_8px_24px_rgba(7,29,56,.22)]' : ''}`}>
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-3 sm:px-8 lg:px-12">
+          <Link href="/" className="flex min-w-0 items-center gap-3" aria-label="ARS EXIM Global Solutions home">
+            <span className="flex h-[54px] w-[66px] shrink-0 items-center justify-center rounded-sm bg-white p-1.5 sm:h-[62px] sm:w-[76px]">
+              <Image
+                src="/ars-exim-logo-transparent.png"
+                alt="ARS EXIM Global Solutions logo"
+                width={622}
+                height={522}
+                priority
+                className="h-full w-full object-contain"
+              />
+            </span>
+            <span className="hidden min-w-0 sm:block">
+              <span className="block truncate text-[13px] font-bold uppercase tracking-[0.12em] text-white lg:text-sm">
+                ARS EXIM Global Solutions
+              </span>
+              <span className="mt-1 block text-[10px] font-medium tracking-[0.08em] text-[#C4CED8]">
+                EXpert Insulation Management
+              </span>
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-7">
-            {navLinks.map((link) => {
-              const isActive =
-                link.href === '/'
-                  ? pathname === '/'
-                  : pathname.startsWith(link.href);
-
-              if (link.subLinks) {
-                return (
-                  <div
-                    key={link.name}
-                    className="relative group"
-                    onMouseEnter={() => setServicesOpen(true)}
-                    onMouseLeave={() => setServicesOpen(false)}
-                  >
-                    <button
-                      type="button"
-                      aria-expanded={servicesOpen}
-                      className={cn(
-                        'flex items-center space-x-1 text-sm font-semibold tracking-wide transition-colors py-2 focus:outline-none focus:text-navy-900',
-                        isActive ? 'text-navy-900' : 'text-navy-700 hover:text-navy-900'
-                      )}
-                    >
-                      <span>{link.name}</span>
-                      <ChevronDown className="w-4 h-4 text-navy-700 group-hover:text-navy-900 transition-transform group-hover:rotate-180" />
-                    </button>
-
-                    {/* Dropdown Menu */}
-                    <div className="absolute top-full left-0 w-64 pt-2 hidden group-hover:block transition-all">
-                      <div className="bg-white border border-[#dfeaf7] rounded shadow-industrial-lg py-2">
-                        {link.subLinks.map((sub) => (
-                          <Link
-                            key={sub.name}
-                            href={sub.href}
-                            className={cn(
-                              'block px-4 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors',
-                              pathname === sub.href
-                                ? 'bg-[#edf5ff] text-navy-900 font-bold'
-                                : 'text-navy-700 hover:bg-[#edf5ff] hover:text-navy-900'
-                            )}
-                          >
-                            {sub.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-
+          <nav aria-label="Main navigation" className="hidden items-center gap-6 lg:flex xl:gap-8">
+            {navigation.slice(0, 2).map((link) => {
+              const active = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={cn(
-                    'text-sm font-semibold tracking-wide transition-colors py-2 relative',
-                    isActive
-                      ? 'text-navy-900'
-                      : 'text-navy-700 hover:text-navy-900'
-                  )}
+                  aria-current={active ? 'page' : undefined}
+                  className={`relative py-3 text-sm font-semibold transition-colors hover:text-white ${active ? 'text-white' : 'text-white/70'}`}
                 >
                   {link.name}
-                  {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-navy-900 rounded-full" />
-                  )}
+                  {active && <span className="absolute inset-x-0 bottom-1 h-0.5 bg-[#C4CED8]" />}
+                </Link>
+              );
+            })}
+
+            <div
+              className="relative"
+              onMouseEnter={() => setServicesOpen(true)}
+              onMouseLeave={() => setServicesOpen(false)}
+              onFocus={() => setServicesOpen(true)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  setServicesOpen(false);
+                }
+              }}
+            >
+              <div className="flex items-center gap-1">
+                <Link
+                  href="/services"
+                  aria-current={servicesActive ? 'page' : undefined}
+                  className={`py-3 text-sm font-semibold transition-colors hover:text-white ${servicesActive ? 'text-white' : 'text-white/70'}`}
+                >
+                  Services
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Toggle services menu"
+                  aria-expanded={servicesOpen}
+                  aria-controls="services-menu"
+                  onClick={() => setServicesOpen((open) => !open)}
+                  className="flex h-9 w-7 items-center justify-center text-white/70 transition-colors hover:text-white focus-visible:outline-white"
+                >
+                  <ChevronDown className={`h-4 w-4 transition-transform ${servicesOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </button>
+              </div>
+              {servicesOpen && (
+                <div id="services-menu" className="absolute left-0 top-full w-64 border border-[#D7E0E8] bg-white py-2 text-[#182536] shadow-xl">
+                  {serviceLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      aria-current={pathname === link.href ? 'page' : undefined}
+                      className={`block px-4 py-2.5 text-xs font-semibold transition-colors hover:bg-[#F2F5F8] hover:text-[#12365A] ${pathname === link.href ? 'bg-[#F2F5F8] text-[#12365A]' : ''}`}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {navigation.slice(2).map((link) => {
+              const active = pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={`relative py-3 text-sm font-semibold transition-colors hover:text-white ${active ? 'text-white' : 'text-white/70'}`}
+                >
+                  {link.name}
+                  {active && <span className="absolute inset-x-0 bottom-1 h-0.5 bg-[#C4CED8]" />}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Primary CTA Button */}
-          <div className="hidden lg:flex items-center space-x-4">
-            <Link href="/request-a-quote">
-              <Button variant="primary" size="md">
-                Request a Quote
-              </Button>
+          <div className="hidden lg:block">
+            <Link
+              href="/request-a-quote"
+              className="inline-flex min-h-10 items-center justify-center gap-2 bg-white px-4 text-xs font-bold text-[#071D38] transition-colors hover:bg-[#C4CED8]"
+            >
+              Request a Quote <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
 
-          {/* Mobile Menu Hamburger */}
-          <div className="lg:hidden flex items-center">
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-navy-900 hover:text-navy-700 focus:outline-none focus:ring-2 focus:ring-navy-900 rounded"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+            className="flex h-11 w-11 shrink-0 items-center justify-center border border-white/25 text-white transition-colors hover:bg-white/10 focus-visible:outline-white lg:hidden"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+          </button>
         </div>
 
-        {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-[#dfeaf7] px-4 pt-3 pb-6 space-y-2 text-navy-900">
-            {navLinks.map((link) => {
-              if (link.subLinks) {
-                return (
-                  <div key={link.name} className="py-2 border-b border-navy-800">
-                    <span className="block text-xs font-bold uppercase tracking-wider text-navy-700 mb-2">
-                      {link.name}
-                    </span>
-                    <div className="pl-3 space-y-1.5">
-                      {link.subLinks.map((sub) => (
-                        <Link
-                          key={sub.name}
-                          href={sub.href}
-                          className="block text-sm font-semibold text-navy-700 hover:text-navy-900 py-1"
-                        >
-                          {sub.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                );
-              }
-
+          <nav
+            id="mobile-navigation"
+            aria-label="Mobile navigation"
+            className="max-h-[calc(100vh-7rem)] overflow-y-auto border-t border-white/15 bg-[#071D38] px-4 pb-6 pt-3 text-white lg:hidden sm:px-8"
+          >
+            {navigation.slice(0, 2).map((link) => {
+              const active = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="block text-base font-semibold text-navy-900 hover:text-navy-700 py-2 border-b border-[#dfeaf7]"
+                  aria-current={active ? 'page' : undefined}
+                  className={`flex min-h-12 items-center border-b border-white/10 text-sm font-semibold ${active ? 'text-white' : 'text-white/75'}`}
                 >
                   {link.name}
                 </Link>
               );
             })}
-
-            <div className="pt-4">
-              <Link href="/request-a-quote" className="block w-full">
-                <Button variant="primary" size="lg" className="w-full">
-                  Request a Project Quote
-                </Button>
-              </Link>
+            <div className="border-b border-white/10">
+              <div className="flex min-h-12 items-center justify-between">
+                <Link href="/services" aria-current={servicesActive ? 'page' : undefined} className={`text-sm font-semibold ${servicesActive ? 'text-white' : 'text-white/75'}`}>
+                  Services
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setMobileServicesOpen((open) => !open)}
+                  aria-label="Toggle services submenu"
+                  aria-expanded={mobileServicesOpen}
+                  aria-controls="mobile-services-menu"
+                  className="flex h-11 w-11 items-center justify-center text-white/80"
+                >
+                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileServicesOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </button>
+              </div>
+              {mobileServicesOpen && (
+                <div id="mobile-services-menu" className="space-y-1 pb-3 pl-4">
+                  {serviceLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      aria-current={pathname === link.href ? 'page' : undefined}
+                      className="flex min-h-10 items-center text-sm text-white/70 transition-colors hover:text-white"
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
+            {navigation.slice(2).map((link) => {
+              const active = pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={`flex min-h-12 items-center border-b border-white/10 text-sm font-semibold ${active ? 'text-white' : 'text-white/75'}`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+            <Link
+              href="/request-a-quote"
+              className="mt-5 flex min-h-12 items-center justify-center gap-2 bg-white px-4 text-sm font-bold text-[#071D38] transition-colors hover:bg-[#C4CED8]"
+            >
+              Request a Quote <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </nav>
         )}
       </header>
     </>

@@ -4,27 +4,30 @@
 
 :root {
   --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --navy-900: #10233F;
-  --brand-blue: #edf5ff;
-  --brand-blue-strong: #dfeeff;
-  --gold: #C9A961;
+  --navy-900: #071D38;
+  --corporate-navy: #12365A;
+  --steel-blue: #527493;
+  --silver: #C4CED8;
+  --silver-light: #F2F5F8;
+  --text-charcoal: #182536;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
 body {
-  color: #1E232A;
-  background: linear-gradient(180deg, #f5f9ff 0%, #edf5ff 100%);
+  color: var(--text-charcoal);
+  background: #FFFFFF;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background-color: #10233F;
-  color: #C9A961;
+  background-color: var(--navy-900);
+  color: #FFFFFF;
 }
 
 /* Subtle Industrial Engineering Background Pattern */
@@ -115,6 +118,6 @@ select {
 
 /* Focus Visible Rings */
 :focus-visible {
-  outline: 2px solid #C9A961;
+  outline: 2px solid var(--steel-blue);
   outline-offset: 2px;
 }

@@ -4,11 +4,11 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://arsexim.com'),
   title: {
-    default: 'ARS EXIM | EXpert Insulation Management',
+    default: 'ARS EXIM Global Solutions | Industrial Services',
     template: '%s | ARS EXIM',
   },
   description:
-    'ARS EXIM delivers EXpert Insulation Management with industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower services for project infrastructure.',
+    'ARS EXIM Global Solutions supports industrial project teams with insulation, coating and painting, passive fire protection, scaffolding and skilled manpower.',
   keywords: [
     'industrial insulation contractor',
     'passive fire protection',
@@ -36,10 +36,10 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://arsexim.com',
-    siteName: 'ARS EXIM',
-    title: 'ARS EXIM | EXpert Insulation Management',
+    siteName: 'ARS EXIM Global Solutions',
+    title: 'ARS EXIM Global Solutions | Industrial Services',
     description:
-      'Industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower delivered under EXpert Insulation Management.',
+      'Industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower for project enquiries.',
     images: [
       {
         url: '/ars-exim-social.png',
@@ -51,8 +51,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ARS EXIM | EXpert Insulation Management',
-    description: 'Industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower delivered by ARS EXIM.',
+    title: 'ARS EXIM Global Solutions | Industrial Services',
+    description: 'Industrial insulation, coating and painting, passive fire protection, scaffolding and skilled manpower for project enquiries.',
     images: ['/ars-exim-social.png'],
   },
   robots: {
