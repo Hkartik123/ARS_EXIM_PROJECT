@@ -16,7 +16,7 @@ export default function ContactPage() {
         <Breadcrumbs items={[{ label: 'Contact Us' }]} />
 
         <div className="max-w-3xl my-8">
-          <span className="text-xs font-bold uppercase tracking-widest text-gold-600 block mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest text-accent-600 block mb-2">
             Direct Communications
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-4">
@@ -34,15 +34,15 @@ export default function ContactPage() {
               <h2 className="text-lg font-bold text-white border-b border-navy-800 pb-3">Project Enquiries</h2>
 
               <div className="flex items-center space-x-3 text-sm text-steel-300">
-                <Phone className="w-5 h-5 text-gold flex-shrink-0" />
-                <a href="tel:+919764425426" className="hover:text-gold transition-colors font-medium">
+                <Phone className="w-5 h-5 text-accent flex-shrink-0" />
+                <a href="tel:+919764425426" className="hover:text-accent transition-colors font-medium">
                   +91 9764 425 426
                 </a>
               </div>
 
               <div className="flex items-center space-x-3 text-sm text-steel-300">
-                <Mail className="w-5 h-5 text-gold flex-shrink-0" />
-                <a href="mailto:info@arsexim.com" className="hover:text-gold transition-colors font-medium">
+                <Mail className="w-5 h-5 text-accent flex-shrink-0" />
+                <a href="mailto:info@arsexim.com" className="hover:text-accent transition-colors font-medium">
                   info@arsexim.com
                 </a>
               </div>
@@ -58,7 +58,7 @@ export default function ContactPage() {
 
             <div className="bg-white border border-steel-200 rounded p-6">
               <div className="flex items-center space-x-3 mb-2">
-                <ShieldCheck className="w-5 h-5 text-gold" />
+                <ShieldCheck className="w-5 h-5 text-accent" />
                 <h3 className="font-bold text-navy-900 text-sm">Vendor Pre-Qualification</h3>
               </div>
               <p className="text-xs text-steel-600 leading-relaxed">

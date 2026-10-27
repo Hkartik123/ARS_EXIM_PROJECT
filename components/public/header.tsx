@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, ChevronDown, Mail, Menu, MessageCircle, Phone, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react';
+import { CompanyLogo } from '@/components/ui/company-logo';
 
 const serviceLinks = [
   { name: 'All services', href: '/services' },
@@ -47,51 +47,24 @@ export function Header() {
     <>
       <a
         href="#main-content"
-        className="sr-only fixed left-4 top-4 z-[60] bg-white px-4 py-3 font-bold text-[#071D38] focus:not-sr-only"
+        className="sr-only fixed left-4 top-4 z-[60] bg-white px-4 py-3 font-bold text-[#071D35] focus:not-sr-only"
       >
         Skip to main content
       </a>
 
-      <div className="bg-[#071D38] text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 text-[11px] sm:px-8 lg:px-12">
-          <p className="hidden items-center gap-2 font-semibold tracking-wide text-white/75 sm:flex">
-            Industrial services <span className="text-[#C4CED8]">·</span> Project enquiries
-          </p>
-          <div className="ml-auto flex items-center gap-4 sm:gap-6">
-            <a href="tel:+919764425426" className="inline-flex min-h-7 items-center gap-1.5 text-white/85 transition-colors hover:text-white">
-              <Phone className="h-3 w-3 text-[#C4CED8]" aria-hidden="true" />
-              <span>+91 9764 425 426</span>
-            </a>
-            <a href="mailto:info@arsexim.com" className="hidden min-h-7 items-center gap-1.5 text-white/85 transition-colors hover:text-white md:inline-flex">
-              <Mail className="h-3 w-3 text-[#C4CED8]" aria-hidden="true" />
-              <span>info@arsexim.com</span>
-            </a>
-            <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="inline-flex min-h-7 items-center gap-1.5 font-semibold text-white/85 transition-colors hover:text-white">
-              <MessageCircle className="h-3.5 w-3.5 text-[#C4CED8]" aria-hidden="true" />
-              <span>WhatsApp</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <header className={`sticky top-0 z-50 border-b border-white/10 bg-[#071D38] text-white transition-shadow duration-200 ${scrolled ? 'shadow-[0_8px_24px_rgba(7,29,56,.22)]' : ''}`}>
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-3 sm:px-8 lg:px-12">
-          <Link href="/" className="flex min-w-0 items-center gap-3" aria-label="ARS EXIM Global Solutions home">
-            <span className="flex h-[54px] w-[66px] shrink-0 items-center justify-center rounded-sm bg-white p-1.5 sm:h-[62px] sm:w-[76px]">
-              <Image
-                src="/ars-exim-logo-transparent.png"
-                alt="ARS EXIM Global Solutions logo"
-                width={622}
-                height={522}
-                priority
-                className="h-full w-full object-contain"
-              />
-            </span>
+      <header className={`sticky top-0 z-50 border-b border-white/10 bg-[#071D35] text-white transition-shadow duration-200 ${scrolled ? 'shadow-[0_8px_24px_rgba(7,29,56,.22)]' : ''}`}>
+        <div className="mx-auto flex min-h-[72px] max-w-[1440px] items-center justify-between gap-5 px-5 py-3 sm:px-8 sm:py-4 lg:min-h-[112px] lg:px-8 lg:py-6">
+          <Link href="/" className="flex min-w-0 items-center gap-3.5" aria-label="ARS EXIM Global Solutions home">
+            <CompanyLogo
+              priority
+              sizes="(max-width: 640px) 60px, (max-width: 1023px) 65px, 75px"
+              className="h-[50px] w-auto shrink-0 object-contain sm:h-[54px] lg:h-[62px]"
+            />
             <span className="hidden min-w-0 sm:block">
-              <span className="block truncate text-[13px] font-bold uppercase tracking-[0.12em] text-white lg:text-sm">
+              <span className="block truncate text-[13px] font-bold uppercase tracking-[0.1em] text-white lg:text-base">
                 ARS EXIM Global Solutions
               </span>
-              <span className="mt-1 block text-[10px] font-medium tracking-[0.08em] text-[#C4CED8]">
+              <span className="mt-1 block text-[10px] font-medium tracking-[0.08em] text-[#DCE3EA] lg:text-xs">
                 EXpert Insulation Management
               </span>
             </span>
@@ -108,7 +81,7 @@ export function Header() {
                   className={`relative py-3 text-sm font-semibold transition-colors hover:text-white ${active ? 'text-white' : 'text-white/70'}`}
                 >
                   {link.name}
-                  {active && <span className="absolute inset-x-0 bottom-1 h-0.5 bg-[#C4CED8]" />}
+                  {active && <span className="absolute inset-x-0 bottom-1 h-0.5 bg-[#DCE3EA]" />}
                 </Link>
               );
             })}
@@ -144,13 +117,13 @@ export function Header() {
                 </button>
               </div>
               {servicesOpen && (
-                <div id="services-menu" className="absolute left-0 top-full w-64 border border-[#D7E0E8] bg-white py-2 text-[#182536] shadow-xl">
+                <div id="services-menu" className="absolute left-0 top-full w-64 border border-[#D8E0E8] bg-white py-2 text-[#263445] shadow-xl">
                   {serviceLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
                       aria-current={pathname === link.href ? 'page' : undefined}
-                      className={`block px-4 py-2.5 text-xs font-semibold transition-colors hover:bg-[#F2F5F8] hover:text-[#12365A] ${pathname === link.href ? 'bg-[#F2F5F8] text-[#12365A]' : ''}`}
+                      className={`block px-4 py-2.5 text-xs font-semibold transition-colors hover:bg-[#F3F6F9] hover:text-[#12365A] ${pathname === link.href ? 'bg-[#F3F6F9] text-[#12365A]' : ''}`}
                     >
                       {link.name}
                     </Link>
@@ -169,7 +142,7 @@ export function Header() {
                   className={`relative py-3 text-sm font-semibold transition-colors hover:text-white ${active ? 'text-white' : 'text-white/70'}`}
                 >
                   {link.name}
-                  {active && <span className="absolute inset-x-0 bottom-1 h-0.5 bg-[#C4CED8]" />}
+                  {active && <span className="absolute inset-x-0 bottom-1 h-0.5 bg-[#DCE3EA]" />}
                 </Link>
               );
             })}
@@ -178,7 +151,7 @@ export function Header() {
           <div className="hidden lg:block">
             <Link
               href="/request-a-quote"
-              className="inline-flex min-h-10 items-center justify-center gap-2 bg-white px-4 text-xs font-bold text-[#071D38] transition-colors hover:bg-[#C4CED8]"
+              className="inline-flex min-h-10 items-center justify-center gap-2 bg-white px-4 text-xs font-bold text-[#071D35] transition-colors hover:bg-[#DCE3EA]"
             >
               Request a Quote <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
@@ -200,7 +173,7 @@ export function Header() {
           <nav
             id="mobile-navigation"
             aria-label="Mobile navigation"
-            className="max-h-[calc(100vh-7rem)] overflow-y-auto border-t border-white/15 bg-[#071D38] px-4 pb-6 pt-3 text-white lg:hidden sm:px-8"
+            className="max-h-[calc(100vh-7rem)] overflow-y-auto border-t border-white/15 bg-[#071D35] px-4 pb-6 pt-3 text-white lg:hidden sm:px-8"
           >
             {navigation.slice(0, 2).map((link) => {
               const active = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
@@ -261,7 +234,7 @@ export function Header() {
             })}
             <Link
               href="/request-a-quote"
-              className="mt-5 flex min-h-12 items-center justify-center gap-2 bg-white px-4 text-sm font-bold text-[#071D38] transition-colors hover:bg-[#C4CED8]"
+              className="mt-5 flex min-h-12 items-center justify-center gap-2 bg-white px-4 text-sm font-bold text-[#071D35] transition-colors hover:bg-[#DCE3EA]"
             >
               Request a Quote <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>

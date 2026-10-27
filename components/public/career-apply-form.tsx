@@ -183,7 +183,7 @@ export function CareerApplyForm({ jobId, jobTitle }: CareerApplyFormProps) {
           />
           {resumeFile ? (
             <div className="flex items-center justify-center space-x-2 text-xs font-bold text-navy-900">
-              <FileText className="w-4 h-4 text-gold" />
+              <FileText className="w-4 h-4 text-accent" />
               <span>{resumeFile.name} ({(resumeFile.size / (1024 * 1024)).toFixed(2)} MB)</span>
             </div>
           ) : (

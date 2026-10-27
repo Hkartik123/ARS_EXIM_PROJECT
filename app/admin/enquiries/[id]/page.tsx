@@ -138,7 +138,7 @@ export default function EnquiryDetailPage({ params }: EnquiryDetailPageProps) {
       </div>
 
       {feedback && (
-        <div className="p-4 bg-steel-100 border-l-4 border-gold text-navy-950 text-xs font-bold rounded">
+        <div className="p-4 bg-steel-100 border-l-4 border-accent text-navy-950 text-xs font-bold rounded">
           {feedback}
         </div>
       )}
@@ -162,7 +162,7 @@ export default function EnquiryDetailPage({ params }: EnquiryDetailPageProps) {
               </div>
               <div>
                 <span className="text-steel-400 block font-semibold">Email</span>
-                <a href={`mailto:${enquiry.email}`} className="text-gold-700 font-bold hover:underline">
+                <a href={`mailto:${enquiry.email}`} className="text-accent-700 font-bold hover:underline">
                   {enquiry.email}
                 </a>
               </div>
@@ -243,7 +243,7 @@ export default function EnquiryDetailPage({ params }: EnquiryDetailPageProps) {
                     className="flex items-center justify-between p-3.5 bg-steel-50 border border-steel-200 rounded text-xs"
                   >
                     <div className="flex items-center space-x-2 truncate">
-                      <FileText className="w-4 h-4 text-gold flex-shrink-0" />
+                      <FileText className="w-4 h-4 text-accent flex-shrink-0" />
                       <span className="font-bold text-navy-900 truncate">{file.originalName}</span>
                       <span className="text-steel-400">({(file.fileSize / (1024 * 1024)).toFixed(2)} MB)</span>
                     </div>
@@ -251,7 +251,7 @@ export default function EnquiryDetailPage({ params }: EnquiryDetailPageProps) {
                       href={`/api/admin/storage/download?key=${encodeURIComponent(file.storageKey)}`}
                       target="_blank"
                       download
-                      className="inline-flex items-center px-3 py-1.5 bg-navy-900 text-gold rounded font-bold uppercase tracking-wider text-[11px] hover:bg-navy-800"
+                      className="inline-flex items-center px-3 py-1.5 bg-navy-900 text-accent rounded font-bold uppercase tracking-wider text-[11px] hover:bg-navy-800"
                     >
                       <Download className="w-3.5 h-3.5 mr-1" />
                       Download
@@ -309,7 +309,7 @@ export default function EnquiryDetailPage({ params }: EnquiryDetailPageProps) {
           {/* Notes History Trail */}
           <div className="bg-white border border-steel-200 rounded p-6 shadow-sm space-y-4">
             <div className="flex items-center space-x-2 border-b border-steel-100 pb-2">
-              <MessageSquare className="w-4 h-4 text-gold" />
+              <MessageSquare className="w-4 h-4 text-accent" />
               <h3 className="text-sm font-bold uppercase tracking-wider text-navy-900">
                 Internal Notes Trail ({enquiry.notes?.length || 0})
               </h3>

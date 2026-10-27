@@ -96,7 +96,7 @@ export function GalleryGrid({
                 setSelectedIndex(null);
                 setSelectedCategory(category);
               }}
-              className={`min-h-11 rounded-full px-4 py-2 text-xs font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${
+              className={`min-h-11 rounded-full px-4 py-2 text-xs font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                 selectedCategory === category
                   ? 'bg-navy-900 text-white'
                   : 'border border-steel-200 bg-white text-steel-700 hover:border-navy-900 hover:text-navy-900'
@@ -118,7 +118,7 @@ export function GalleryGrid({
                 openerRef.current = event.currentTarget;
                 setSelectedIndex(index);
               }}
-              className="group overflow-hidden rounded border border-steel-200 bg-white text-left shadow-sm transition-all hover:-translate-y-1 hover:shadow-industrial focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              className="group overflow-hidden rounded border border-steel-200 bg-white text-left shadow-sm transition-all hover:-translate-y-1 hover:shadow-industrial focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               aria-label={`View image: ${image.title}`}
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-steel-100">
@@ -129,8 +129,8 @@ export function GalleryGrid({
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#10233f]/75 via-transparent to-transparent" />
-                <span className="absolute left-3 top-3 rounded-full border border-white/25 bg-[#10233f]/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#071D35]/75 via-transparent to-transparent" />
+                <span className="absolute left-3 top-3 rounded-full border border-white/25 bg-[#071D35]/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
                   {image.category || 'Uncategorized'}
                 </span>
               </div>
@@ -149,7 +149,7 @@ export function GalleryGrid({
 
       {selected && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#071521]/85 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#071D35]/85 p-4 backdrop-blur-sm"
           role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) closeGallery();
@@ -160,7 +160,7 @@ export function GalleryGrid({
               ref={closeButtonRef}
               type="button"
               onClick={closeGallery}
-              className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#10233f] text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold sm:right-4 sm:top-4"
+              className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#071D35] text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:right-4 sm:top-4"
               aria-label="Close gallery image"
             >
               <X className="h-4 w-4" />
@@ -179,7 +179,7 @@ export function GalleryGrid({
                   <button
                     type="button"
                     onClick={() => setSelectedIndex((index) => (index === null ? 0 : (index - 1 + filteredImages.length) % filteredImages.length))}
-                    className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#10233f]/90 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                    className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#071D35]/90 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="h-5 w-5" />
@@ -187,7 +187,7 @@ export function GalleryGrid({
                   <button
                     type="button"
                     onClick={() => setSelectedIndex((index) => (index === null ? 0 : (index + 1) % filteredImages.length))}
-                    className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#10233f]/90 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                    className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#071D35]/90 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                     aria-label="Next image"
                   >
                     <ChevronRight className="h-5 w-5" />
@@ -196,7 +196,7 @@ export function GalleryGrid({
               )}
             </div>
             <div className="p-6 sm:p-8">
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-gold-700">{selected.category || 'Uncategorized'}</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-accent-700">{selected.category || 'Uncategorized'}</span>
               <h2 className="mt-2 font-display text-3xl font-bold text-navy-950">{selected.title}</h2>
               {selected.caption && <p className="mt-2 text-sm leading-6 text-steel-700">{selected.caption}</p>}
               {filteredImages.length > 1 && (

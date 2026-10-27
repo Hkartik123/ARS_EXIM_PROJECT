@@ -60,7 +60,7 @@ export default async function AdminApplicationsPage() {
                         href={`/api/admin/storage/download?key=${encodeURIComponent(app.resumeStorageKey)}`}
                         target="_blank"
                         download
-                        className="inline-flex items-center px-3 py-1 bg-navy-900 text-gold rounded font-bold uppercase tracking-wider text-[11px] hover:bg-navy-800"
+                        className="inline-flex items-center px-3 py-1 bg-navy-900 text-accent rounded font-bold uppercase tracking-wider text-[11px] hover:bg-navy-800"
                       >
                         <Download className="w-3.5 h-3.5 mr-1" />
                         CV

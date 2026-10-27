@@ -33,7 +33,7 @@ export function Accordion({ items, className }: { items: AccordionItem[]; classN
             >
               <span className="text-base font-bold pr-4">{item.question}</span>
               <ChevronDown
-                className={cn('h-5 w-5 text-steel-500 transition-transform duration-200 flex-shrink-0', isOpen && 'rotate-180 text-gold')}
+                className={cn('h-5 w-5 text-steel-500 transition-transform duration-200 flex-shrink-0', isOpen && 'rotate-180 text-accent')}
               />
             </button>
             {isOpen && (

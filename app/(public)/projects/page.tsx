@@ -44,7 +44,7 @@ export default async function ProjectsPage() {
         <Breadcrumbs items={[{ label: 'Projects' }]} />
 
         <div className="max-w-3xl my-8">
-          <span className="text-xs font-bold uppercase tracking-widest text-gold-600 block mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest text-accent-600 block mb-2">
             ARS EXIM · Project Portfolio
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-4">
@@ -67,7 +67,7 @@ export default async function ProjectsPage() {
 
         <section aria-labelledby="client-site-photography-heading" className="mt-10">
           <div className="mb-5 max-w-3xl">
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Industrial Sites</span>
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-accent-700">Industrial Sites</span>
             <h2 id="client-site-photography-heading" className="mt-2 font-display text-2xl font-bold text-navy-950 sm:text-3xl">
               Client-provided site photography
             </h2>
@@ -88,7 +88,7 @@ export default async function ProjectsPage() {
                   />
                 </div>
                 <figcaption className="p-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold-700">{image.category}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-accent-700">{image.category}</span>
                   <h3 className="mt-1 font-semibold text-navy-900">{image.title}</h3>
                   <p className="mt-2 text-xs leading-5 text-steel-700">{image.caption}</p>
                 </figcaption>
@@ -97,14 +97,14 @@ export default async function ProjectsPage() {
           </div>
         </section>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-4 border border-[#dfeaf7] bg-white p-6 sm:flex-row sm:items-center">
+        <div className="mt-10 flex flex-col items-start justify-between gap-4 border border-[#D8E0E8] bg-white p-6 sm:flex-row sm:items-center">
           <div>
             <h2 className="font-display text-xl font-bold text-navy-900">Planning a similar scope?</h2>
             <p className="mt-1 text-sm text-steel-600">Share your project specifications with our team.</p>
           </div>
           <Link
             href="/request-a-quote"
-            className="inline-flex min-h-11 items-center justify-center rounded bg-gold px-5 py-2 text-xs font-bold uppercase tracking-wider text-navy-950 transition-colors hover:bg-gold-600"
+            className="inline-flex min-h-11 items-center justify-center rounded bg-accent px-5 py-2 text-xs font-bold uppercase tracking-wider text-navy-950 transition-colors hover:bg-accent-600"
           >
             Submit Project Specifications
           </Link>
@@ -112,7 +112,7 @@ export default async function ProjectsPage() {
 
         <section aria-labelledby="project-capabilities-heading" className="mt-20">
           <div className="mb-8 max-w-3xl">
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Service capabilities</span>
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-accent-700">Service capabilities</span>
             <h2 id="project-capabilities-heading" className="mt-3 font-display text-3xl font-bold text-navy-950 sm:text-4xl">
               Specialist work across connected disciplines.
             </h2>
@@ -132,7 +132,7 @@ export default async function ProjectsPage() {
                     <Link
                       key={image.src}
                       href={service.href}
-                      className="group relative block overflow-hidden bg-navy-950 focus-visible:outline-gold"
+                      className="group relative block overflow-hidden bg-navy-950 focus-visible:outline-accent"
                     >
                       <div className="relative aspect-[4/3]">
                         <Image

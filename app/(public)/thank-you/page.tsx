@@ -32,8 +32,8 @@ export default function ThankYouPage({ searchParams }: PageProps) {
           </p>
 
           {/* Reference Badge */}
-          <div className="bg-navy-950 text-white rounded p-5 my-6 border-l-4 border-gold">
-            <span className="text-xs uppercase tracking-widest text-gold block mb-1 font-semibold">
+          <div className="bg-navy-950 text-white rounded p-5 my-6 border-l-4 border-accent">
+            <span className="text-xs uppercase tracking-widest text-accent block mb-1 font-semibold">
               Enquiry Reference
             </span>
             <div className="text-2xl sm:text-3xl font-black font-display tracking-wider text-white">

@@ -4,12 +4,16 @@
 
 :root {
   --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --navy-900: #071D38;
-  --corporate-navy: #12365A;
-  --steel-blue: #527493;
-  --silver: #C4CED8;
-  --silver-light: #F2F5F8;
-  --text-charcoal: #182536;
+  --color-primary: #071D35;
+  --color-secondary: #12365A;
+  --color-accent: #1687FF;
+  --color-steel: #6F849B;
+  --color-silver: #DCE3EA;
+  --color-background: #F3F6F9;
+  --color-surface: #FFFFFF;
+  --color-text: #263445;
+  --color-muted: #68788A;
+  --color-border: #D8E0E8;
 }
 
 html {
@@ -18,15 +22,15 @@ html {
 }
 
 body {
-  color: var(--text-charcoal);
-  background: #FFFFFF;
+  color: var(--color-text);
+  background: var(--color-surface);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background-color: var(--navy-900);
+  background-color: var(--color-primary);
   color: #FFFFFF;
 }
 
@@ -34,8 +38,8 @@ body {
 .bg-industrial-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(16, 35, 63, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(16, 35, 63, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(7, 29, 53, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(7, 29, 53, 0.04) 1px, transparent 1px);
 }
 
 .industrial-scene {
@@ -118,6 +122,6 @@ select {
 
 /* Focus Visible Rings */
 :focus-visible {
-  outline: 2px solid var(--steel-blue);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }

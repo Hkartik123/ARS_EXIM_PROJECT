@@ -20,7 +20,7 @@ export function AdminTopbar({ title, userName = 'Admin', userRole = 'SUPER_ADMIN
           <ShieldCheck className="w-3.5 h-3.5 text-success" />
           <span className="font-semibold text-navy-900">{userName}</span>
           <span className="text-steel-400 font-bold">•</span>
-          <span className="text-[10px] uppercase font-bold tracking-wider text-gold-700 bg-gold-100 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-accent-700 bg-accent-100 px-1.5 py-0.5 rounded">
             {userRole}
           </span>
         </div>

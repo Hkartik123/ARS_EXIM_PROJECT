@@ -21,7 +21,7 @@ export default function AboutPage() {
         {/* Section Header */}
         <div className="my-8 grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
           <div className="max-w-3xl">
-          <span className="text-xs font-bold uppercase tracking-widest text-gold-600 block mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest text-accent-600 block mb-2">
             ARS EXIM · EXpert Insulation Management
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-6">
@@ -44,7 +44,7 @@ export default function AboutPage() {
               sizes="(max-width: 1024px) 100vw, 42vw"
               className="object-cover"
             />
-            <span className="absolute bottom-3 left-3 bg-[#10233f]/85 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-white">Illustrative industrial site image</span>
+            <span className="absolute bottom-3 left-3 bg-[#071D35]/85 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-white">Illustrative industrial site image</span>
           </div>
         </div>
 
@@ -53,7 +53,7 @@ export default function AboutPage() {
         {/* Heritage & Values Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 my-16">
           <div className="p-8 border border-steel-200 rounded bg-steel-50">
-            <Target className="w-8 h-8 text-gold mb-4" />
+            <Target className="w-8 h-8 text-accent mb-4" />
             <h3 className="text-xl font-bold text-navy-900 mb-2">Our Mission</h3>
             <p className="text-sm text-steel-600 leading-relaxed">
               To safeguard high-hazard industrial assets through uncompromising technical execution,
@@ -102,15 +102,15 @@ export default function AboutPage() {
             </h3>
             <ul className="space-y-4 text-sm text-steel-300">
               <li className="flex items-start space-x-3">
-                <span className="w-2 h-2 rounded-full bg-gold mt-1.5 flex-shrink-0" />
+                <span className="w-2 h-2 rounded-full bg-accent mt-1.5 flex-shrink-0" />
                 <span><strong>Work type:</strong> Shutdown, turnaround, new-build or maintenance scope.</span>
               </li>
               <li className="flex items-start space-x-3">
-                <span className="w-2 h-2 rounded-full bg-gold mt-1.5 flex-shrink-0" />
+                <span className="w-2 h-2 rounded-full bg-accent mt-1.5 flex-shrink-0" />
                 <span><strong>Work area:</strong> Equipment, piping, structures and access requirements.</span>
               </li>
               <li className="flex items-start space-x-3">
-                <span className="w-2 h-2 rounded-full bg-gold mt-1.5 flex-shrink-0" />
+                <span className="w-2 h-2 rounded-full bg-accent mt-1.5 flex-shrink-0" />
                 <span><strong>Project basis:</strong> Location, schedule, quantities and site-specific requirements.</span>
               </li>
             </ul>

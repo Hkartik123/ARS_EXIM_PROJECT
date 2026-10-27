@@ -154,7 +154,7 @@ export function ContactForm() {
           required
           checked={formData.consent}
           onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
-          className="mt-0.5 rounded border-steel-300 text-gold focus:ring-gold"
+          className="mt-0.5 rounded border-steel-300 text-accent focus:ring-accent"
         />
         <span>
           I agree to ARS EXIM processing my contact coordinates for the purpose of responding to this

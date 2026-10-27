@@ -292,7 +292,7 @@ export function QuoteForm() {
                 >
                   <div
                     className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                      checked ? 'bg-gold border-gold text-navy-950' : 'border-steel-400 bg-white'
+                      checked ? 'bg-accent border-accent text-navy-950' : 'border-steel-400 bg-white'
                     }`}
                   >
                     {checked && <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -352,7 +352,7 @@ export function QuoteForm() {
                 className="flex items-center justify-between p-3 bg-white border border-steel-200 rounded text-xs"
               >
                 <div className="flex items-center space-x-2 truncate">
-                  <FileText className="w-4 h-4 text-gold flex-shrink-0" />
+                  <FileText className="w-4 h-4 text-accent flex-shrink-0" />
                   <span className="font-semibold text-navy-900 truncate">{file.name}</span>
                   <span className="text-steel-400">({(file.size / (1024 * 1024)).toFixed(2)} MB)</span>
                 </div>
@@ -377,7 +377,7 @@ export function QuoteForm() {
               required
               checked={formData.consent}
               onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
-              className="mt-0.5 rounded border-steel-300 text-gold focus:ring-gold"
+              className="mt-0.5 rounded border-steel-300 text-accent focus:ring-accent"
             />
             <span>
               I confirm that the submitted project specifications are accurate and authorize ARS EXIM to

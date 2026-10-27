@@ -46,7 +46,7 @@ export default async function GalleryPage() {
         <Breadcrumbs items={[{ label: 'Gallery' }]} />
 
         <header className="my-8 max-w-4xl">
-          <span className="block text-xs font-bold uppercase tracking-[0.2em] text-gold-700">Industrial photography</span>
+          <span className="block text-xs font-bold uppercase tracking-[0.2em] text-accent-700">Industrial photography</span>
           <h1 className="mt-3 font-display text-4xl font-bold text-navy-950 sm:text-6xl">Industrial Gallery</h1>
           <p className="mt-4 text-base leading-7 text-steel-700 sm:text-lg">
             Client-provided industrial site photography and approved images. Captions are limited to details that have been verified.
@@ -62,7 +62,7 @@ export default async function GalleryPage() {
           </div>
         ) : (
           <div className="mb-8 flex items-center gap-3 rounded border border-steel-200 bg-white p-3 text-sm text-steel-700">
-            <Images className="h-4 w-4 shrink-0 text-gold-700" />
+            <Images className="h-4 w-4 shrink-0 text-accent-700" />
             <span>Published gallery assets are selected and maintained in the admin media library.</span>
           </div>
         )}

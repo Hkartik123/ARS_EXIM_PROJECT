@@ -72,7 +72,7 @@ export default function AdminDashboardPage() {
             href="/api/admin/enquiries/export"
             className="inline-flex items-center px-4 py-2 border border-steel-300 rounded text-xs font-bold uppercase tracking-wider text-navy-900 bg-white hover:bg-steel-50 shadow-sm"
           >
-            <FileSpreadsheet className="w-4 h-4 mr-2 text-gold" />
+            <FileSpreadsheet className="w-4 h-4 mr-2 text-accent" />
             Export RFQ CSV
           </a>
           <Link href="/admin/projects/new">
@@ -91,7 +91,7 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-steel-500">
               Total Quotation RFQs
             </span>
-            <Inbox className="w-5 h-5 text-gold" />
+            <Inbox className="w-5 h-5 text-accent" />
           </div>
           <div className="text-3xl font-black text-navy-900 font-display mt-2">
             {metrics.totalQuotes}
@@ -145,7 +145,7 @@ export default function AdminDashboardPage() {
           <h3 className="text-base font-bold text-navy-900">Recent Quotation Requests & Inquiries</h3>
           <Link
             href="/admin/enquiries"
-            className="text-xs font-bold uppercase tracking-wider text-gold-700 hover:text-navy-900 flex items-center"
+            className="text-xs font-bold uppercase tracking-wider text-accent-700 hover:text-navy-900 flex items-center"
           >
             <span>View All Inquiries</span>
             <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -183,7 +183,7 @@ export default function AdminDashboardPage() {
                     <td className="py-4 px-6 text-right">
                       <Link
                         href={`/admin/enquiries/${enq.id}`}
-                        className="text-xs font-bold text-navy-900 hover:text-gold uppercase tracking-wider"
+                        className="text-xs font-bold text-navy-900 hover:text-accent uppercase tracking-wider"
                       >
                         Review &rarr;
                       </Link>
@@ -206,12 +206,12 @@ export default function AdminDashboardPage() {
       <div className="bg-white border border-steel-200 rounded shadow-sm p-6">
         <div className="flex items-center justify-between mb-4 border-b border-steel-100 pb-3">
           <div className="flex items-center space-x-2">
-            <ShieldCheck className="w-5 h-5 text-gold" />
+            <ShieldCheck className="w-5 h-5 text-accent" />
             <h3 className="text-base font-bold text-navy-900">Security Audit Activity</h3>
           </div>
           <Link
             href="/admin/audit-logs"
-            className="text-xs font-bold uppercase tracking-wider text-gold-700 hover:text-navy-900"
+            className="text-xs font-bold uppercase tracking-wider text-accent-700 hover:text-navy-900"
           >
             Audit Log Ledger &rarr;
           </Link>

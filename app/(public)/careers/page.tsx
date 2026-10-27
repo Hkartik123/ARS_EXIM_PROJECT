@@ -28,7 +28,7 @@ export default async function CareersPage() {
 
         {/* Section Header */}
         <div className="max-w-3xl my-8">
-          <span className="text-xs font-bold uppercase tracking-widest text-gold-600 block mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest text-accent-600 block mb-2">
             Talent & Engineering Leadership
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-4">
@@ -62,7 +62,7 @@ export default async function CareersPage() {
           ) : (
             <div className="space-y-4">
               {careers.map((job: any) => (
-                <Card key={job.slug} className="p-6 bg-white transition-all hover:border-gold">
+                <Card key={job.slug} className="p-6 bg-white transition-all hover:border-accent">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <div className="flex flex-wrap gap-2 mb-2">
@@ -72,11 +72,11 @@ export default async function CareersPage() {
                       <h3 className="text-xl font-bold text-navy-900 leading-snug">{job.title}</h3>
                       <div className="flex flex-wrap items-center gap-4 text-xs text-steel-500 font-medium mt-2">
                         <span className="flex items-center space-x-1">
-                          <MapPin className="w-3.5 h-3.5 text-gold" />
+                          <MapPin className="w-3.5 h-3.5 text-accent" />
                           <span>{job.location}</span>
                         </span>
                         <span className="flex items-center space-x-1">
-                          <Clock className="w-3.5 h-3.5 text-gold" />
+                          <Clock className="w-3.5 h-3.5 text-accent" />
                           <span>Experience: {job.experienceRequired}</span>
                         </span>
                       </div>

@@ -60,7 +60,7 @@ export default function AdminEnquiriesPage() {
           href="/api/admin/enquiries/export"
           className="inline-flex items-center px-4 py-2 border border-steel-300 rounded text-xs font-bold uppercase tracking-wider text-navy-900 bg-white hover:bg-steel-50 shadow-sm"
         >
-          <FileSpreadsheet className="w-4 h-4 mr-2 text-gold" />
+          <FileSpreadsheet className="w-4 h-4 mr-2 text-accent" />
           Export All as CSV
         </a>
       </div>
@@ -176,7 +176,7 @@ export default function AdminEnquiriesPage() {
                     <td className="py-4 px-6 text-right">
                       <Link
                         href={`/admin/enquiries/${enq.id}`}
-                        className="inline-flex items-center text-xs font-bold text-navy-900 hover:text-gold uppercase tracking-wider"
+                        className="inline-flex items-center text-xs font-bold text-navy-900 hover:text-accent uppercase tracking-wider"
                       >
                         <span>Review</span>
                         <Eye className="w-3.5 h-3.5 ml-1" />

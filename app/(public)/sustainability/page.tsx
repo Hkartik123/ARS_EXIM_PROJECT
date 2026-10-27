@@ -67,7 +67,7 @@ export default function SustainabilityPage() {
         </div>
 
         {/* Quantifiable Impact Section */}
-        <div className="bg-navy-950 text-white rounded p-8 sm:p-12 my-12 border-t-4 border-gold shadow-industrial">
+        <div className="bg-navy-950 text-white rounded p-8 sm:p-12 my-12 border-t-4 border-accent shadow-industrial">
           <div className="max-w-3xl">
             <h2 className="text-2xl font-bold font-display text-white mb-4">
               Preventing Energy Loss Through Advanced Thermal Audits

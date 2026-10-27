@@ -46,22 +46,22 @@ export function IndustrialScene() {
     renderer.domElement.style.touchAction = 'pan-y';
     host.appendChild(renderer.domElement);
 
-    scene.add(new THREE.HemisphereLight(0xdce8ee, 0x172534, 2.4));
-    const keyLight = new THREE.DirectionalLight(0xffe5b1, 3.4);
+    scene.add(new THREE.HemisphereLight(0xdce3ea, 0x071d35, 2.4));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.4);
     keyLight.position.set(4, 9, 6);
     scene.add(keyLight);
-    const rimLight = new THREE.DirectionalLight(0x8ec5d2, 2.2);
+    const rimLight = new THREE.DirectionalLight(0x6f849b, 2.2);
     rimLight.position.set(-6, 4, -5);
     scene.add(rimLight);
 
-    const steel = new THREE.MeshStandardMaterial({ color: 0x93a6ae, metalness: 0.78, roughness: 0.3 });
-    const darkSteel = new THREE.MeshStandardMaterial({ color: 0x354c59, metalness: 0.7, roughness: 0.38 });
-    const gold = new THREE.MeshStandardMaterial({ color: 0xd4ad5d, metalness: 0.62, roughness: 0.3 });
+    const steel = new THREE.MeshStandardMaterial({ color: 0xdce3ea, metalness: 0.78, roughness: 0.3 });
+    const darkSteel = new THREE.MeshStandardMaterial({ color: 0x12365a, metalness: 0.7, roughness: 0.38 });
+    const accent = new THREE.MeshStandardMaterial({ color: 0x1687ff, metalness: 0.62, roughness: 0.3 });
     const vesselMaterial = new THREE.MeshStandardMaterial({
-      color: 0xc1d0d2,
+      color: 0xdce3ea,
       metalness: 0.66,
       roughness: 0.27,
-      emissive: 0x18292d,
+      emissive: 0x071d35,
       emissiveIntensity: 0.18,
     });
 
@@ -98,12 +98,12 @@ export function IndustrialScene() {
     }
 
     for (const x of [-1.5, 0, 1.5]) {
-      addBeam(rack, new THREE.Vector3(x, 0.25, 0.86), new THREE.Vector3(x + 0.72, 1.65, 0.86), 0.065, gold);
-      addBeam(rack, new THREE.Vector3(x + 0.72, 0.25, -0.86), new THREE.Vector3(x, 1.65, -0.86), 0.065, gold);
+      addBeam(rack, new THREE.Vector3(x, 0.25, 0.86), new THREE.Vector3(x + 0.72, 1.65, 0.86), 0.065, accent);
+      addBeam(rack, new THREE.Vector3(x + 0.72, 0.25, -0.86), new THREE.Vector3(x, 1.65, -0.86), 0.065, accent);
     }
 
     for (let index = 0; index < 4; index += 1) {
-      const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 4.45, 16), index === 1 ? gold : steel);
+      const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 4.45, 16), index === 1 ? accent : steel);
       pipe.rotation.z = Math.PI / 2;
       pipe.position.set(0, 0.62 + index * 0.76, index % 2 === 0 ? -0.35 : 0.35);
       rack.add(pipe);
@@ -118,7 +118,7 @@ export function IndustrialScene() {
     tankGroup.add(tank);
 
     for (const height of [1.95, 2.55]) {
-      const seam = new THREE.Mesh(new THREE.TorusGeometry(1.265, 0.023, 8, 48), gold);
+      const seam = new THREE.Mesh(new THREE.TorusGeometry(1.265, 0.023, 8, 48), accent);
       seam.rotation.x = Math.PI / 2;
       seam.position.y = height;
       tankGroup.add(seam);
@@ -134,7 +134,7 @@ export function IndustrialScene() {
       const leg = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.16, 0.12), darkSteel);
       leg.position.set(x, 0.58, z);
       tankGroup.add(leg);
-      const foot = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.08, 0.36), gold);
+      const foot = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.08, 0.36), accent);
       foot.position.set(x, 0.05, z);
       tankGroup.add(foot);
     }
@@ -143,7 +143,7 @@ export function IndustrialScene() {
     ladder.position.set(1.5, 0, 1.03);
     rig.add(ladder);
     for (const x of [-0.24, 0.24]) {
-      const rail = new THREE.Mesh(new THREE.BoxGeometry(0.055, 3.45, 0.055), gold);
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(0.055, 3.45, 0.055), accent);
       rail.position.set(x, 1.73, 0);
       ladder.add(rail);
     }

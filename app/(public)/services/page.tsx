@@ -105,7 +105,7 @@ export default function ServicesPage() {
         <Breadcrumbs items={[{ label: 'Services' }]} />
 
         <div className="max-w-3xl my-8">
-          <span className="text-xs font-bold uppercase tracking-widest text-gold-600 block mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest text-accent-600 block mb-2">
             Engineering Capabilities
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-6">
@@ -128,13 +128,13 @@ export default function ServicesPage() {
               >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                   <div>
-                    <div className="w-12 h-12 bg-navy-900 text-gold rounded flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-navy-900 text-accent rounded flex items-center justify-center mb-4">
                       <Icon className="w-6 h-6" />
                     </div>
                     <h2 className="text-2xl font-bold text-navy-900 mb-2">
                       {service.title}
                     </h2>
-                    <p className="text-xs font-semibold text-gold-700 uppercase tracking-wider mb-4">
+                    <p className="text-xs font-semibold text-accent-700 uppercase tracking-wider mb-4">
                       {service.tagline}
                     </p>
                     <p className="text-sm text-steel-600 leading-relaxed mb-6">
@@ -156,7 +156,7 @@ export default function ServicesPage() {
                     <ul className="space-y-3 text-xs text-steel-700 font-medium">
                       {service.applications.map((app, i) => (
                         <li key={i} className="flex items-start">
-                          <CheckCircle2 className="w-4 h-4 text-gold mr-2 flex-shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-4 h-4 text-accent mr-2 flex-shrink-0 mt-0.5" />
                           <span>{app}</span>
                         </li>
                       ))}
@@ -174,7 +174,7 @@ export default function ServicesPage() {
                       </p>
                     <Link
                       href={`/request-a-quote?service=${encodeURIComponent(service.title)}`}
-                      className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-gold-700 hover:text-navy-900"
+                      className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-accent-700 hover:text-navy-900"
                     >
                       Request Quote for this Service &rarr;
                     </Link>

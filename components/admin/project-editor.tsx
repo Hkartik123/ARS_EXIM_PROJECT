@@ -321,7 +321,7 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
                       key={svc.value}
                       onClick={() => handleServiceToggle(svc.value)}
                       className={`px-3.5 py-2 rounded text-xs font-semibold border transition-colors ${
-                        checked ? 'bg-navy-900 text-gold border-navy-900' : 'bg-white text-steel-700 border-steel-300'
+                        checked ? 'bg-navy-900 text-accent border-navy-900' : 'bg-white text-steel-700 border-steel-300'
                       }`}
                     >
                       {svc.label}
@@ -345,7 +345,7 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
                     type="checkbox"
                     checked={formData.clientPublishable}
                     onChange={(e) => setFormData({ ...formData, clientPublishable: e.target.checked })}
-                    className="rounded border-steel-300 text-gold focus:ring-gold"
+                    className="rounded border-steel-300 text-accent focus:ring-accent"
                   />
                   <span>Client permission confirmed for public display</span>
                 </label>
@@ -417,7 +417,7 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
                 <button type="button" onClick={() => void loadMedia()} className="text-xs font-bold text-navy-900 underline">
                   Reload images
                 </button>
-                <Link href="/admin/media" target="_blank" className="text-xs font-bold text-gold-700 underline">
+                <Link href="/admin/media" target="_blank" className="text-xs font-bold text-accent-700 underline">
                   Upload images
                 </Link>
               </div>
@@ -428,7 +428,7 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
               </div>
             )}
             {formData.featuredImage && (
-              <div className="flex items-center gap-4 rounded border border-gold/60 bg-gold/5 p-3">
+              <div className="flex items-center gap-4 rounded border border-accent/60 bg-accent/5 p-3">
                 <div className="relative h-20 w-28 shrink-0 overflow-hidden bg-steel-100">
                   <Image src={formData.featuredImage} alt="Selected project cover image" fill unoptimized sizes="112px" className="object-cover" />
                 </div>
@@ -479,7 +479,7 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
                             type="button"
                             onClick={() => toggleGalleryImage(item.url)}
                             aria-pressed={selectedInGallery}
-                            className={`min-h-9 w-full rounded border px-2 text-[10px] font-bold uppercase tracking-wide ${selectedInGallery ? 'border-gold bg-gold/20 text-navy-900' : 'border-steel-300 text-navy-900 hover:bg-steel-50'}`}
+                            className={`min-h-9 w-full rounded border px-2 text-[10px] font-bold uppercase tracking-wide ${selectedInGallery ? 'border-accent bg-accent/20 text-navy-900' : 'border-steel-300 text-navy-900 hover:bg-steel-50'}`}
                           >
                             {selectedInGallery ? 'Remove from gallery' : 'Add to gallery'}
                           </button>
@@ -512,7 +512,7 @@ export function ProjectEditor({ initialData, isEdit = false }: ProjectEditorProp
                   type="checkbox"
                   checked={formData.isFeatured}
                   onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                  className="rounded border-steel-300 text-gold focus:ring-gold"
+                  className="rounded border-steel-300 text-accent focus:ring-accent"
                 />
                 <span>Feature on Homepage Showcase</span>
               </label>

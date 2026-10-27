@@ -199,7 +199,7 @@ export function ServiceScopeView({ slug }: { slug: keyof typeof serviceContent }
         <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: service.title }]} />
 
         <header className="my-8 border-b border-steel-200 pb-10">
-          <span className="text-xs font-bold uppercase tracking-widest text-gold-700">ARS EXIM service enquiry</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-accent-700">ARS EXIM service enquiry</span>
           <h1 className="mt-3 max-w-4xl font-display text-4xl font-bold leading-tight text-navy-950 sm:text-6xl">{service.title}</h1>
           <p className="mt-3 text-lg font-semibold text-navy-700">{service.subtitle}</p>
           <p className="mt-6 max-w-4xl text-base leading-7 text-steel-700">{service.intro}</p>
@@ -211,7 +211,7 @@ export function ServiceScopeView({ slug }: { slug: keyof typeof serviceContent }
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
           <section>
             <div className="flex items-center gap-3">
-              <ClipboardList className="h-5 w-5 text-gold-700" />
+              <ClipboardList className="h-5 w-5 text-accent-700" />
               <h2 className="font-display text-2xl font-bold text-navy-950">Typical enquiry scope</h2>
             </div>
             <ul className="mt-5 space-y-4">
@@ -242,7 +242,7 @@ export function ServiceScopeView({ slug }: { slug: keyof typeof serviceContent }
               ))}
             </ol>
 
-            <div className="mt-8 bg-[#edf5ff] p-6">
+            <div className="mt-8 bg-[#F3F6F9] p-6">
               <h2 className="font-display text-xl font-bold text-navy-950">Technical basis</h2>
               <p className="mt-2 text-sm leading-6 text-steel-700">Materials, manufacturer systems, standards, design values, certifications, inspection criteria and acceptance records are not assumed on this page. Submit the client specification or tender documents so the applicable requirements can be identified before a proposal is prepared.</p>
             </div>
@@ -261,7 +261,7 @@ export function ServiceScopeView({ slug }: { slug: keyof typeof serviceContent }
           </div>
         </section>
 
-        <section className="mt-14 flex flex-col gap-5 bg-[#10233f] p-7 text-white sm:flex-row sm:items-center sm:justify-between sm:p-9">
+        <section className="mt-14 flex flex-col gap-5 bg-[#071D35] p-7 text-white sm:flex-row sm:items-center sm:justify-between sm:p-9">
           <div>
             <h2 className="font-display text-2xl font-bold">Have a {service.title.toLowerCase()} enquiry?</h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">Share the site location, work type, timeline, available drawings and project specification. Attachments can be added through the quote form.</p>

@@ -18,7 +18,7 @@ export function LoadError({ title, message }: LoadErrorProps) {
       <button
         type="button"
         onClick={() => router.refresh()}
-        className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded bg-navy-900 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-navy-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+        className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded bg-navy-900 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-navy-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <RefreshCw className="h-4 w-4" aria-hidden="true" />
         Try again

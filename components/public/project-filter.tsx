@@ -72,7 +72,7 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
                 onClick={() => setSelectedService(svc.value)}
                 className={`px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-colors ${
                   selectedService === svc.value
-                    ? 'bg-navy-900 text-gold'
+                    ? 'bg-navy-900 text-accent'
                     : 'bg-steel-100 text-steel-700 hover:bg-steel-200'
                 }`}
               >
@@ -104,7 +104,7 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
               onClick={() => setSelectedIndustry(ind)}
               className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
                 selectedIndustry === ind
-                  ? 'bg-gold text-navy-950 font-bold'
+                  ? 'bg-accent text-navy-950 font-bold'
                   : 'text-steel-600 hover:text-navy-900'
               }`}
             >
@@ -122,7 +122,7 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
       {/* Projects Grid */}
       {initialProjects.length === 0 ? (
         <div className="border border-steel-200 bg-white px-6 py-16 text-center shadow-sm">
-          <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-700">Project portfolio</span>
+          <span className="text-xs font-bold uppercase tracking-[0.16em] text-accent-700">Project portfolio</span>
           <h3 className="mt-3 font-display text-2xl font-bold text-navy-900">Projects Coming Soon</h3>
           <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-steel-600">
             We are currently updating our project portfolio. Please check back soon.
@@ -140,7 +140,7 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
               setSelectedIndustry('ALL');
               setSearchQuery('');
             }}
-            className="px-4 py-2 bg-navy-900 text-gold text-xs font-bold uppercase tracking-wider rounded"
+            className="px-4 py-2 bg-navy-900 text-accent text-xs font-bold uppercase tracking-wider rounded"
           >
             Reset Filters
           </button>
@@ -170,11 +170,11 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
               <CardContent className="p-6 flex-1 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center space-x-2 text-xs text-steel-500 mb-2 font-medium">
-                    <MapPin className="w-3.5 h-3.5 text-gold flex-shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 text-accent flex-shrink-0" />
                     <span>{[project.location, project.country].filter(Boolean).join(', ') || 'Location not provided'}</span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-navy-900 leading-snug mb-3 group-hover:text-gold-600 transition-colors">
+                  <h3 className="text-lg font-bold text-navy-900 leading-snug mb-3 group-hover:text-accent-600 transition-colors">
                     {project.title}
                   </h3>
 
@@ -201,7 +201,7 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
                   </div>
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-navy-900 group-hover:text-gold transition-colors"
+                    className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-navy-900 group-hover:text-accent transition-colors"
                   >
                     <span>View Dossier</span>
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />

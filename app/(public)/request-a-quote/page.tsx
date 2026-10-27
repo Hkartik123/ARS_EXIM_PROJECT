@@ -17,7 +17,7 @@ export default function RequestAQuotePage() {
 
         {/* Page Header */}
         <div className="my-8 text-center sm:text-left">
-          <span className="text-xs font-bold uppercase tracking-widest text-gold-600 block mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest text-accent-600 block mb-2">
             Commercial Proposals & Estimating
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-navy-900 tracking-tight font-display mb-4">
@@ -32,11 +32,11 @@ export default function RequestAQuotePage() {
         {/* Security & Confidentiality Badges */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-white border border-steel-200 rounded p-4 flex items-center space-x-3">
-            <FileSpreadsheet className="w-5 h-5 text-gold flex-shrink-0" />
+            <FileSpreadsheet className="w-5 h-5 text-accent flex-shrink-0" />
             <span className="text-xs font-semibold text-navy-900">Attach drawings, BOQ or scope documents</span>
           </div>
           <div className="bg-white border border-steel-200 rounded p-4 flex items-center space-x-3">
-            <ClipboardCheck className="w-5 h-5 text-gold flex-shrink-0" />
+            <ClipboardCheck className="w-5 h-5 text-accent flex-shrink-0" />
             <span className="text-xs font-semibold text-navy-900">Share project type and anticipated schedule</span>
           </div>
           <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="bg-white border border-steel-200 rounded p-4 flex items-center space-x-3 text-[#177d53] hover:border-[#177d53]">

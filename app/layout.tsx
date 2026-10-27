@@ -4,7 +4,7 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://arsexim.com'),
   title: {
-    default: 'ARS EXIM Global Solutions | Industrial Services',
+    default: 'ARS EXIM | EXpert Insulation Management',
     template: '%s | ARS EXIM',
   },
   description:
@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: '/ars-exim-logo-transparent.png',
-    shortcut: '/ars-exim-logo-transparent.png',
-    apple: '/ars-exim-logo-transparent.png',
+    icon: '/ars-exim-icon.png',
+    shortcut: '/ars-exim-icon.png',
+    apple: '/ars-exim-icon.png',
   },
   openGraph: {
     type: 'website',

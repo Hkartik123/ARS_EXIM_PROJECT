@@ -56,7 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#edf5ff] flex items-center justify-center text-navy-900 text-sm font-semibold">
+      <div className="min-h-screen bg-steel-50 flex items-center justify-center text-navy-900 text-sm font-semibold">
         <div className="flex items-center space-x-3">
           <div className="w-5 h-5 border-2 border-navy-900 border-t-transparent rounded-full animate-spin" />
           <span>Authenticating Administrator Privileges...</span>

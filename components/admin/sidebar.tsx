@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -23,6 +22,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@/models/User';
+import { CompanyLogo } from '@/components/ui/company-logo';
 
 interface SidebarProps {
   userRole?: UserRole;
@@ -50,32 +50,32 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
   const canManageContent = userRole === 'SUPER_ADMIN' || userRole === 'ADMIN_CONTENT';
 
   return (
-    <aside className="w-64 bg-[#edf5ff] text-navy-900 flex flex-col border-r border-[#dfeaf7] flex-shrink-0 min-h-screen">
+    <aside className="w-64 bg-steel-50 text-navy-900 flex flex-col border-r border-steel-200 flex-shrink-0 min-h-screen">
       {/* Brand Header */}
-      <div className="p-6 border-b border-[#dfeaf7] flex items-center justify-between">
+      <div className="p-6 border-b border-steel-200 flex items-center justify-between">
         <Link href="/admin/dashboard" className="flex items-center space-x-3">
-          <Image src="/ars-exim-logo-transparent.png" alt="ARS EXIM logo" width={622} height={522} className="h-[88px] w-auto object-contain" />
+          <CompanyLogo sizes="86px" className="h-[72px] w-auto" />
         </Link>
       </div>
 
       {canManageContent && (
-        <div className="border-b border-[#dfeaf7] px-4 py-4">
+        <div className="border-b border-steel-200 px-4 py-4">
           <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-steel-500">
             Quick Upload
           </p>
           <div className="grid grid-cols-2 gap-2">
             <Link
               href="/admin/projects/new"
-              className="flex min-h-16 flex-col items-center justify-center gap-1 rounded border border-[#dfeaf7] bg-white px-2 py-2 text-center text-[11px] font-semibold text-navy-900 transition-colors hover:border-gold hover:bg-[#fffdf7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              className="flex min-h-16 flex-col items-center justify-center gap-1 rounded border border-steel-200 bg-white px-2 py-2 text-center text-[11px] font-semibold text-navy-900 transition-colors hover:border-accent hover:bg-steel-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              <FolderPlus className="h-4 w-4 text-gold-700" aria-hidden="true" />
+              <FolderPlus className="h-4 w-4 text-accent-700" aria-hidden="true" />
               Project details
             </Link>
             <Link
               href="/admin/media"
-              className="flex min-h-16 flex-col items-center justify-center gap-1 rounded border border-[#dfeaf7] bg-white px-2 py-2 text-center text-[11px] font-semibold text-navy-900 transition-colors hover:border-gold hover:bg-[#fffdf7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+              className="flex min-h-16 flex-col items-center justify-center gap-1 rounded border border-steel-200 bg-white px-2 py-2 text-center text-[11px] font-semibold text-navy-900 transition-colors hover:border-accent hover:bg-steel-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              <ImagePlus className="h-4 w-4 text-gold-700" aria-hidden="true" />
+              <ImagePlus className="h-4 w-4 text-accent-700" aria-hidden="true" />
               Upload image
             </Link>
           </div>
@@ -96,7 +96,7 @@ export function AdminSidebar({ userRole = 'SUPER_ADMIN', userName = 'Admin', onL
                 className={cn(
                   'flex items-center px-3.5 py-2.5 rounded text-xs font-semibold tracking-wide transition-colors group',
                   isActive
-                    ? 'bg-white text-navy-900 font-bold shadow-sm border border-[#dfeaf7]'
+                    ? 'bg-white text-navy-900 font-bold shadow-sm border border-steel-200'
                     : 'text-navy-700 hover:bg-white hover:text-navy-900'
                 )}
               >

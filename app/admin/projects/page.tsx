@@ -202,7 +202,7 @@ export default function AdminProjectsPage() {
                       </Link>
                       <Link
                         href={`/admin/projects/${p._id}/edit`}
-                        className="inline-block p-1.5 text-steel-400 hover:text-gold transition-colors"
+                        className="inline-block p-1.5 text-steel-400 hover:text-accent transition-colors"
                         title="Edit Project"
                       >
                         <Edit3 className="w-4 h-4" />
@@ -210,7 +210,7 @@ export default function AdminProjectsPage() {
                       <button
                         type="button"
                         onClick={() => handlePublishToggle(p)}
-                        className="p-1.5 text-steel-400 hover:text-gold transition-colors"
+                        className="p-1.5 text-steel-400 hover:text-accent transition-colors"
                         title={p.published || p.publishStatus === 'PUBLISHED' ? 'Unpublish project' : 'Publish project'}
                       >
                         <Eye className="w-4 h-4" />

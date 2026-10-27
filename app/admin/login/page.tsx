@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { CompanyLogo } from '@/components/ui/company-logo';
 import { AlertCircle, Lock } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -42,15 +42,8 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-navy-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="mx-auto mb-3 flex justify-center">
-          <Image
-            src="/ars-exim-logo-transparent.png"
-            alt="ARS EXIM logo"
-            width={622}
-            height={522}
-            priority
-            className="h-[128px] w-auto rounded-md bg-white p-1.5 object-contain shadow-sm"
-          />
+        <div className="mx-auto mb-3 flex h-[96px] w-[112px] justify-center rounded-md bg-white p-1.5 shadow-sm">
+          <CompanyLogo priority sizes="100px" className="h-full w-full" />
         </div>
         <h2 className="text-2xl font-black text-white font-display tracking-tight">
           ARS EXIM Staff Command Portal
@@ -91,7 +84,7 @@ export default function AdminLoginPage() {
             />
 
             <div className="p-3 bg-steel-50 rounded border border-steel-200 text-xs text-steel-600 flex items-center space-x-2">
-              <Lock className="w-4 h-4 text-gold flex-shrink-0" />
+              <Lock className="w-4 h-4 text-accent flex-shrink-0" />
               <span>Sessions are secured with HttpOnly tokens & brute-force backoff protection.</span>
             </div>
 

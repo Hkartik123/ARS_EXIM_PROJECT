@@ -7,7 +7,7 @@ export function WhatsAppButton() {
       <Link
         href="/request-a-quote"
         aria-label="Get a project quote"
-        className="inline-flex h-11 w-11 items-center justify-center gap-2 rounded-full bg-gold text-xs font-bold uppercase tracking-wider text-navy-950 shadow-lg transition-transform hover:-translate-y-0.5 sm:w-auto sm:px-4"
+        className="inline-flex h-11 w-11 items-center justify-center gap-2 rounded-full bg-accent text-xs font-bold uppercase tracking-wider text-navy-950 shadow-lg transition-transform hover:-translate-y-0.5 sm:w-auto sm:px-4"
       >
         <Quote className="h-4 w-4 sm:hidden" aria-hidden="true" />
         <span className="hidden sm:inline">Get a Quote</span>

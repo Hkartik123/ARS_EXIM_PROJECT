@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight, Mail, MessageCircle, Phone } from 'lucide-react';
+import { CompanyLogo } from '@/components/ui/company-logo';
 
 const services = [
   { label: 'Hot insulation', href: '/services/hot-insulation' },
@@ -27,43 +27,35 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#071D38] pb-32 pt-16 text-white sm:pb-12 sm:pt-20">
+    <footer className="bg-[#071D35] pb-32 pt-16 text-white sm:pb-12 sm:pt-20">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
         <div className="grid gap-12 border-b border-white/15 pb-12 md:grid-cols-2 lg:grid-cols-[1.2fr_0.85fr_0.75fr_1fr] lg:gap-10">
           <div>
             <Link href="/" aria-label="ARS EXIM Global Solutions home" className="inline-flex items-center gap-3">
-              <span className="flex h-[66px] w-[82px] items-center justify-center rounded-sm bg-white p-2">
-                <Image
-                  src="/ars-exim-logo-transparent.png"
-                  alt="ARS EXIM Global Solutions logo"
-                  width={622}
-                  height={522}
-                  className="h-full w-full object-contain"
-                />
-              </span>
+              <CompanyLogo sizes="64px" className="h-14 w-auto object-contain" />
               <span>
                 <span className="block text-xs font-bold uppercase tracking-[0.12em]">ARS EXIM</span>
-                <span className="mt-1 block text-[10px] tracking-wide text-[#C4CED8]">Global Solutions</span>
+                <span className="mt-1 block text-[10px] tracking-wide text-[#DCE3EA]">Global Solutions</span>
               </span>
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-6 text-white/70">
               Industrial insulation, passive fire protection, scaffolding, coating and painting,
               and skilled manpower services for project enquiries.
             </p>
-            <p className="mt-4 text-xs font-semibold tracking-wide text-[#C4CED8]">
+            <p className="mt-4 text-xs font-semibold tracking-wide text-[#DCE3EA]">
               EXpert Insulation Management
             </p>
           </div>
 
           <div>
-            <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.16em] text-[#C4CED8]">
+            <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.16em] text-[#DCE3EA]">
               Industrial services
             </h2>
             <ul className="space-y-3">
               {services.map((service) => (
                 <li key={service.href}>
                   <Link href={service.href} className="group inline-flex items-center gap-2 text-sm text-white/75 transition-colors hover:text-white">
-                    <ArrowRight className="h-3.5 w-3.5 text-[#C4CED8] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    <ArrowRight className="h-3.5 w-3.5 text-[#DCE3EA] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                     {service.label}
                   </Link>
                 </li>
@@ -72,7 +64,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.16em] text-[#C4CED8]">
+            <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.16em] text-[#DCE3EA]">
               Explore
             </h2>
             <ul className="grid grid-cols-2 gap-x-4 gap-y-3">
@@ -87,32 +79,32 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.16em] text-[#C4CED8]">
+            <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.16em] text-[#DCE3EA]">
               Project enquiries
             </h2>
             <ul className="space-y-4 text-sm">
               <li>
                 <a href="tel:+919764425426" className="inline-flex items-center gap-3 text-white/80 transition-colors hover:text-white">
-                  <Phone className="h-4 w-4 shrink-0 text-[#C4CED8]" aria-hidden="true" />
+                  <Phone className="h-4 w-4 shrink-0 text-[#DCE3EA]" aria-hidden="true" />
                   +91 9764 425 426
                 </a>
               </li>
               <li>
                 <a href="mailto:info@arsexim.com" className="inline-flex items-center gap-3 text-white/80 transition-colors hover:text-white">
-                  <Mail className="h-4 w-4 shrink-0 text-[#C4CED8]" aria-hidden="true" />
+                  <Mail className="h-4 w-4 shrink-0 text-[#DCE3EA]" aria-hidden="true" />
                   info@arsexim.com
                 </a>
               </li>
               <li>
                 <a href="https://wa.me/919764425426" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 text-white/80 transition-colors hover:text-white">
-                  <MessageCircle className="h-4 w-4 shrink-0 text-[#C4CED8]" aria-hidden="true" />
+                  <MessageCircle className="h-4 w-4 shrink-0 text-[#DCE3EA]" aria-hidden="true" />
                   WhatsApp project enquiries
                 </a>
               </li>
             </ul>
             <Link
               href="/request-a-quote"
-              className="mt-6 inline-flex min-h-11 items-center gap-2 border border-white/40 px-4 text-xs font-bold text-white transition-colors hover:border-white hover:bg-white hover:text-[#071D38]"
+              className="mt-6 inline-flex min-h-11 items-center gap-2 border border-white/40 px-4 text-xs font-bold text-white transition-colors hover:border-white hover:bg-white hover:text-[#071D35]"
             >
               Submit project details <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>

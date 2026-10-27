@@ -33,7 +33,7 @@ export default async function CareerDetailPage({ params }: PageProps) {
         <div className="bg-white border border-steel-200 rounded p-8 sm:p-10 my-8 shadow-sm">
           <div className="flex flex-wrap gap-2 mb-3">
             <Badge variant="navy">{job.department}</Badge>
-            <Badge variant="gold">{job.employmentType}</Badge>
+            <Badge variant="accent">{job.employmentType}</Badge>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-black text-navy-900 font-display mb-4">
@@ -42,11 +42,11 @@ export default async function CareerDetailPage({ params }: PageProps) {
 
           <div className="flex flex-wrap items-center gap-6 text-xs text-steel-600 font-medium">
             <span className="flex items-center space-x-1.5">
-              <MapPin className="w-4 h-4 text-gold" />
+              <MapPin className="w-4 h-4 text-accent" />
               <span>Location: {job.location}</span>
             </span>
             <span className="flex items-center space-x-1.5">
-              <Clock className="w-4 h-4 text-gold" />
+              <Clock className="w-4 h-4 text-accent" />
               <span>Required Experience: {job.experienceRequired}</span>
             </span>
           </div>
@@ -65,7 +65,7 @@ export default async function CareerDetailPage({ params }: PageProps) {
               <ul className="space-y-2.5">
                 {job.responsibilities.map((resp: string, idx: number) => (
                   <li key={idx} className="flex items-start text-xs sm:text-sm text-steel-700">
-                    <CheckCircle2 className="w-4 h-4 text-gold mr-2.5 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-accent mr-2.5 flex-shrink-0 mt-0.5" />
                     <span>{resp}</span>
                   </li>
                 ))}

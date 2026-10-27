@@ -49,7 +49,7 @@ export default function IndustriesPage() {
         <Breadcrumbs items={[{ label: 'Industries' }]} />
 
         <header className="my-8 max-w-3xl">
-          <span className="block text-xs font-bold uppercase tracking-[0.2em] text-gold-700">Sector expertise</span>
+          <span className="block text-xs font-bold uppercase tracking-[0.2em] text-accent-700">Sector expertise</span>
           <h1 className="mt-3 font-display text-4xl font-bold text-navy-950 sm:text-6xl">
             Industries we support.
           </h1>
@@ -60,8 +60,8 @@ export default function IndustriesPage() {
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {industries.map(({ title, description, icon: Icon }) => (
-            <article key={title} className="rounded border border-steel-200 bg-steel-50 p-6 shadow-sm transition hover:-translate-y-1 hover:border-gold-500 hover:shadow-md">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded bg-navy-950 text-gold">
+            <article key={title} className="rounded border border-steel-200 bg-steel-50 p-6 shadow-sm transition hover:-translate-y-1 hover:border-accent-500 hover:shadow-md">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded bg-navy-950 text-accent">
                 <Icon className="h-5 w-5" />
               </div>
               <h2 className="font-display text-2xl font-bold text-navy-950">{title}</h2>
@@ -70,7 +70,7 @@ export default function IndustriesPage() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 rounded bg-[#10233f] p-7 text-white sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-4 rounded bg-[#071D35] p-7 text-white sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="font-display text-2xl font-bold">Need a project-specific review?</h2>
             <p className="mt-2 max-w-2xl text-sm text-white/75">

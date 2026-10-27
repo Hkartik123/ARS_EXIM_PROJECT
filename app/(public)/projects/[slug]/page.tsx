@@ -94,7 +94,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             <Badge variant="navy">{project.category || project.industry || 'Project reference'}</Badge>
             {project.status && <Badge variant="steel">{project.status}</Badge>}
             {(project.services || []).map((svc: string) => (
-              <Badge key={svc} variant="gold">
+              <Badge key={svc} variant="accent">
                 {svc.replace(/-/g, ' ')}
               </Badge>
             ))}
@@ -106,12 +106,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
           <div className="flex flex-wrap items-center gap-6 text-xs text-steel-600 font-semibold pt-2 border-t border-steel-200">
             <span className="flex items-center space-x-1.5">
-              <MapPin className="w-4 h-4 text-gold flex-shrink-0" />
+              <MapPin className="w-4 h-4 text-accent flex-shrink-0" />
               <span>Location: {[project.location, project.country].filter(Boolean).join(', ') || 'Not provided'}</span>
             </span>
             {project.clientPublishable && project.client && (
               <span className="flex items-center space-x-1.5">
-                <Building2 className="w-4 h-4 text-gold flex-shrink-0" />
+                <Building2 className="w-4 h-4 text-accent flex-shrink-0" />
                 <span>Client: {project.client}</span>
               </span>
             )}
@@ -156,7 +156,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <ul className="space-y-3">
                 {project.scopeOfWork.map((item: string, idx: number) => (
                   <li key={idx} className="flex items-start text-sm text-steel-800 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-gold mr-3 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-accent mr-3 flex-shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -167,12 +167,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             {project.technicalChallenges && project.technicalChallenges.length > 0 && (
               <section>
                 <h2 className="text-xl font-bold text-navy-900 font-display mb-4 flex items-center">
-                  <AlertTriangle className="w-5 h-5 text-gold mr-2" />
+                  <AlertTriangle className="w-5 h-5 text-accent mr-2" />
                   Technical Challenges Encountered
                 </h2>
                 <div className="space-y-3">
                   {project.technicalChallenges.map((challenge: string, idx: number) => (
-                    <div key={idx} className="p-4 border-l-4 border-gold bg-steel-50 text-sm text-steel-700">
+                    <div key={idx} className="p-4 border-l-4 border-accent bg-steel-50 text-sm text-steel-700">
                       {challenge}
                     </div>
                   ))}
@@ -232,7 +232,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             )}
 
             {project.coverImageIsIllustrative && (
-              <p className="border-l-2 border-gold bg-steel-50 px-4 py-3 text-xs leading-5 text-steel-600">
+              <p className="border-l-2 border-accent bg-steel-50 px-4 py-3 text-xs leading-5 text-steel-600">
                 The displayed image illustrates an ARS EXIM service capability and is not a photograph of this specific project.
               </p>
             )}
@@ -249,7 +249,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                     };
                     const href = serviceLinks[service] || '/services';
                     return (
-                      <Link key={service} href={href} className="inline-flex min-h-10 items-center gap-2 border border-steel-200 px-4 text-xs font-bold uppercase text-navy-900 hover:border-gold">
+                      <Link key={service} href={href} className="inline-flex min-h-10 items-center gap-2 border border-steel-200 px-4 text-xs font-bold uppercase text-navy-900 hover:border-accent">
                         {service.replace(/-/g, ' ')} <ArrowRight className="h-3.5 w-3.5" />
                       </Link>
                     );
@@ -262,7 +262,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           {/* Sidebar CTA & Related Projects */}
           <div className="space-y-8">
             <div className="bg-navy-950 text-white rounded p-8 shadow-industrial">
-              <span className="text-xs font-bold uppercase tracking-widest text-gold block mb-2">
+              <span className="text-xs font-bold uppercase tracking-widest text-accent block mb-2">
                 Turnaround & Capital Bids
               </span>
               <h3 className="text-lg font-bold text-white mb-3">
@@ -289,12 +289,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                     <Link
                       key={rp.slug}
                       href={`/projects/${rp.slug}`}
-                      className="block p-3 bg-white border border-steel-200 rounded hover:border-gold transition-colors group"
+                      className="block p-3 bg-white border border-steel-200 rounded hover:border-accent transition-colors group"
                     >
-                      <span className="text-[10px] uppercase font-bold text-gold-700 block">
+                      <span className="text-[10px] uppercase font-bold text-accent-700 block">
                         {rp.industry}
                       </span>
-                      <h4 className="text-xs font-bold text-navy-900 group-hover:text-gold transition-colors leading-snug">
+                      <h4 className="text-xs font-bold text-navy-900 group-hover:text-accent transition-colors leading-snug">
                         {rp.title}
                       </h4>
                     </Link>

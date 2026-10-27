@@ -32,14 +32,14 @@ export function FounderProfile() {
     <section
       ref={sectionRef}
       aria-labelledby="founders-heading"
-      className="overflow-hidden bg-[#10233f] py-16 text-white sm:py-20 lg:py-24"
+      className="overflow-hidden bg-[#071D35] py-16 text-white sm:py-20 lg:py-24"
     >
       <div className="mx-auto grid max-w-full items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16 lg:px-12">
         <div
           data-visible={isVisible}
           className="founder-reveal relative mx-auto w-full max-w-md"
         >
-          <div className="absolute -inset-3 border border-gold/60" aria-hidden="true" />
+          <div className="absolute -inset-3 border border-accent/60" aria-hidden="true" />
           <div className="relative aspect-[4/5] overflow-hidden bg-navy-900 shadow-industrial-lg">
             <Image
               src="/images/project-capabilities/founder-rs.webp"
@@ -49,11 +49,11 @@ export function FounderProfile() {
               className="object-cover transition-transform duration-700 ease-out hover:scale-[1.03]"
             />
           </div>
-          <span className="absolute -bottom-6 -right-3 h-16 w-16 border-b-4 border-r-4 border-gold" aria-hidden="true" />
+          <span className="absolute -bottom-6 -right-3 h-16 w-16 border-b-4 border-r-4 border-accent" aria-hidden="true" />
         </div>
 
         <div data-visible={isVisible} className="founder-copy space-y-5">
-          <span className="block text-xs font-bold uppercase tracking-[0.18em] text-gold">
+          <span className="block text-xs font-bold uppercase tracking-[0.18em] text-accent">
             About Founders
           </span>
           <h2
@@ -68,7 +68,7 @@ export function FounderProfile() {
           </p>
           <Link
             href="/about"
-            className="inline-flex min-h-11 items-center gap-2 border border-white/40 px-5 text-sm font-bold text-white transition-colors hover:border-gold hover:bg-gold hover:text-navy-950 focus-visible:outline-gold"
+            className="inline-flex min-h-11 items-center gap-2 border border-white/40 px-5 text-sm font-bold text-white transition-colors hover:border-accent hover:bg-accent hover:text-navy-950 focus-visible:outline-accent"
           >
             About ARS EXIM <ArrowRight className="h-4 w-4" />
           </Link>
