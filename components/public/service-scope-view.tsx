@@ -1,7 +1,11 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Check, ClipboardList } from 'lucide-react';
 import { Breadcrumbs } from '@/components/public/breadcrumbs';
 import { Button } from '@/components/ui/button';
+import { projectServiceImagery } from '@/lib/projects/service-imagery';
+
+type ServiceImage = (typeof projectServiceImagery)[number]['images'][number];
 
 const projectReviewSteps = [
   {
@@ -190,8 +194,17 @@ const serviceContent = {
   },
 } as const;
 
+const serviceImages: Partial<Record<keyof typeof serviceContent, readonly ServiceImage[]>> = {
+  'hot-insulation': [projectServiceImagery[0].images[1]],
+  'cold-cryogenic-insulation': [projectServiceImagery[0].images[2]],
+  'industrial-insulation': projectServiceImagery[0].images,
+  'passive-fire-protection': projectServiceImagery[1].images,
+  scaffolding: projectServiceImagery[2].images,
+};
+
 export function ServiceScopeView({ slug }: { slug: keyof typeof serviceContent }) {
   const service = serviceContent[slug];
+  const images = serviceImages[slug] ?? [];
 
   return (
     <div className="bg-white py-12">
@@ -207,6 +220,37 @@ export function ServiceScopeView({ slug }: { slug: keyof typeof serviceContent }
             <Button variant="primary" size="lg">Discuss this scope <ArrowRight className="ml-2 h-4 w-4" /></Button>
           </Link>
         </header>
+
+        {images.length > 0 && (
+          <section aria-labelledby="service-images-heading" className="mb-14">
+            <div className="mb-5">
+              <p className="text-xs font-bold uppercase tracking-widest text-accent-700">
+                Service capability images
+              </p>
+              <h2 id="service-images-heading" className="mt-2 font-display text-2xl font-bold text-navy-950">
+                {service.title} in focus
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {images.map((image) => (
+                <figure key={image.src} className="overflow-hidden border border-steel-200 bg-white">
+                  <div className="relative aspect-[4/3] bg-steel-100">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <figcaption className="p-4 text-sm leading-5 text-steel-700">
+                    {image.alt}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
 
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
           <section>

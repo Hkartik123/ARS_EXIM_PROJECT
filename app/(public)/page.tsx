@@ -154,12 +154,12 @@ export default async function HomePage() {
         className="relative isolate flex min-h-[640px] items-center overflow-hidden bg-[#071D35] text-white sm:min-h-[700px]"
       >
         <Image
-          src="/images/industrial-site-team.webp"
-          alt="Illustrative industrial project team at a large facility."
+          src="/images/client-gallery/industrial-facility-site.jpg"
+          alt="Client-provided photograph of an industrial processing plant with process equipment, pipe racks and refinery structures."
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[62%_center]"
+          className="object-cover object-[58%_center]"
         />
         <div
           aria-hidden="true"

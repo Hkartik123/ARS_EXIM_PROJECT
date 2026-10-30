@@ -31,19 +31,18 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
         <div className="grid gap-12 border-b border-white/15 pb-12 md:grid-cols-2 lg:grid-cols-[1.2fr_0.85fr_0.75fr_1fr] lg:gap-10">
           <div>
-            <Link href="/" aria-label="ARS EXIM Global Solutions home" className="inline-flex items-center gap-3">
+            <Link href="/" aria-label="ARS EXIM – EXpert Insulation Management home" className="inline-flex items-center gap-3">
               <CompanyLogo sizes="64px" className="h-14 w-auto object-contain" />
               <span>
                 <span className="block text-xs font-bold uppercase tracking-[0.12em]">ARS EXIM</span>
-                <span className="mt-1 block text-[10px] tracking-wide text-[#DCE3EA]">Global Solutions</span>
+                <span className="mt-1 block text-[10px] tracking-wide text-[#DCE3EA]">
+                  <strong>EX</strong>pert <strong>I</strong>nsulation <strong>M</strong>anagement
+                </span>
               </span>
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-6 text-white/70">
               Industrial insulation, passive fire protection, scaffolding, coating and painting,
               and skilled manpower services for project enquiries.
-            </p>
-            <p className="mt-4 text-xs font-semibold tracking-wide text-[#DCE3EA]">
-              <strong>EX</strong>pert <strong>I</strong>nsulation <strong>M</strong>anagement
             </p>
           </div>
 
@@ -131,7 +130,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 pt-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {currentYear} ARS EXIM Global Solutions. All rights reserved.</p>
+          <p>© {currentYear} ARS EXIM. All rights reserved.</p>
           <div className="flex gap-5">
             <Link href="/privacy-policy" className="transition-colors hover:text-white">Privacy Policy</Link>
             <Link href="/terms-and-conditions" className="transition-colors hover:text-white">Terms & Conditions</Link>

@@ -10,7 +10,7 @@ export function CompanyLogo({ className, priority = false, sizes }: CompanyLogoP
   return (
     <Image
       src="/ars-exim-logo-transparent.png"
-      alt="ARS EXIM Global Solutions"
+      alt="ARS EXIM"
       width={622}
       height={522}
       priority={priority}

@@ -54,17 +54,17 @@ export function Header() {
 
       <header className={`sticky top-0 z-50 border-b border-white/10 bg-[#071D35] text-white transition-shadow duration-200 ${scrolled ? 'shadow-[0_8px_24px_rgba(7,29,56,.22)]' : ''}`}>
         <div className="mx-auto flex min-h-[72px] max-w-[1440px] items-center justify-between gap-5 px-5 py-3 sm:px-8 sm:py-4 lg:min-h-[112px] lg:px-8 lg:py-6">
-          <Link href="/" className="flex min-w-0 items-center gap-3.5" aria-label="ARS EXIM Global Solutions home">
+          <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3.5" aria-label="ARS EXIM – EXpert Insulation Management home">
             <CompanyLogo
               priority
               sizes="(max-width: 640px) 60px, (max-width: 1023px) 65px, 75px"
-              className="h-[50px] w-auto shrink-0 object-contain sm:h-[54px] lg:h-[62px]"
+              className="h-10 w-auto shrink-0 object-contain sm:h-[54px] lg:h-[62px]"
             />
-            <span className="hidden min-w-0 sm:block">
-              <span className="block truncate text-[13px] font-bold uppercase tracking-[0.1em] text-white lg:text-base">
-                ARS EXIM Global Solutions
+            <span className="block min-w-0">
+              <span className="block truncate text-[11px] font-bold uppercase tracking-[0.08em] text-white sm:text-[13px] sm:tracking-[0.1em] lg:text-base">
+                ARS EXIM
               </span>
-              <span className="mt-1 block text-[10px] font-medium tracking-[0.08em] text-[#DCE3EA] lg:text-xs">
+              <span className="mt-0.5 block text-[8px] font-medium leading-tight tracking-normal text-[#DCE3EA] sm:mt-1 sm:text-[10px] sm:tracking-[0.08em] lg:text-xs">
                 <strong>EX</strong>pert <strong>I</strong>nsulation <strong>M</strong>anagement
               </span>
             </span>
