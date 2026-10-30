@@ -183,7 +183,7 @@ export default async function HomePage() {
               ARS EXIM
             </h1>
             <p className="mt-4 text-sm font-bold uppercase tracking-[0.14em] text-[#DCE3EA] sm:text-base">
-              EXpert Insulation Management
+              <strong>EX</strong>pert <strong>I</strong>nsulation <strong>M</strong>anagement
             </p>
             <p className="mt-7 max-w-2xl text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
               ARS EXIM supports industrial project teams with insulation, passive fire protection,
@@ -261,7 +261,9 @@ export default async function HomePage() {
               <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-[#071D35]/80 to-transparent p-5 pt-16 text-white sm:p-7 sm:pt-20">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#DCE3EA]">ARS EXIM</p>
-                  <p className="mt-1 font-semibold">EXpert Insulation Management</p>
+                  <p className="mt-1 font-semibold">
+                    <strong>EX</strong>pert <strong>I</strong>nsulation <strong>M</strong>anagement
+                  </p>
                 </div>
                 <CompanyLogo
                   sizes="(max-width: 640px) 65px, 75px"
@@ -470,6 +472,27 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      <section aria-labelledby="partners-title" className="border-t border-[#D8E0E8] bg-white py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.19em] text-[#6F849B]">
+              Our Partners
+            </p>
+            <h2
+              id="partners-title"
+              className="mt-3 font-display text-3xl font-bold tracking-tight text-[#071D35] sm:text-4xl"
+            >
+              Partner Organizations
+            </h2>
+          </div>
+          <ul className="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+            <li className="flex min-h-24 items-center justify-center border border-[#D8E0E8] bg-[#F3F6F9] px-5 py-6 text-center font-semibold text-[#12365A]">
+              L&amp;T Engineering &amp; Hydrocarbon
+            </li>
+          </ul>
+        </div>
+      </section>
 
       <section id="contact" className="scroll-mt-24 bg-[#F3F6F9] py-20 sm:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14 lg:px-12">

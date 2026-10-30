@@ -65,7 +65,7 @@ export function Header() {
                 ARS EXIM Global Solutions
               </span>
               <span className="mt-1 block text-[10px] font-medium tracking-[0.08em] text-[#DCE3EA] lg:text-xs">
-                EXpert Insulation Management
+                <strong>EX</strong>pert <strong>I</strong>nsulation <strong>M</strong>anagement
               </span>
             </span>
           </Link>

@@ -43,7 +43,7 @@ export function Footer() {
               and skilled manpower services for project enquiries.
             </p>
             <p className="mt-4 text-xs font-semibold tracking-wide text-[#DCE3EA]">
-              EXpert Insulation Management
+              <strong>EX</strong>pert <strong>I</strong>nsulation <strong>M</strong>anagement
             </p>
           </div>
 
@@ -102,6 +102,25 @@ export function Footer() {
                 </a>
               </li>
             </ul>
+            <div className="mt-6 border-t border-white/15 pt-5">
+              <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-[#DCE3EA]">
+                Registered Office Address
+              </h3>
+              <address className="mt-2 break-words text-sm not-italic leading-6 text-white/75">
+                Lumbini Nagar, Jamnapur Colony, Sakoli, District Bhandara, Maharashtra – 441802,
+                India.
+              </address>
+              <dl className="mt-4 space-y-3 break-words text-xs">
+                <div>
+                  <dt className="font-semibold text-white/90">GST Registration No.</dt>
+                  <dd className="mt-0.5 text-white/70">27FEVPS8989L1ZQ</dd>
+                </div>
+                <div>
+                  <dt className="font-semibold text-white/90">MSME Registration No.</dt>
+                  <dd className="mt-0.5 text-white/70">UDYAM-MH-06-0041915</dd>
+                </div>
+              </dl>
+            </div>
             <Link
               href="/request-a-quote"
               className="mt-6 inline-flex min-h-11 items-center gap-2 border border-white/40 px-4 text-xs font-bold text-white transition-colors hover:border-white hover:bg-white hover:text-[#071D35]"

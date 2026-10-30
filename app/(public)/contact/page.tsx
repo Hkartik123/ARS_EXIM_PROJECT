@@ -68,6 +68,19 @@ export default function ContactPage() {
                 </a>.
               </p>
             </div>
+
+            <section
+              aria-labelledby="registered-office-heading"
+              className="rounded border border-steel-200 bg-white p-6"
+            >
+              <h2 id="registered-office-heading" className="text-sm font-bold text-navy-900">
+                Registered Office Address
+              </h2>
+              <address className="mt-2 break-words text-sm leading-6 text-steel-600 not-italic">
+                Lumbini Nagar, Jamnapur Colony, Sakoli, District Bhandara, Maharashtra – 441802,
+                India.
+              </address>
+            </section>
           </div>
 
           {/* Contact Inquiry Form */}
