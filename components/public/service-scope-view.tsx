@@ -196,7 +196,7 @@ const serviceContent = {
 
 const serviceImages: Partial<Record<keyof typeof serviceContent, readonly ServiceImage[]>> = {
   'hot-insulation': [projectServiceImagery[0].images[1]],
-  'cold-cryogenic-insulation': [projectServiceImagery[0].images[2]],
+  'cold-cryogenic-insulation': [projectServiceImagery[0].images[3], projectServiceImagery[0].images[4]],
   'industrial-insulation': projectServiceImagery[0].images,
   'passive-fire-protection': projectServiceImagery[1].images,
   scaffolding: projectServiceImagery[2].images,

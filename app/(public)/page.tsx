@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { ContactForm } from '@/components/public/contact-form';
 import { CompanyLogo } from '@/components/ui/company-logo';
+import { ProjectCover } from '@/components/public/project-cover';
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 
 export const dynamic = 'force-dynamic';
@@ -154,7 +155,7 @@ export default async function HomePage() {
         className="relative isolate flex min-h-[640px] items-center overflow-hidden bg-[#071D35] text-white sm:min-h-[700px]"
       >
         <Image
-          src="/images/client-gallery/industrial-facility-site.jpg"
+          src="/images/project-capabilities/client-industrial-facility.jpg"
           alt="Client-provided photograph of an industrial processing plant with process equipment, pipe racks and refinery structures."
           fill
           priority
@@ -212,7 +213,7 @@ export default async function HomePage() {
           </div>
         </div>
         <span className="absolute bottom-4 right-5 text-[10px] font-medium tracking-wide text-white/60 sm:right-8">
-          Illustrative industrial site image
+          Client-provided industrial site image
         </span>
       </section>
 
@@ -434,23 +435,18 @@ export default async function HomePage() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {featuredProjects.map((project, index) => (
                 <Link href={`/projects/${project.slug}`} key={project.slug} className="group min-w-0">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-[#D8E0E8]">
-                    <Image
-                      src={project.featuredImage || '/images/industrial-site-team.webp'}
-                      alt={project.coverImageIsIllustrative ? `Service capability image related to ${project.title}; not project-site photography` : project.title}
-                      fill
-                      unoptimized
+                  <div className="relative">
+                    <ProjectCover
+                      src={project.featuredImage}
+                      alt={project.title}
+                      isIllustrative={project.coverImageIsIllustrative}
                       sizes="(max-width: 768px) 100vw, 25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      className="aspect-[4/3]"
+                      imageClassName="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                     <span className="absolute left-3 top-3 bg-white px-2.5 py-1 text-sm font-bold text-[#071D35]">
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    {project.coverImageIsIllustrative && (
-                      <span className="absolute bottom-3 left-3 bg-[#071D35]/85 px-2 py-1 text-[9px] font-semibold text-white">
-                        Service imagery · not site photography
-                      </span>
-                    )}
                   </div>
                   <div className="border-b border-[#D8E0E8] py-4">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#68788A]">
@@ -486,9 +482,16 @@ export default async function HomePage() {
               Partner Organizations
             </h2>
           </div>
-          <ul className="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-            <li className="flex min-h-24 items-center justify-center border border-[#D8E0E8] bg-[#F3F6F9] px-5 py-6 text-center font-semibold text-[#12365A]">
-              L&amp;T Engineering &amp; Hydrocarbon
+          <ul className="mx-auto mt-8 grid max-w-md grid-cols-1 gap-4">
+            <li className="flex min-h-32 flex-col items-center justify-center gap-3 border border-[#D8E0E8] bg-[#071D35] px-5 py-6 text-center font-semibold text-white">
+              <Image
+                src="/images/partners/lt.svg"
+                alt="Larsen & Toubro"
+                width={151}
+                height={28}
+                className="h-7 w-auto"
+              />
+              <span>L&amp;T Engineering &amp; Hydrocarbon</span>
             </li>
           </ul>
         </div>

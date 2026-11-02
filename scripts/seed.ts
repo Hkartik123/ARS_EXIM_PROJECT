@@ -5,6 +5,29 @@ loadEnvConfig(process.cwd());
 import { hashPassword } from '../lib/auth/passwords';
 import { normalizeProjectForPersistence } from '../lib/projects/normalize';
 
+type VerifiedProjectReference = {
+  slug: string;
+  title: string;
+  location: string;
+  country: string;
+  featuredImage: string;
+  client?: string;
+  clientName?: string;
+  clientPublishable?: boolean;
+  category?: string;
+  industry?: string;
+  services?: string[];
+  shortDescription?: string;
+  description?: string;
+  scopeOfWork?: string[];
+  technicalChallenges?: string[];
+  executionApproach?: string;
+  safetyConsiderations?: string[];
+  coverImageIsIllustrative?: boolean;
+  isFeatured?: boolean;
+  featured?: boolean;
+};
+
 async function seed() {
   console.log('🌱 Starting verified ARS EXIM database initialization...');
   // 1. Seed Initial Super Admin
@@ -487,7 +510,7 @@ async function seed() {
     },
   ];
 
-  const verifiedProjectReferences = [
+  const verifiedProjectReferences: VerifiedProjectReference[] = [
     {
       slug: 'jafurah-gas-project-phase-i',
       title: 'Jafurah Gas Project Phase-I',
@@ -516,6 +539,38 @@ async function seed() {
       country: 'Qatar',
       featuredImage: '/images/project-capabilities/pfp-structure.webp',
     },
+    {
+      slug: 'hrrl-pachpadra-dual-feed-cracker-unit',
+      title: 'HPCL Rajasthan Refinery Limited (HRRL) — DFCU',
+      client: 'HPCL Rajasthan Refinery Limited',
+      clientPublishable: true,
+      category: 'Refinery',
+      industry: 'Oil & Gas',
+      location: 'Pachpadra, Barmer, Rajasthan',
+      country: 'India',
+      shortDescription:
+        'Dual Feed Cracker Unit (DFCU). EPCC Contractor: L&T Energy Hydrocarbon.',
+      description:
+        'Dual Feed Cracker Unit (DFCU). EPCC Contractor: L&T Energy Hydrocarbon.',
+      featuredImage: '/images/project-capabilities/client-industrial-facility.jpg',
+      coverImageIsIllustrative: true,
+    },
+    {
+      slug: 'ioc-panipat-p25-residue-hydrocracker-unit',
+      title: 'Indian Oil Corporation Limited — Panipat Refinery Expansion (P-25)',
+      client: 'Indian Oil Corporation Limited',
+      clientPublishable: true,
+      category: 'Refinery',
+      industry: 'Oil & Gas',
+      location: 'Panipat, Haryana',
+      country: 'India',
+      shortDescription:
+        'P-25 Project — Residue Hydrocracker Unit (RHCU). EPCC Contractor: L&T Energy Hydrocarbon.',
+      description:
+        'P-25 Project — Residue Hydrocracker Unit (RHCU). EPCC Contractor: L&T Energy Hydrocarbon.',
+      featuredImage: '/images/project-capabilities/client-industrial-facility.jpg',
+      coverImageIsIllustrative: true,
+    },
   ];
 
   await prisma.project.updateMany({
@@ -532,24 +587,30 @@ async function seed() {
   for (const project of verifiedProjectReferences) {
     const data = normalizeProjectForPersistence({
           ...project,
-          category: 'Industrial',
-          industry: 'Other',
-          services: [],
-          shortDescription: '',
-          description: '',
-          scopeOfWork: [],
-          technicalChallenges: [],
-          executionApproach: '',
-          safetyConsiderations: [],
+          category: project.category || 'Industrial',
+          industry: project.industry || 'Other',
+          client: project.client || '',
+          clientName: project.clientName || project.client || '',
+          clientPublishable: project.clientPublishable ?? false,
+          services: project.services || [],
+          shortDescription: project.shortDescription || '',
+          description: project.description || project.shortDescription || '',
+          scopeOfWork: project.scopeOfWork || [],
+          technicalChallenges: project.technicalChallenges || [],
+          executionApproach: project.executionApproach || '',
+          safetyConsiderations: project.safetyConsiderations || [],
           coverImage: project.featuredImage,
-          coverImageIsIllustrative: true,
+          coverImageIsIllustrative: project.coverImageIsIllustrative ?? true,
           galleryImages: [],
-          isFeatured: false,
-          featured: false,
+          isFeatured: project.isFeatured ?? false,
+          featured: project.featured ?? false,
           published: true,
           publishStatus: 'PUBLISHED',
           isDeleted: false,
-          seo: { title: project.title, metaDescription: project.title },
+          seo: {
+            title: project.title,
+            metaDescription: project.shortDescription || project.title,
+          },
         });
     await prisma.project.upsert({
       where: { slug: project.slug },

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ProjectImage } from '@/components/public/project-image';
+import { ProjectCover } from '@/components/public/project-cover';
 
 export interface ProjectCardData {
   slug: string;
@@ -149,22 +149,18 @@ export function ProjectFilter({ initialProjects }: ProjectFilterProps) {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredProjects.map((project) => (
             <Card key={project.slug} className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-industrial-lg">
-              <div className="relative h-56 w-full overflow-hidden bg-navy-950">
-                <ProjectImage
+              <div className="relative">
+                <ProjectCover
                   src={project.featuredImage || '/images/industrial-site-team.webp'}
-                  alt={project.coverImageIsIllustrative ? `Service capability imagery related to ${project.title}; not project-specific photography` : project.title}
-                  fill
+                  alt={project.title}
+                  isIllustrative={project.coverImageIsIllustrative}
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
+                  className="h-56 w-full"
+                  imageClassName="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
                 />
                 <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
                   <Badge variant="navy">{project.category || project.industry || 'Project reference'}</Badge>
                 </div>
-                {project.coverImageIsIllustrative && (
-                  <span className="absolute bottom-3 left-3 rounded bg-navy-950/80 px-2 py-1 text-[10px] font-semibold text-white">
-                    Service imagery · not project-site photography
-                  </span>
-                )}
               </div>
 
               <CardContent className="p-6 flex-1 flex flex-col justify-between">

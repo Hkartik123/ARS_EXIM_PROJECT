@@ -16,6 +16,14 @@ export const projectServiceImagery = [
         src: '/images/project-capabilities/cold-cryogenic-insulation.webp',
         alt: 'Cold insulation on cryogenic industrial piping',
       },
+      {
+        src: '/images/project-capabilities/client-cryogenic-insulation-piping.jpg',
+        alt: 'Large insulated cryogenic process pipes at an industrial facility',
+      },
+      {
+        src: '/images/project-capabilities/client-cryogenic-insulation-unit.jpg',
+        alt: 'Cryogenic process equipment and insulated piping at an industrial facility',
+      },
     ],
   },
   {

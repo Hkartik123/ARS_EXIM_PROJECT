@@ -17,6 +17,7 @@ import {
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 import { normalizeProjectRecord } from '@/lib/projects/normalize';
 import { ProjectImage } from '@/components/public/project-image';
+import { ProjectCover } from '@/components/public/project-cover';
 
 interface PageProps {
   params: { slug: string };
@@ -119,20 +120,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         </div>
 
         {/* Hero Featured Media */}
-        <div className="relative h-96 sm:h-[480px] w-full rounded overflow-hidden shadow-industrial-lg mb-12 bg-navy-950">
-          <ProjectImage
-            src={project.featuredImage || '/images/industrial-site-team.webp'}
-            alt={project.coverImageIsIllustrative ? `Service capability imagery related to ${project.title}; not project-specific photography` : project.title}
-            fill
-            sizes="(max-width: 640px) 100vw, 90vw"
-            className="object-cover"
-          />
-          {project.coverImageIsIllustrative && (
-            <span className="absolute bottom-4 left-4 rounded bg-navy-950/80 px-3 py-2 text-xs font-semibold text-white">
-              Service capability imagery · not project-site photography
-            </span>
-          )}
-        </div>
+        <ProjectCover
+          src={project.featuredImage || '/images/industrial-site-team.webp'}
+          alt={project.title}
+          isIllustrative={project.coverImageIsIllustrative}
+          sizes="(max-width: 640px) 100vw, 90vw"
+          className="mb-12 h-96 w-full rounded shadow-industrial-lg sm:h-[480px]"
+        />
 
         {/* Technical Dossier Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 my-12">
@@ -229,12 +223,6 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                   ))}
                 </div>
               </section>
-            )}
-
-            {project.coverImageIsIllustrative && (
-              <p className="border-l-2 border-accent bg-steel-50 px-4 py-3 text-xs leading-5 text-steel-600">
-                The displayed image illustrates an ARS EXIM service capability and is not a photograph of this specific project.
-              </p>
             )}
 
             {(project.services || []).length > 0 && (
