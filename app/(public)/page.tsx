@@ -19,6 +19,9 @@ import {
 import { ContactForm } from '@/components/public/contact-form';
 import { CompanyLogo } from '@/components/ui/company-logo';
 import { ProjectCover } from '@/components/public/project-cover';
+import { AnimatedCtaLink } from '@/components/public/animated-cta-link';
+import { AnimatedHomeHeadline } from '@/components/public/animated-home-headline';
+import { ScrollReveal, ScrollTextReveal } from '@/components/public/scroll-reveal';
 import { UNVERIFIED_SEED_PROJECT_SLUGS } from '@/lib/projects/visibility';
 
 export const dynamic = 'force-dynamic';
@@ -160,7 +163,7 @@ export default async function HomePage() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[58%_center]"
+          className="home-hero-image object-cover object-[58%_center]"
         />
         <div
           aria-hidden="true"
@@ -170,6 +173,7 @@ export default async function HomePage() {
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-t from-[#071D35]/70 via-transparent to-[#071D35]/10"
         />
+        <div aria-hidden="true" className="hero-ambient-glow pointer-events-none absolute inset-0" />
 
         <div className="relative mx-auto w-full max-w-7xl px-5 py-24 sm:px-8 lg:px-12">
           <div className="home-reveal max-w-3xl">
@@ -177,12 +181,7 @@ export default async function HomePage() {
               <span className="h-px w-9 bg-[#DCE3EA]" />
               ARS EXIM <span className="text-white/45">|</span> Industrial project support
             </p>
-            <h1
-              id="home-title"
-              className="max-w-3xl font-sans text-5xl font-bold leading-[1.04] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl"
-            >
-              ARS EXIM
-            </h1>
+            <AnimatedHomeHeadline />
             <p className="mt-4 text-sm font-bold uppercase tracking-[0.14em] text-[#DCE3EA] sm:text-base">
               <strong>EX</strong>pert <strong>I</strong>nsulation <strong>M</strong>anagement
             </p>
@@ -192,18 +191,19 @@ export default async function HomePage() {
               and schedule to start a project discussion.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link
+              <AnimatedCtaLink
                 href="#services"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-accent px-6 text-sm font-bold text-white transition-colors hover:bg-accent-700"
+                className="min-h-12 justify-between rounded-sm px-6 text-sm font-bold sm:min-w-[220px]"
               >
-                Explore Our Services <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
+                Explore Our Services
+              </AnimatedCtaLink>
+              <AnimatedCtaLink
                 href="#contact"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-white/50 px-6 text-sm font-bold text-white transition-colors hover:border-white hover:bg-white/10"
+                appearance="outline"
+                className="min-h-12 justify-between rounded-sm border-white/50 px-6 text-sm font-bold hover:border-white hover:bg-white/10 sm:min-w-[170px]"
               >
-                Contact Us <ArrowUpRight className="h-4 w-4" />
-              </Link>
+                Contact Us
+              </AnimatedCtaLink>
             </div>
             <p className="mt-10 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
               Industrial insulation <span className="mx-2 text-[#DCE3EA]">/</span> PFP
@@ -226,11 +226,10 @@ export default async function HomePage() {
             <h2 className="mt-4 max-w-2xl text-4xl font-bold leading-tight tracking-[-0.035em] text-[#071D35] sm:text-5xl">
               Specialist support for industrial project requirements.
             </h2>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-[#263445]">
-              ARS EXIM brings industrial insulation, passive fire protection, scaffolding and access,
-              coating and painting, and skilled manpower into one project enquiry. Each work package
-              is shaped around the client’s assets, specifications, site conditions and required interfaces.
-            </p>
+            <ScrollTextReveal
+              className="mt-6 max-w-2xl text-base leading-7 text-[#263445]"
+              text="ARS EXIM brings industrial insulation, passive fire protection, scaffolding and access, coating and painting, and skilled manpower into one project enquiry. Each work package is shaped around the client’s assets, specifications, site conditions and required interfaces."
+            />
             <div className="mt-8 flex flex-wrap gap-2">
               {['Insulation', 'Passive fire protection', 'Scaffolding & access', 'Coating & painting', 'Skilled manpower'].map((capability) => (
                 <span
@@ -248,7 +247,7 @@ export default async function HomePage() {
               More about the company <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="relative">
+          <ScrollReveal variant="image" className="relative">
             <div className="absolute -left-3 -top-3 h-full w-full border border-[#DCE3EA] sm:-left-5 sm:-top-5" />
             <div className="relative overflow-hidden bg-[#F3F6F9]">
               <Image
@@ -257,7 +256,7 @@ export default async function HomePage() {
                 width={1600}
                 height={1067}
                 sizes="(max-width: 1024px) 100vw, 44vw"
-                className="aspect-[4/3] w-full object-cover"
+                className="scroll-parallax-media aspect-[4/3] w-full object-cover"
               />
               <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-[#071D35]/80 to-transparent p-5 pt-16 text-white sm:p-7 sm:pt-20">
                 <div>
@@ -273,7 +272,7 @@ export default async function HomePage() {
               </div>
             </div>
             <p className="mt-2 text-right text-[10px] text-[#68788A]">Illustrative industrial site image</p>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -316,12 +315,13 @@ export default async function HomePage() {
             ))}
           </div>
           <div className="mt-8 text-center">
-            <Link
+            <AnimatedCtaLink
               href="/services"
-              className="inline-flex min-h-11 items-center gap-2 border border-[#12365A] px-5 text-sm font-bold text-[#12365A] transition-colors hover:bg-[#12365A] hover:text-white"
+              appearance="outline"
+              className="min-h-11 border-[#12365A] px-5 text-sm font-bold text-[#12365A] hover:bg-[#12365A] hover:text-white"
             >
-              View all services <ArrowUpRight className="h-4 w-4" />
-            </Link>
+              View all services
+            </AnimatedCtaLink>
           </div>
         </div>
       </section>
